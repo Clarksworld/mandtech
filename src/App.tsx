@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Bell, ShieldCheck, Mail, MapPin, PhoneCall, Heart } from 'lucide-react';
+import { ShieldCheck, Search, Globe, Share2 } from 'lucide-react';
 import { MandtechLogo } from './components/Logo';
 import HomePage from './pages/HomePage';
 import CatalogPage from './pages/CatalogPage';
@@ -12,6 +12,7 @@ type ActivePage = 'home' | 'catalog' | 'aftersales' | 'contact';
 export default function App() {
   const [activePage, setActivePage] = useState<ActivePage>('home');
   const [showStatusModal, setShowStatusModal] = useState(false);
+  const [emailInput, setEmailInput] = useState('');
 
   const renderActivePage = () => {
     switch (activePage) {
@@ -25,6 +26,14 @@ export default function App() {
         return <ContactPage />;
       default:
         return <HomePage onNavigate={(page) => setActivePage(page as ActivePage)} />;
+    }
+  };
+
+  const handleNewsletterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (emailInput.trim()) {
+      alert(`Newsletter subscription registered for: ${emailInput}`);
+      setEmailInput('');
     }
   };
 
@@ -59,15 +68,15 @@ export default function App() {
         </div>
       )}
 
-      {/* Global brand navigation navbar */}
+      {/* Global brand navigation navbar (Redesigned Light Theme) */}
       <header className="global-navbar">
         <div className="container nav-container">
           {/* Logo & Brand Name */}
           <div className="nav-brand-group" onClick={() => setActivePage('home')} style={{ cursor: 'pointer' }}>
-            <MandtechLogo size={36} color="#FFFFFF" accentColor="var(--primary-container)" />
+            <MandtechLogo size={32} color="var(--deep-charcoal)" accentColor="var(--primary-container)" />
             <div className="brand-text-block">
-              <span className="brand-primary-name">MANDTECH</span>
-              <span className="brand-secondary-name">DIGITAL IDENTITY SYSTEM</span>
+              <span className="brand-primary-name">Mandtech</span>
+              <span className="brand-secondary-name">Services</span>
             </div>
           </div>
 
@@ -83,7 +92,19 @@ export default function App() {
               className={`nav-item-btn ${activePage === 'catalog' ? 'nav-active' : ''}`}
               onClick={() => setActivePage('catalog')}
             >
-              Catalog
+              Equipment Sales
+            </button>
+            <button
+              className={`nav-item-btn`}
+              onClick={() => setActivePage('catalog')}
+            >
+              Parts Catalog
+            </button>
+            <button
+              className={`nav-item-btn`}
+              onClick={() => setActivePage('contact')}
+            >
+              Leasing & Rentals
             </button>
             <button
               className={`nav-item-btn ${activePage === 'aftersales' ? 'nav-active' : ''}`}
@@ -91,33 +112,29 @@ export default function App() {
             >
               After-Sales
             </button>
-            <button
-              className={`nav-item-btn ${activePage === 'contact' ? 'nav-active' : ''}`}
-              onClick={() => setActivePage('contact')}
-            >
-              Contact
-            </button>
           </nav>
 
-          {/* Quick Info bar */}
+          {/* Search box and Action Button */}
           <div className="nav-actions-group">
+            <div className="nav-search-box">
+              <Search size={16} className="nav-search-icon" />
+              <input 
+                type="text" 
+                placeholder="Search components..." 
+                className="nav-search-input"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    alert(`Searching catalog for keyword: "${(e.target as HTMLInputElement).value}"`);
+                    setActivePage('catalog');
+                  }
+                }}
+              />
+            </div>
             <button 
-              className="status-trigger-badge"
-              onClick={() => setShowStatusModal(true)}
-              title="System Operations Status"
+              className="nav-inquiry-btn"
+              onClick={() => setActivePage('contact')}
             >
-              <span className="pulse-green-dot"></span>
-              <span className="badge-text-label">System Active</span>
-            </button>
-            
-            <button 
-              className="notification-navbar-btn" 
-              onClick={() => {
-                alert('Notification Center: Dispatch system calibrated. Routine dispatches completed.');
-              }}
-            >
-              <Bell size={18} />
-              <span className="notif-counter-bubble">1</span>
+              Get an Inquiry
             </button>
           </div>
         </div>
@@ -128,39 +145,72 @@ export default function App() {
         {renderActivePage()}
       </main>
 
-      {/* Global responsive Footer */}
+      {/* Global responsive Footer (Redesigned 4-Column Dark Theme) */}
       <footer className="global-footer">
         <div className="container footer-grid">
-          {/* Column 1: Brand description */}
+          {/* Column 1: Brand description and social */}
           <div className="footer-brand-column">
-            <div className="footer-brand-logo">
+            <div className="footer-brand-logo" onClick={() => setActivePage('home')} style={{ cursor: 'pointer' }}>
               <MandtechLogo size={32} color="#FFFFFF" accentColor="var(--primary-container)" />
-              <span className="footer-brand-name">MANDTECH</span>
+              <div className="brand-text-block">
+                <span className="brand-primary-name text-orange">Mandtech</span>
+                <span className="brand-secondary-name text-white">Services</span>
+              </div>
             </div>
             <p className="footer-brand-desc">
-              Nigeria's specialized industrial partner since 2004. Engineering high-pressure air and prime standby power dispatches for manufacturing yards and refining depots.
+              Pioneering industrial reliability through superior equipment and unmatched technical expertise since 2008.
             </p>
+            <div className="footer-social-row">
+              <button className="footer-social-btn" onClick={() => alert('Corporate Website: www.mandtech.com.ng')}>
+                <Globe size={16} />
+              </button>
+              <button className="footer-social-btn" onClick={() => alert('Share Mandtech Services profile link.')}>
+                <Share2 size={16} />
+              </button>
+            </div>
           </div>
 
-          {/* Column 2: Navigation map */}
+          {/* Column 2: Quick Links */}
           <div className="footer-links-column">
-            <h4 className="footer-section-title">FLEET SERVICES</h4>
+            <h4 className="footer-section-title">Quick Links</h4>
             <ul className="footer-items-list">
-              <li><button onClick={() => setActivePage('catalog')}>Browse Compressors</button></li>
-              <li><button onClick={() => setActivePage('catalog')}>Generator Inventory</button></li>
-              <li><button onClick={() => setActivePage('aftersales')}>Servicing SLA</button></li>
-              <li><button onClick={() => setActivePage('contact')}>Consulting RFQ</button></li>
+              <li><button onClick={() => setActivePage('catalog')}>Parts Catalog</button></li>
+              <li><button onClick={() => setActivePage('catalog')}>Equipment Sales</button></li>
+              <li><button onClick={() => setActivePage('aftersales')}>Service Request</button></li>
+              <li><button onClick={() => setActivePage('contact')}>Leasing Terms</button></li>
             </ul>
           </div>
 
-          {/* Column 3: Contact indices */}
-          <div className="footer-contact-column">
-            <h4 className="footer-section-title">LAGOS HEADQUARTERS</h4>
-            <div className="footer-contact-details">
-              <p><MapPin size={14} /> Industrial Park Phase II, Victoria Island, Lagos</p>
-              <p><PhoneCall size={14} /> +234 (1) 460-7000</p>
-              <p><Mail size={14} /> info@mandtech.com.ng</p>
-            </div>
+          {/* Column 3: Resources */}
+          <div className="footer-links-column">
+            <h4 className="footer-section-title">Resources</h4>
+            <ul className="footer-items-list">
+              <li><button onClick={() => alert('Sitemap directory load')}>Sitemap</button></li>
+              <li><button onClick={() => alert('Privacy Policy document download')}>Privacy Policy</button></li>
+              <li><button onClick={() => alert('Terms of Service document download')}>Terms of Service</button></li>
+              <li><button onClick={() => alert('Technical data sheets catalog loaded')}>Technical Data</button></li>
+            </ul>
+          </div>
+
+          {/* Column 4: Newsletter */}
+          <div className="footer-newsletter-column">
+            <h4 className="footer-section-title">Newsletter</h4>
+            <p className="footer-newsletter-desc">
+              Stay updated with our latest industrial solutions.
+            </p>
+            <form className="footer-newsletter-form" onSubmit={handleNewsletterSubmit}>
+              <input 
+                type="email" 
+                placeholder="Email Address" 
+                required 
+                className="footer-newsletter-input"
+                value={emailInput}
+                onChange={(e) => setEmailInput(e.target.value)}
+              />
+              <button type="submit" className="footer-newsletter-submit">
+                <Share2 size={16} style={{ transform: 'rotate(45deg)' }} />
+              </button>
+            </form>
           </div>
         </div>
 
@@ -168,11 +218,11 @@ export default function App() {
         <div className="footer-bottom-bar">
           <div className="container bottom-bar-inner">
             <span className="copyright-text">
-              © {new Date().getFullYear()} Mandtech Services Limited. All rights reserved.
+              © 2024 Mandtech Services, All Rights Reserved.
             </span>
-            <span className="credit-text">
-              Industrial Kinetic Identity System. Crafted with <Heart size={10} className="text-orange" />
-            </span>
+            <button className="footer-contact-link" onClick={() => setActivePage('contact')}>
+              Contact Us
+            </button>
           </div>
         </div>
       </footer>
