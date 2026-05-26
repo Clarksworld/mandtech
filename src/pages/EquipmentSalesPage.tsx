@@ -1,4 +1,3 @@
-import './EquipmentSalesPage.css';
 
 export default function EquipmentSalesPage() {
   return (
