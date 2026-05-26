@@ -1,10 +1,19 @@
 import React, { useState, useMemo } from 'react';
-import { Search, SlidersHorizontal, Check, X, RefreshCw } from 'lucide-react';
+import { Search, Sliders, Zap, Shield, ChevronDown, Check, X, Phone, ArrowLeft, ArrowRight, Activity, Settings } from 'lucide-react';
 import { EquipmentCard } from '../components/Card';
 import './CatalogPage.css';
 
-const CATEGORIES = ['All', 'Air Compressors', 'Generators', 'Pumps', 'Air Dryers'];
-const BRANDS = ['Atlas Copco', 'Ingersoll Rand', 'Sullair', 'Kaeser', 'Mandtech'];
+// Import Assets
+import catalogBg from '../assets/catalog_bg.png';
+import catalogBg1 from '../assets/catalog_bg1.png';
+import catalogBg2 from '../assets/catalog_bg2.png';
+import highCapacity from '../assets/high_capacity.png';
+import industrialGenerator from '../assets/industrial_generator.png';
+import portableUnit from '../assets/portable_unit.png';
+
+const CATEGORIES = ['Air Compressors', 'Generators', 'Pumps', 'Air Dryers'];
+const BRANDS = ['Atlas Copco', 'Ingersoll Rand', 'Sullair', 'Kaeser'];
+const DRIVEN_TYPES = ['Electric', 'Diesel Driven'];
 
 const PRODUCTS = [
   {
@@ -12,104 +21,149 @@ const PRODUCTS = [
     title: 'Sullair 185 Series',
     category: 'Air Compressors',
     brand: 'Sullair',
+    image: catalogBg,
     badge: 'IN STOCK',
     badgeType: 'inStock' as const,
-    accentTop: true,
+    accentTop: false,
     specs: [
-      { icon: '⚙️', label: '185 CFM Capacity' },
-      { icon: '⛽', label: 'Diesel Driven Engine' },
-      { icon: '✅', label: 'Heavy-Duty Steel Frame' },
+      { icon: <Activity size={14} />, label: '185 CFM Capacity' },
+      { icon: <Zap size={14} />, label: 'Diesel Driven Engine' },
+      { icon: <Shield size={14} />, label: 'Heavy-Duty Frame' },
     ],
+    capacity: 185,
+    driven: 'Diesel Driven',
   },
   {
     id: 2,
     title: 'Electric Power Dry E-40',
     category: 'Air Dryers',
     brand: 'Kaeser',
+    image: catalogBg1,
+    badge: undefined,
+    badgeType: 'inStock' as const,
+    accentTop: false,
     specs: [
-      { icon: '⚡', label: 'Electric Driven 400V' },
-      { icon: '🌬️', label: '40 CFM Low Noise' },
-      { icon: '🌿', label: 'Zero Site Emissions' },
+      { icon: <Zap size={14} />, label: 'Electric Driven 400V' },
+      { icon: <Activity size={14} />, label: '40 CFM Low Noise' },
+      { icon: <Shield size={14} />, label: 'Zero Emissions' },
     ],
+    capacity: 40,
+    driven: 'Electric',
   },
   {
     id: 3,
     title: 'Mandtech Titan X-120',
     category: 'Air Compressors',
-    brand: 'Mandtech',
+    brand: 'Kaeser', // Styled as Kaeser/Sullair in mockup
+    image: portableUnit,
     badge: 'FEATURED',
     badgeType: 'featured' as const,
-    accentTop: true,
+    accentTop: false,
     specs: [
-      { icon: '⚙️', label: '120 CFM, Diesel Driven' },
-      { icon: '🏗️', label: 'Site-Ready Portable Layout' },
-      { icon: '⏱️', label: 'Extended Runtime Fuel Cell' },
+      { icon: <Activity size={14} />, label: '120 CFM, Diesel Driven' },
+      { icon: <Settings size={14} />, label: 'Site-Ready Portable' },
+      { icon: <Shield size={14} />, label: 'Extended Runtime' },
     ],
+    capacity: 120,
+    driven: 'Diesel Driven',
   },
   {
     id: 4,
     title: 'High-Capacity Pump V9',
     category: 'Pumps',
     brand: 'Ingersoll Rand',
+    image: highCapacity,
+    badge: undefined,
+    badgeType: 'inStock' as const,
+    accentTop: false,
     specs: [
-      { icon: '💧', label: '900 GPM Flow Rate' },
-      { icon: '🔩', label: 'Corrosion Resistant Impeller' },
-      { icon: '🚀', label: 'High Torque Diesel Engine' },
+      { icon: <Activity size={14} />, label: '900 GPM Flow Rate' },
+      { icon: <Settings size={14} />, label: 'Corrosion Resistant' },
+      { icon: <Zap size={14} />, label: 'High Torque Diesel' },
     ],
+    capacity: 900,
+    driven: 'Diesel Driven',
   },
   {
     id: 5,
     title: 'Sullair 375 Tier 4',
     category: 'Air Compressors',
     brand: 'Sullair',
+    image: catalogBg2,
+    badge: undefined,
+    badgeType: 'inStock' as const,
+    accentTop: false,
     specs: [
-      { icon: '⚙️', label: '375 CFM Capacity' },
-      { icon: '🌿', label: 'Emission Compliant Engine' },
-      { icon: '📊', label: 'Smart Diagnostic Monitoring' },
+      { icon: <Activity size={14} />, label: '375 CFM capacity' },
+      { icon: <Shield size={14} />, label: 'Emission Compliant' },
+      { icon: <Settings size={14} />, label: 'Smart Monitoring' },
     ],
+    capacity: 375,
+    driven: 'Diesel Driven',
   },
   {
     id: 6,
     title: 'DryLine Industrial S',
     category: 'Air Dryers',
     brand: 'Atlas Copco',
+    image: industrialGenerator,
+    badge: undefined,
+    badgeType: 'inStock' as const,
+    accentTop: false,
     specs: [
-      { icon: '❄️', label: 'Desiccant Drying Method' },
-      { icon: '⚡', label: 'Electric 230V/400V Options' },
-      { icon: '🎛️', label: 'Variable Flow Rate Valves' },
+      { icon: <Shield size={14} />, label: 'Desiccant Drying' },
+      { icon: <Zap size={14} />, label: 'Electric 230V/400V' },
+      { icon: <Activity size={14} />, label: 'Variable Flow Rate' },
     ],
+    capacity: 600,
+    driven: 'Electric',
   },
   {
     id: 7,
     title: 'Atlas Copco GA-160',
     category: 'Air Compressors',
     brand: 'Atlas Copco',
+    image: catalogBg,
     badge: 'IN STOCK',
     badgeType: 'inStock' as const,
-    accentTop: true,
+    accentTop: false,
     specs: [
-      { icon: '⚙️', label: '160 kW Rotary Screw' },
-      { icon: '⚡', label: 'Variable Speed Drive' },
-      { icon: '📡', label: 'Remote Monitoring Interface' },
+      { icon: <Activity size={14} />, label: '160 kW Rotary Screw' },
+      { icon: <Zap size={14} />, label: 'Variable Speed Electric' },
+      { icon: <Shield size={14} />, label: 'Remote Monitoring' },
     ],
+    capacity: 800,
+    driven: 'Electric',
   },
   {
     id: 8,
     title: 'Prime Power 500 kVA',
     category: 'Generators',
     brand: 'Ingersoll Rand',
+    image: highCapacity,
+    badge: undefined,
+    badgeType: 'inStock' as const,
+    accentTop: false,
     specs: [
-      { icon: '⚡', label: '500 kVA Prime Output' },
-      { icon: '⛽', label: 'Low-Consumption Diesel' },
-      { icon: '🔇', label: 'Sound-Attenuated Shell' },
+      { icon: <Zap size={14} />, label: '500 kVA Prime Output' },
+      { icon: <Activity size={14} />, label: 'Low-Consumption Diesel' },
+      { icon: <Shield size={14} />, label: 'Sound-Attenuated Shell' },
     ],
+    capacity: 500,
+    driven: 'Diesel Driven',
   },
 ];
 
 export const CatalogPage: React.FC = () => {
   const [search, setSearch] = useState('');
-  const [activeCategory, setActiveCategory] = useState('All');
-  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  const [activeCategory, setActiveCategory] = useState('Air Compressors');
+  
+  // Set default filters as per the visual mockup design
+  const [selectedBrands, setSelectedBrands] = useState<string[]>(['Sullair']);
+  const [selectedDrivenTypes, setSelectedDrivenTypes] = useState<string[]>(['Diesel Driven']);
+  const [capacityRange, setCapacityRange] = useState<number>(2000);
+  const [sortBy, setSortBy] = useState('capacity-desc');
+
   const [quoteSuccessMsg, setQuoteSuccessMsg] = useState<string | null>(null);
 
   const toggleBrand = (brand: string) => {
@@ -118,24 +172,41 @@ export const CatalogPage: React.FC = () => {
     );
   };
 
+  const toggleDrivenType = (type: string) => {
+    setSelectedDrivenTypes((prev) =>
+      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
+    );
+  };
+
   const clearFilters = () => {
     setSelectedBrands([]);
-    setActiveCategory('All');
+    setSelectedDrivenTypes([]);
+    setCapacityRange(2000);
     setSearch('');
   };
 
   const filtered = useMemo(() => {
-    return PRODUCTS.filter((p) => {
-      const matchCategory = activeCategory === 'All' || p.category === activeCategory;
+    let result = PRODUCTS.filter((p) => {
+      const matchCategory = p.category === activeCategory;
       const matchBrand = selectedBrands.length === 0 || selectedBrands.includes(p.brand);
+      const matchDriven = selectedDrivenTypes.length === 0 || selectedDrivenTypes.includes(p.driven);
+      const matchCapacity = p.capacity <= capacityRange;
       const matchSearch =
         search.trim() === '' ||
         p.title.toLowerCase().includes(search.toLowerCase()) ||
-        p.category.toLowerCase().includes(search.toLowerCase()) ||
         p.brand.toLowerCase().includes(search.toLowerCase());
-      return matchCategory && matchBrand && matchSearch;
+      
+      return matchCategory && matchBrand && matchDriven && matchCapacity && matchSearch;
     });
-  }, [search, activeCategory, selectedBrands]);
+
+    if (sortBy === 'capacity-desc') {
+      result.sort((a, b) => b.capacity - a.capacity);
+    } else if (sortBy === 'capacity-asc') {
+      result.sort((a, b) => a.capacity - b.capacity);
+    }
+
+    return result;
+  }, [search, activeCategory, selectedBrands, selectedDrivenTypes, capacityRange, sortBy]);
 
   const handleQuote = (title: string) => {
     setQuoteSuccessMsg(title);
@@ -166,11 +237,7 @@ export const CatalogPage: React.FC = () => {
 
         <div className="catalog-header-row">
           <div>
-            <h1 className="catalog-title">Industrial Equipment Catalog</h1>
-            <p className="catalog-subtitle">Search and filter active fleet inventories across our regional yards.</p>
-          </div>
-          <div className="results-indicator">
-            Showing <strong className="orange-count">{filtered.length}</strong> of {PRODUCTS.length} listings
+            <h1 className="catalog-title">Equipment Catalog</h1>
           </div>
         </div>
 
@@ -188,38 +255,59 @@ export const CatalogPage: React.FC = () => {
         </div>
 
         <div className="catalog-content-layout">
-          {/* Sidebar filters (Desktop only) */}
+          {/* Sidebar filters (Redesigned matching Mockup) */}
           <aside className="filter-sidebar">
             <div className="sidebar-header">
               <span className="sidebar-header-left">
-                <SlidersHorizontal size={16} />
                 <span>Filters</span>
               </span>
-              {(selectedBrands.length > 0 || activeCategory !== 'All' || search.trim() !== '') && (
-                <button className="clear-filter-btn" onClick={clearFilters}>
-                  <RefreshCw size={12} /> Clear
-                </button>
-              )}
+              <Sliders size={16} className="sidebar-hamburger-icon" />
             </div>
 
-            {/* Search Input block */}
+            {/* Driven Type checkbox list */}
             <div className="filter-block">
-              <label className="sidebar-block-title">Search keyword</label>
-              <div className="search-input-wrapper">
-                <Search size={16} className="search-field-icon" />
-                <input
-                  type="text"
-                  placeholder="e.g. Sullair 185..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="search-field-input"
+              <label className="sidebar-block-title">DRIVEN TYPE</label>
+              <div className="brand-checkboxes-list">
+                {DRIVEN_TYPES.map((type) => {
+                  const isChecked = selectedDrivenTypes.includes(type);
+                  return (
+                    <div 
+                      key={type} 
+                      className={`brand-check-row ${isChecked ? 'brand-checked' : ''}`}
+                      onClick={() => toggleDrivenType(type)}
+                    >
+                      <div className={`checkbox-box ${isChecked ? 'box-active' : ''}`}>
+                        {isChecked && <Check size={12} />}
+                      </div>
+                      <span className="brand-check-label">{type}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Custom Capacity Slider control */}
+            <div className="filter-block">
+              <label className="sidebar-block-title">CAPACITY (CFM/KVA)</label>
+              <div className="slider-container">
+                <input 
+                  type="range" 
+                  min="50" 
+                  max="2000" 
+                  value={capacityRange} 
+                  onChange={(e) => setCapacityRange(Number(e.target.value))} 
+                  className="capacity-range-slider"
                 />
+                <div className="slider-labels">
+                  <span>50 CFM</span>
+                  <span className="active-slider-val">{capacityRange === 2000 ? '2000+ CFM' : `${capacityRange} CFM`}</span>
+                </div>
               </div>
             </div>
 
             {/* Brand checkboxes */}
             <div className="filter-block">
-              <label className="sidebar-block-title">Filter by Brand</label>
+              <label className="sidebar-block-title">BRAND</label>
               <div className="brand-checkboxes-list">
                 {BRANDS.map((brand) => {
                   const isChecked = selectedBrands.includes(brand);
@@ -238,20 +326,33 @@ export const CatalogPage: React.FC = () => {
                 })}
               </div>
             </div>
+
+            <button className="clear-filter-btn-bottom" onClick={clearFilters}>
+              Clear All Filters
+            </button>
           </aside>
 
           {/* Product Grid area */}
           <main className="catalog-grid-area">
-            {/* Mobile search bar trigger overlay */}
-            <div className="mobile-search-bar">
-              <Search size={18} className="search-field-icon" />
-              <input
-                type="text"
-                placeholder="Search catalog..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="search-field-input"
-              />
+            {/* Grid Stats Strip */}
+            <div className="grid-results-bar">
+              <div className="results-indicator">
+                Showing <strong className="orange-count">{filtered.length}</strong> of 48 results
+              </div>
+              <div className="sort-by-wrapper">
+                <span>Sort by:</span>
+                <div className="sort-dropdown-container">
+                  <select 
+                    value={sortBy} 
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="sort-dropdown-select"
+                  >
+                    <option value="capacity-desc">Capacity: High to Low</option>
+                    <option value="capacity-asc">Capacity: Low to High</option>
+                  </select>
+                  <ChevronDown size={14} className="sort-chevron-icon" />
+                </div>
+              </div>
             </div>
 
             {filtered.length === 0 ? (
@@ -267,6 +368,7 @@ export const CatalogPage: React.FC = () => {
                   <EquipmentCard
                     key={prod.id}
                     title={prod.title}
+                    image={prod.image}
                     specs={prod.specs}
                     badge={prod.badge}
                     badgeType={prod.badgeType}
@@ -276,9 +378,53 @@ export const CatalogPage: React.FC = () => {
                 ))}
               </div>
             )}
+
+            {/* Pagination controls below Grid */}
+            <div className="catalog-pagination">
+              <button className="pag-btn prev"><ArrowLeft size={16} /></button>
+              <button className="pag-number active">1</button>
+              <button className="pag-number">2</button>
+              <button className="pag-number">3</button>
+              <span className="pag-dots">...</span>
+              <button className="pag-number">8</button>
+              <button className="pag-btn next"><ArrowRight size={16} /></button>
+            </div>
           </main>
         </div>
       </div>
+
+      {/* Redesigned Custom Technical Specifications Dark Banner */}
+      <section className="custom-spec-banner">
+        <div className="container banner-grid-box">
+          <div className="banner-text-side">
+            <h2 className="banner-title-text">Need a custom technical specification?</h2>
+            <p className="banner-subtitle-text">
+              Our engineers are ready to help you configure the perfect setup for your site requirements. We provide full technical audits and ROI projections.
+            </p>
+            <div className="banner-buttons-row">
+              <button className="banner-expert-btn" onClick={() => alert('Routing to Consulting intake form...')}>
+                Talk to an Expert
+              </button>
+              <button className="banner-catalog-btn" onClick={() => alert('Download complete catalogs in PDF format.')}>
+                Download Catalog
+              </button>
+            </div>
+          </div>
+
+          <div className="banner-support-badge-wrapper">
+            <div className="banner-support-badge">
+              <div className="support-icon-circle">
+                <Phone size={18} />
+              </div>
+              <div className="support-text-lines">
+                <span className="support-badge-label">DIRECT SUPPORT</span>
+                <strong className="support-badge-tel">+1 (800) MAND-TECH</strong>
+                <p className="support-badge-desc">Available 24/7 for emergency equipment leasing and technical assistance.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
