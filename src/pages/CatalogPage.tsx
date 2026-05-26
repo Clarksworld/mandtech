@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Sliders, Zap, Shield, ChevronDown, Check, X, Phone, ArrowLeft, ArrowRight, Activity, Settings } from 'lucide-react';
+import { Sliders, Zap, Shield, ChevronDown, Check, X, Phone, ArrowLeft, ArrowRight, Activity, Settings } from 'lucide-react';
 import { EquipmentCard } from '../components/Card';
 import './CatalogPage.css';
 
