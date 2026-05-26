@@ -1,0 +1,108 @@
+.equipment-card {
+  background-color: var(--surface);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-sm);
+  padding: 24px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-card);
+  transition: var(--transition-smooth);
+}
+
+.equipment-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-premium);
+  border-color: var(--primary-container);
+}
+
+.accent-top {
+  border-top: 4px solid var(--primary-container);
+}
+
+.card-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border-radius: var(--radius-xs);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.badge-inStock {
+  background-color: var(--deep-charcoal);
+  color: var(--on-primary);
+}
+
+.badge-featured {
+  background-color: var(--primary-container);
+  color: var(--deep-charcoal);
+}
+
+.stock-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--success);
+  display: inline-block;
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--deep-charcoal);
+  margin-bottom: 12px;
+}
+
+.card-specs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-grow: 1;
+}
+
+.spec-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--on-surface-muted);
+  font-size: 14px;
+}
+
+.spec-icon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+.card-quote-btn {
+  background-color: var(--primary-container);
+  color: var(--deep-charcoal);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  text-align: center;
+  transition: var(--transition-smooth);
+}
+
+.card-quote-btn:hover {
+  background-color: var(--primary);
+  color: var(--on-primary);
+}
+
+/* Info Card styling */
+.info-card {
+  background-color: var(--surface);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-md);
+  padding: 32px;
+  box-shadow: var(--shadow-card);
+  transition: var(--transition-smooth);
+}
