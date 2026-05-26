@@ -5,19 +5,21 @@ import HomePage from './pages/HomePage';
 import CatalogPage from './pages/CatalogPage';
 import AfterSalesPage from './pages/AfterSalesPage';
 import ContactPage from './pages/ContactPage';
+import EquipmentSalesPage from './pages/EquipmentSalesPage';
 import './App.css';
 
-type ActivePage = 'home' | 'catalog' | 'aftersales' | 'contact';
+type ActivePage = 'home' | 'catalog' | 'equipmentSales' | 'aftersales' | 'contact';
 
 export default function App() {
-  const [activePage, setActivePage] = useState<ActivePage>('home');
+  const [activePage, setActivePage] = useState<ActivePage>('catalog'); // Set 'catalog' active to default to the Parts Catalog as per mockup
   const [showStatusModal, setShowStatusModal] = useState(false);
-  const [emailInput, setEmailInput] = useState('');
 
   const renderActivePage = () => {
     switch (activePage) {
       case 'home':
         return <HomePage onNavigate={(page) => setActivePage(page as ActivePage)} />;
+      case 'equipmentSales':
+        return <EquipmentSalesPage />;
       case 'catalog':
         return <CatalogPage />;
       case 'aftersales':
@@ -26,14 +28,6 @@ export default function App() {
         return <ContactPage />;
       default:
         return <HomePage onNavigate={(page) => setActivePage(page as ActivePage)} />;
-    }
-  };
-
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (emailInput.trim()) {
-      alert(`Newsletter subscription registered for: ${emailInput}`);
-      setEmailInput('');
     }
   };
 
@@ -89,19 +83,19 @@ export default function App() {
               Home
             </button>
             <button
-              className={`nav-item-btn ${activePage === 'catalog' ? 'nav-active' : ''}`}
-              onClick={() => setActivePage('catalog')}
+              className={`nav-item-btn ${activePage === 'equipmentSales' ? 'nav-active' : ''}`}
+              onClick={() => setActivePage('equipmentSales')}
             >
               Equipment Sales
             </button>
             <button
-              className={`nav-item-btn`}
+              className={`nav-item-btn ${activePage === 'catalog' ? 'nav-active' : ''}`}
               onClick={() => setActivePage('catalog')}
             >
               Parts Catalog
             </button>
             <button
-              className={`nav-item-btn`}
+              className={`nav-item-btn ${activePage === 'contact' ? 'nav-active' : ''}`}
               onClick={() => setActivePage('contact')}
             >
               Leasing & Rentals
@@ -157,27 +151,19 @@ export default function App() {
                 <span className="brand-secondary-name text-white">Services</span>
               </div>
             </div>
-            <p className="footer-brand-desc">
-              Pioneering industrial reliability through superior equipment and unmatched technical expertise since 2008.
+            <p className="footer-brand-desc" style={{ marginTop: '12px' }}>
+              Industrial excellence in equipment lifecycle management and parts distribution.
             </p>
-            <div className="footer-social-row">
-              <button className="footer-social-btn" onClick={() => alert('Corporate Website: www.mandtech.com.ng')}>
-                <Globe size={16} />
-              </button>
-              <button className="footer-social-btn" onClick={() => alert('Share Mandtech Services profile link.')}>
-                <Share2 size={16} />
-              </button>
-            </div>
           </div>
 
           {/* Column 2: Quick Links */}
           <div className="footer-links-column">
             <h4 className="footer-section-title">Quick Links</h4>
             <ul className="footer-items-list">
-              <li><button onClick={() => setActivePage('catalog')}>Parts Catalog</button></li>
-              <li><button onClick={() => setActivePage('catalog')}>Equipment Sales</button></li>
-              <li><button onClick={() => setActivePage('aftersales')}>Service Request</button></li>
-              <li><button onClick={() => setActivePage('contact')}>Leasing Terms</button></li>
+              <li><button onClick={() => setActivePage('equipmentSales')}>Equipment Sales</button></li>
+              <li><button onClick={() => setActivePage('contact')}>Leasing & Rentals</button></li>
+              <li><button onClick={() => setActivePage('catalog')} style={{ textDecoration: 'underline', color: 'var(--primary-container)' }}>Parts Catalog</button></li>
+              <li><button onClick={() => setActivePage('aftersales')}>After-Sales</button></li>
             </ul>
           </div>
 
@@ -185,44 +171,38 @@ export default function App() {
           <div className="footer-links-column">
             <h4 className="footer-section-title">Resources</h4>
             <ul className="footer-items-list">
-              <li><button onClick={() => alert('Sitemap directory load')}>Sitemap</button></li>
-              <li><button onClick={() => alert('Privacy Policy document download')}>Privacy Policy</button></li>
-              <li><button onClick={() => alert('Terms of Service document download')}>Terms of Service</button></li>
-              <li><button onClick={() => alert('Technical data sheets catalog loaded')}>Technical Data</button></li>
+              <li><button onClick={() => alert('Loading Maintenance Manuals...')}>Maintenance Manuals</button></li>
+              <li><button onClick={() => setActivePage('aftersales')}>Service Request</button></li>
+              <li><button onClick={() => alert('Loading Technical Guides...')}>Technical Guides</button></li>
+              <li><button onClick={() => alert('Loading OEM Compliance resources...')}>OEM Compliance</button></li>
             </ul>
           </div>
 
-          {/* Column 4: Newsletter */}
-          <div className="footer-newsletter-column">
-            <h4 className="footer-section-title">Newsletter</h4>
-            <p className="footer-newsletter-desc">
-              Stay updated with our latest industrial solutions.
+          {/* Column 4: Contact Us */}
+          <div className="footer-links-column">
+            <h4 className="footer-section-title">Contact Us</h4>
+            <p className="footer-contact-text" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13.5px', lineHeight: '1.6', marginBottom: '12px' }}>
+              Plot 24A, Industrial Area Phase II,<br />Johannesburg, SA
             </p>
-            <form className="footer-newsletter-form" onSubmit={handleNewsletterSubmit}>
-              <input 
-                type="email" 
-                placeholder="Email Address" 
-                required 
-                className="footer-newsletter-input"
-                value={emailInput}
-                onChange={(e) => setEmailInput(e.target.value)}
-              />
-              <button type="submit" className="footer-newsletter-submit">
-                <Share2 size={16} style={{ transform: 'rotate(45deg)' }} />
-              </button>
-            </form>
+            <p className="footer-contact-email" style={{ fontSize: '13.5px' }}>
+              <a href="mailto:parts@mandtech.co.za" style={{ color: 'rgba(255,255,255,0.7)', transition: 'color 0.2s' }} onMouseOver={(e) => (e.target as HTMLElement).style.color = '#ffffff'} onMouseOut={(e) => (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.7)'}>
+                parts@mandtech.co.za
+              </a>
+            </p>
           </div>
         </div>
 
         {/* Bottom footer credit */}
         <div className="footer-bottom-bar">
-          <div className="container bottom-bar-inner">
+          <div className="container bottom-bar-inner" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
             <span className="copyright-text">
-              © 2024 Mandtech Services, All Rights Reserved.
+              © 2024 Mandtech Services. All Rights Reserved.
             </span>
-            <button className="footer-contact-link" onClick={() => setActivePage('contact')}>
-              Contact Us
-            </button>
+            <div className="footer-bottom-links" style={{ display: 'flex', gap: '20px' }}>
+              <button onClick={() => alert('Sitemap')} style={{ color: 'rgba(255,255,255,0.5)', fontSize: '12px', transition: 'color 0.2s' }} onMouseOver={(e) => (e.target as HTMLElement).style.color = '#ffffff'} onMouseOut={(e) => (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.5)'}>Sitemap</button>
+              <button onClick={() => alert('Privacy Policy')} style={{ color: 'rgba(255,255,255,0.5)', fontSize: '12px', transition: 'color 0.2s' }} onMouseOver={(e) => (e.target as HTMLElement).style.color = '#ffffff'} onMouseOut={(e) => (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.5)'}>Privacy Policy</button>
+              <button onClick={() => alert('Terms of Service')} style={{ color: 'rgba(255,255,255,0.5)', fontSize: '12px', transition: 'color 0.2s' }} onMouseOver={(e) => (e.target as HTMLElement).style.color = '#ffffff'} onMouseOut={(e) => (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.5)'}>Terms of Service</button>
+            </div>
           </div>
         </div>
       </footer>
