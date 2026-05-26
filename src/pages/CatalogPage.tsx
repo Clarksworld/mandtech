@@ -106,7 +106,7 @@ const PRODUCTS = [
 ];
 
 // Helper to deduce mockup display category (e.g. SULLAIR • FILTRATION)
-const getDisplayCategory = (brand: string, category: string, title: string) => {
+const getDisplayCategory = (category: string, title: string) => {
   if (title.toLowerCase().includes('valve')) return 'VALVES';
   if (title.toLowerCase().includes('sensor')) return 'SENSORS';
   if (category === 'Air Filtration') return 'FILTRATION';
@@ -140,7 +140,7 @@ const PartCard: React.FC<PartCardProps> = ({
   onAdd
 }) => {
   const displayBrand = brand === 'Universal' ? 'UNIVERSAL' : brand.toUpperCase();
-  const displayCategory = getDisplayCategory(brand, category, title);
+  const displayCategory = getDisplayCategory(category, title);
 
   return (
     <div className="part-card">

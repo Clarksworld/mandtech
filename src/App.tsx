@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ShieldCheck, Search, Globe, Share2 } from 'lucide-react';
+import { ShieldCheck, Search } from 'lucide-react';
 import { MandtechLogo } from './components/Logo';
 import HomePage from './pages/HomePage';
 import CatalogPage from './pages/CatalogPage';

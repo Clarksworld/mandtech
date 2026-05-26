@@ -1,4 +1,3 @@
-import React from 'react';
 import './EquipmentSalesPage.css';
 
 export default function EquipmentSalesPage() {
