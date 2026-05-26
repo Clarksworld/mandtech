@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ShieldCheck, Search } from 'lucide-react';
+import { ShieldCheck, Search, Share2, Mail } from 'lucide-react';
 import { MandtechLogo } from './components/Logo';
 import HomePage from './pages/HomePage';
 import CatalogPage from './pages/CatalogPage';
@@ -11,7 +11,7 @@ import './App.css';
 type ActivePage = 'home' | 'catalog' | 'equipmentSales' | 'aftersales' | 'contact';
 
 export default function App() {
-  const [activePage, setActivePage] = useState<ActivePage>('catalog'); // Set 'catalog' active to default to the Parts Catalog as per mockup
+  const [activePage, setActivePage] = useState<ActivePage>('equipmentSales'); // Default to Equipment Sales as per mockup
   const [showStatusModal, setShowStatusModal] = useState(false);
 
   const renderActivePage = () => {
@@ -145,63 +145,62 @@ export default function App() {
           {/* Column 1: Brand description and social */}
           <div className="footer-brand-column">
             <div className="footer-brand-logo" onClick={() => setActivePage('home')} style={{ cursor: 'pointer' }}>
-              <MandtechLogo size={32} color="#FFFFFF" accentColor="var(--primary-container)" />
-              <div className="brand-text-block">
-                <span className="brand-primary-name text-orange">Mandtech</span>
-                <span className="brand-secondary-name text-white">Services</span>
+              <div className="brand-text-block" style={{ marginLeft: 0 }}>
+                <span className="brand-primary-name text-white">Mandtech</span>
+                <span className="brand-secondary-name text-white" style={{ display: 'block', marginTop: '2px' }}>Services</span>
               </div>
             </div>
-            <p className="footer-brand-desc" style={{ marginTop: '12px' }}>
-              Industrial excellence in equipment lifecycle management and parts distribution.
+            <p className="footer-brand-desc" style={{ marginTop: '16px', color: 'rgba(255,255,255,0.7)', fontSize: '13px', lineHeight: '1.6' }}>
+              Providing premium industrial equipment solutions and technical services across global engineering sectors since 2004.
             </p>
           </div>
 
-          {/* Column 2: Quick Links */}
+          {/* Column 2: Product Lines */}
           <div className="footer-links-column">
-            <h4 className="footer-section-title">Quick Links</h4>
-            <ul className="footer-items-list">
-              <li><button onClick={() => setActivePage('equipmentSales')}>Equipment Sales</button></li>
-              <li><button onClick={() => setActivePage('contact')}>Leasing & Rentals</button></li>
-              <li><button onClick={() => setActivePage('catalog')} style={{ textDecoration: 'underline', color: 'var(--primary-container)' }}>Parts Catalog</button></li>
-              <li><button onClick={() => setActivePage('aftersales')}>After-Sales</button></li>
+            <h4 className="footer-section-title" style={{ fontSize: '11px', letterSpacing: '0.8px', textTransform: 'uppercase', color: '#ffffff', marginBottom: '18px' }}>Product Lines</h4>
+            <ul className="footer-items-list" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <li><button onClick={() => setActivePage('equipmentSales')} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>Air Compressors</button></li>
+              <li><button onClick={() => setActivePage('equipmentSales')} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>Industrial Generators</button></li>
+              <li><button onClick={() => setActivePage('equipmentSales')} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>Fluid Management Pumps</button></li>
+              <li><button onClick={() => setActivePage('equipmentSales')} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>Desiccant Air Dryers</button></li>
             </ul>
           </div>
 
-          {/* Column 3: Resources */}
+          {/* Column 3: Services */}
           <div className="footer-links-column">
-            <h4 className="footer-section-title">Resources</h4>
-            <ul className="footer-items-list">
-              <li><button onClick={() => alert('Loading Maintenance Manuals...')}>Maintenance Manuals</button></li>
-              <li><button onClick={() => setActivePage('aftersales')}>Service Request</button></li>
-              <li><button onClick={() => alert('Loading Technical Guides...')}>Technical Guides</button></li>
-              <li><button onClick={() => alert('Loading OEM Compliance resources...')}>OEM Compliance</button></li>
+            <h4 className="footer-section-title" style={{ fontSize: '11px', letterSpacing: '0.8px', textTransform: 'uppercase', color: '#ffffff', marginBottom: '18px' }}>Services</h4>
+            <ul className="footer-items-list" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <li><button onClick={() => alert('Loading On-Site Maintenance...')} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>On-Site Maintenance</button></li>
+              <li><button onClick={() => setActivePage('contact')} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>Equipment Rentals</button></li>
+              <li><button onClick={() => alert('Loading System Audits...')} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>System Audits</button></li>
+              <li><button onClick={() => setActivePage('catalog')} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>Parts & Spares</button></li>
             </ul>
           </div>
 
-          {/* Column 4: Contact Us */}
+          {/* Column 4: Connect */}
           <div className="footer-links-column">
-            <h4 className="footer-section-title">Contact Us</h4>
-            <p className="footer-contact-text" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13.5px', lineHeight: '1.6', marginBottom: '12px' }}>
-              Plot 24A, Industrial Area Phase II,<br />Johannesburg, SA
-            </p>
-            <p className="footer-contact-email" style={{ fontSize: '13.5px' }}>
-              <a href="mailto:parts@mandtech.co.za" style={{ color: 'rgba(255,255,255,0.7)', transition: 'color 0.2s' }} onMouseOver={(e) => (e.target as HTMLElement).style.color = '#ffffff'} onMouseOut={(e) => (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.7)'}>
-                parts@mandtech.co.za
-              </a>
+            <h4 className="footer-section-title" style={{ fontSize: '11px', letterSpacing: '0.8px', textTransform: 'uppercase', color: '#ffffff', marginBottom: '18px' }}>Connect</h4>
+            <div className="footer-social-icons" style={{ display: 'flex', gap: '12px', marginBottom: '24px' }}>
+              <button style={{ width: '36px', height: '36px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', backgroundColor: 'transparent' }}><Share2 size={16} /></button>
+              <button style={{ width: '36px', height: '36px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', backgroundColor: 'transparent' }}><Mail size={16} /></button>
+            </div>
+            <p className="footer-contact-text" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px', lineHeight: '1.6' }}>
+              HQ: Industrial Zone 4, Block 12,<br />Houston, TX
             </p>
           </div>
         </div>
 
         {/* Bottom footer credit */}
-        <div className="footer-bottom-bar">
+        <div className="footer-bottom-bar" style={{ borderTop: '1px solid rgba(255,255,255,0.05)', padding: '24px 0', marginTop: '48px' }}>
           <div className="container bottom-bar-inner" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
-            <span className="copyright-text">
+            <span className="copyright-text" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '12px' }}>
               © 2024 Mandtech Services. All Rights Reserved.
             </span>
-            <div className="footer-bottom-links" style={{ display: 'flex', gap: '20px' }}>
+            <div className="footer-bottom-links" style={{ display: 'flex', gap: '24px' }}>
               <button onClick={() => alert('Sitemap')} style={{ color: 'rgba(255,255,255,0.5)', fontSize: '12px', transition: 'color 0.2s' }} onMouseOver={(e) => (e.target as HTMLElement).style.color = '#ffffff'} onMouseOut={(e) => (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.5)'}>Sitemap</button>
               <button onClick={() => alert('Privacy Policy')} style={{ color: 'rgba(255,255,255,0.5)', fontSize: '12px', transition: 'color 0.2s' }} onMouseOver={(e) => (e.target as HTMLElement).style.color = '#ffffff'} onMouseOut={(e) => (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.5)'}>Privacy Policy</button>
               <button onClick={() => alert('Terms of Service')} style={{ color: 'rgba(255,255,255,0.5)', fontSize: '12px', transition: 'color 0.2s' }} onMouseOver={(e) => (e.target as HTMLElement).style.color = '#ffffff'} onMouseOut={(e) => (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.5)'}>Terms of Service</button>
+              <button onClick={() => alert('Contact Us')} style={{ color: 'rgba(255,255,255,0.5)', fontSize: '12px', transition: 'color 0.2s' }} onMouseOver={(e) => (e.target as HTMLElement).style.color = '#ffffff'} onMouseOut={(e) => (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.5)'}>Contact Us</button>
             </div>
           </div>
         </div>
