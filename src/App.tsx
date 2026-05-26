@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Bell, Info, ShieldCheck, Mail, MapPin, PhoneCall, Heart } from 'lucide-react';
+import { useState } from 'react';
+import { Bell, ShieldCheck, Mail, MapPin, PhoneCall, Heart } from 'lucide-react';
 import { MandtechLogo } from './components/Logo';
 import HomePage from './pages/HomePage';
 import CatalogPage from './pages/CatalogPage';

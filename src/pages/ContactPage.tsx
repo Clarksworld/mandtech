@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Check, Send, Clock } from 'lucide-react';
+import { Mail, Phone, MapPin, Check, Clock } from 'lucide-react';
 import { InputField, CheckboxItem } from '../components/FormFields';
 import { Button } from '../components/Button';
 import { InfoCard } from '../components/Card';
