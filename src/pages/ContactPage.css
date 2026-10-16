@@ -304,3 +304,95 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Attached Procurement Basket Items Card */
+.attached-inquiry-box {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-left: 4px solid var(--primary-container);
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+}
+
+.attached-inquiry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.attached-inquiry-title {
+  font-family: var(--font-headers);
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--deep-charcoal);
+  margin: 0;
+}
+
+.attached-clear-all-btn {
+  background: transparent;
+  border: none;
+  color: #ef4444;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 2px 6px;
+}
+
+.attached-clear-all-btn:hover {
+  text-decoration: underline;
+}
+
+.attached-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.attached-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+.attached-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.attached-item-name {
+  font-weight: 700;
+  color: var(--deep-charcoal);
+}
+
+.attached-item-sub {
+  font-size: 11.5px;
+  color: #64748b;
+}
+
+.attached-remove-btn {
+  background: #f1f5f9;
+  border: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.attached-remove-btn:hover {
+  background: #fee2e2;
+  color: #ef4444;
+}

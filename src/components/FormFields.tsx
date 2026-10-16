@@ -34,25 +34,25 @@ export const InputField: React.FC<InputFieldProps> = ({
         <textarea
           id={inputId}
           value={value}
-          onChange={onChange as any}
+          onChange={onChange as React.ChangeEventHandler<HTMLTextAreaElement>}
           placeholder={placeholder}
           rows={rows}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           className="field-input field-textarea"
-          {...(props as any)}
+          {...(props as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
         />
       ) : (
         <input
           id={inputId}
           type={type}
           value={value}
-          onChange={onChange}
+          onChange={onChange as React.ChangeEventHandler<HTMLInputElement>}
           placeholder={placeholder}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           className="field-input"
-          {...props}
+          {...(props as React.InputHTMLAttributes<HTMLInputElement>)}
         />
       )}
     </div>

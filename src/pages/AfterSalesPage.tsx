@@ -30,23 +30,41 @@ export const AfterSalesPage: React.FC = () => {
   const [intakeLoading, setIntakeLoading] = useState(false);
   const [successIntakeTicket, setSuccessIntakeTicket] = useState<string | null>(null);
 
+interface TicketLog {
+  time: string;
+  text: string;
+}
+
+interface TrackedTicketData {
+  id?: string;
+  status?: string;
+  engineer?: string;
+  eta?: string;
+  severity?: string;
+  logs?: TicketLog[];
+  error?: boolean;
+  message?: string;
+}
+
   // Tracker state
   const [ticketSearch, setTicketSearch] = useState('');
   const [trackerLoading, setTrackerLoading] = useState(false);
-  const [trackedTicket, setTrackedTicket] = useState<any>(null);
+  const [trackedTicket, setTrackedTicket] = useState<TrackedTicketData | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
 
   const handleSubmitIntake = (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError(null);
     if (!assetId.trim()) {
-      alert('Please fill out the Asset ID/Serial Number.');
+      setFormError('Please fill out the Asset ID / Serial Number.');
       return;
     }
     if (!description.trim()) {
-      alert('Please fill out the service request description.');
+      setFormError('Please fill out the service request description.');
       return;
     }
     if (!agreeLogs) {
-      alert('Please authorize dispatch terms to proceed.');
+      setFormError('Please check the authorization box to authorize emergency technician dispatch.');
       return;
     }
 
@@ -61,6 +79,35 @@ export const AfterSalesPage: React.FC = () => {
       setDescription('');
       setAgreeLogs(false);
     }, 1500);
+  };
+
+  const handleDownloadGuide = (title: string) => {
+    const content = `MANDTECH SERVICES TECHNICAL DOCUMENTATION
+-------------------------------------------
+Document: ${title}
+Source: Mandtech Technical Operations Library
+Standards: ISO 9001 / OEM Maintenance Specifications
+
+TABLE OF CONTENTS:
+1. Daily Operational Safety Protocols
+2. Pre-Ignition Pressure & Fluid Level Inspections
+3. Lubrication Interval Logging (250h / 500h / 1000h)
+4. Emergency Pressure Relief & Shutdown Steps
+5. Authorized Spare Parts Matrix & Filter Sizing
+
+For engineering assistance or dispatch:
+Technical Hotline: +234 (1) 460-7000
+Lagos Yard VI | Port Harcourt Yard`;
+
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${title.replace(/[^a-zA-Z0-9]/g, '_')}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   const handleTrackTicket = (e: React.FormEvent) => {
@@ -171,6 +218,20 @@ export const AfterSalesPage: React.FC = () => {
 
                 <InfoCard className="form-card-wrapper">
                   <h3 className="form-inner-title">Log a New Support Request</h3>
+                  {formError && (
+                    <div style={{
+                      background: '#fef2f2',
+                      border: '1px solid #f87171',
+                      borderRadius: '6px',
+                      padding: '12px 16px',
+                      marginBottom: '16px',
+                      color: '#b91c1c',
+                      fontSize: '13.5px',
+                      fontWeight: 600
+                    }}>
+                      ⚠️ {formError}
+                    </div>
+                  )}
                   <form onSubmit={handleSubmitIntake}>
                     <InputField
                       label="Asset Serial ID / Machine Tag"
@@ -309,12 +370,12 @@ export const AfterSalesPage: React.FC = () => {
                   {/* Log timeline */}
                   <h4 className="logs-timeline-title">DISPATCH TIME LOGS</h4>
                   <div className="timeline-container">
-                    {trackedTicket.logs.map((log: any, idx: number) => (
+                    {trackedTicket.logs?.map((log: TicketLog, idx: number) => (
                       <div key={idx} className="timeline-row">
                         <span className="timeline-time">{log.time}</span>
                         <div className="timeline-bullet-wrapper">
                           <span className="timeline-bullet"></span>
-                          {idx < trackedTicket.logs.length - 1 && <span className="timeline-line"></span>}
+                          {idx < (trackedTicket.logs?.length ?? 0) - 1 && <span className="timeline-line"></span>}
                         </div>
                         <p className="timeline-text">{log.text}</p>
                       </div>
@@ -358,7 +419,7 @@ export const AfterSalesPage: React.FC = () => {
                       </div>
                       <button 
                         className="guide-download-btn"
-                        onClick={() => alert(`Downloading technical manual: "${g.title}"`)}
+                        onClick={() => handleDownloadGuide(g.title)}
                       >
                         Download <ArrowRight size={14} />
                       </button>

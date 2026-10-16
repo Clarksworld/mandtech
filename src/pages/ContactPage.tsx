@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Check, Clock } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Mail, Phone, MapPin, Check, Clock, X } from 'lucide-react';
+import { useInquiry } from '../context/InquiryContext';
 import { InputField, CheckboxItem } from '../components/FormFields';
 import { Button } from '../components/Button';
 import { InfoCard } from '../components/Card';
@@ -7,14 +8,14 @@ import './ContactPage.css';
 
 const BRANCHES = [
   {
-    city: 'Lagos Headquarters',
+    city: 'Lagos Headquarters & Yard',
     addr: 'Industrial Park Phase II, Victoria Island, Lagos, Nigeria',
     phone: '+234 (1) 460-7000',
     email: 'lagos@mandtech.com.ng',
     gps: '6.4281° N, 3.4219° E',
   },
   {
-    city: 'Port Harcourt Yard',
+    city: 'Port Harcourt Trans-Amadi Hub',
     addr: 'Plot 15, Trans-Amadi Industrial Layout, Port Harcourt, Nigeria',
     phone: '+234 (84) 303-900',
     email: 'ph@mandtech.com.ng',
@@ -23,7 +24,9 @@ const BRANCHES = [
 ];
 
 export const ContactPage: React.FC = () => {
-  // Inquiry state
+  const { inquiryItems, removeFromInquiry, clearInquiry } = useInquiry();
+
+  // Inquiry form state
   const [name, setName] = useState('');
   const [company, setCompany] = useState('');
   const [email, setEmail] = useState('');
@@ -39,32 +42,52 @@ export const ContactPage: React.FC = () => {
   const [newsletter, setNewsletter] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submittedTicketNo, setSubmittedTicketNo] = useState('');
+  const [formError, setFormError] = useState<string | null>(null);
+
+  // Auto-check equipment categories if items are in the basket
+  useEffect(() => {
+    inquiryItems.forEach(item => {
+      const cat = item.category.toLowerCase();
+      const title = item.title.toLowerCase();
+      if (cat.includes('compress') || title.includes('compress') || title.includes('cfm')) setEquipCompressors(true);
+      if (cat.includes('gen') || title.includes('gen') || title.includes('kva')) setEquipGenerators(true);
+      if (cat.includes('pump') || title.includes('pump') || title.includes('gpm')) setEquipPumps(true);
+      if (cat.includes('dry') || title.includes('dry')) setEquipDryers(true);
+    });
+  }, [inquiryItems]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError(null);
+
     if (!name.trim()) {
-      alert('Please enter your full name.');
+      setFormError('Please enter your full contact person name.');
       return;
     }
     if (!company.trim()) {
-      alert('Please enter your company name.');
+      setFormError('Please enter your organization or company name.');
       return;
     }
     if (!email.trim() || !email.includes('@')) {
-      alert('Please enter a valid business email.');
+      setFormError('Please enter a valid business email address.');
       return;
     }
-    if (!message.trim()) {
-      alert('Please describe your requirements.');
+    if (!message.trim() && inquiryItems.length === 0) {
+      setFormError('Please describe your equipment requirements or attach items from the catalog.');
       return;
     }
 
     setSubmitting(true);
     setTimeout(() => {
       setSubmitting(false);
+      const ticket = 'RFQ-' + Math.floor(100000 + Math.random() * 900000);
+      setSubmittedTicketNo(ticket);
       setSubmitted(true);
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      // Reset state
+
+      // Clear state and cart
+      clearInquiry();
       setName('');
       setCompany('');
       setEmail('');
@@ -77,7 +100,7 @@ export const ContactPage: React.FC = () => {
       
       setTimeout(() => {
         setSubmitted(false);
-      }, 5000);
+      }, 7000);
     }, 1500);
   };
 
@@ -87,13 +110,19 @@ export const ContactPage: React.FC = () => {
         {/* Submitted notification banner */}
         {submitted && (
           <div className="contact-success-banner">
-            <span className="success-banner-badge"><Check size={16} /></span>
+            <span className="success-banner-badge"><Check size={18} /></span>
             <div className="success-banner-content">
-              <h4 className="success-banner-title">Proposal Inquiry Received</h4>
+              <h4 className="success-banner-title">Formal Proposal Inquiry Received ({submittedTicketNo})</h4>
               <p className="success-banner-text">
-                Your technical specifications have been submitted successfully. A regional engineering coordinator will respond within <strong>2 hours</strong> with formal proposals.
+                Your technical specifications have been submitted successfully. A regional engineering coordinator will review and respond within <strong>2 hours</strong> with formal pricing and mobilization timeline.
               </p>
             </div>
+            <button
+              onClick={() => setSubmitted(false)}
+              style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#065f46' }}
+            >
+              <X size={18} />
+            </button>
           </div>
         )}
 
@@ -101,14 +130,14 @@ export const ContactPage: React.FC = () => {
         <div className="contact-header">
           <h1 className="contact-title">Contact &amp; Proposal Intake</h1>
           <p className="contact-subtitle">
-            Partner with our field application team to configure, dispatch, or contract heavy industrial assets.
+            Partner with our field application team to configure equipment sizing, procure genuine spares, or contract heavy industrial fleet leases.
           </p>
         </div>
 
         <div className="contact-grid-layout">
           {/* Left Side: Regional Directories */}
           <div className="contact-info-column">
-            <h2 className="column-section-title">OUR REGIONAL YARDS</h2>
+            <h2 className="column-section-title">OUR REGIONAL HUBS</h2>
             <div className="branches-list">
               {BRANCHES.map((b, i) => (
                 <InfoCard key={i} className="branch-info-card">
@@ -136,12 +165,12 @@ export const ContactPage: React.FC = () => {
               <a href="tel:+23414607000" className="quick-contact-tile">
                 <span className="tile-icon-wrapper">📞</span>
                 <span className="tile-title">Lagos Dispatch Annex</span>
-                <span className="tile-desc">Tap to dial Lagos yard instantly.</span>
+                <span className="tile-desc">Direct hotline for emergency dispatch.</span>
               </a>
-              <a href="mailto:info@mandtech.com.ng" className="quick-contact-tile">
+              <a href="mailto:proposals@mandtech.com.ng" className="quick-contact-tile">
                 <span className="tile-icon-wrapper">✉️</span>
                 <span className="tile-title">Corporate RFQ Mailbox</span>
-                <span className="tile-desc">Direct route for RFQ files.</span>
+                <span className="tile-desc">Fast-track route for bid tender packages.</span>
               </a>
             </div>
 
@@ -159,8 +188,8 @@ export const ContactPage: React.FC = () => {
                   <strong>9:00 AM – 1:00 PM</strong>
                 </div>
                 <div className="hours-row">
-                  <span>Sunday &amp; Holidays</span>
-                  <span className="closed-label">Closed (Hotline Active)</span>
+                  <span>Sunday &amp; Public Holidays</span>
+                  <span className="closed-label">Emergency Fleet Hotline Active (24/7)</span>
                 </div>
               </div>
             </InfoCard>
@@ -169,10 +198,64 @@ export const ContactPage: React.FC = () => {
           {/* Right Side: Heavy Industry Intake Form */}
           <div className="contact-form-column">
             <InfoCard className="contact-form-wrapper">
-              <h3 className="form-inner-title">Submit a Technical Consulting Inquiry</h3>
+              <h3 className="form-inner-title">Submit a Technical Consulting &amp; Proposal Inquiry</h3>
               <p className="form-inner-sub">
                 Complete our technical intake form to receive custom configuration proposals, sizing metrics, and contracted quotes.
               </p>
+
+              {/* Form Validation Error Banner */}
+              {formError && (
+                <div style={{
+                  background: '#fef2f2',
+                  border: '1px solid #f87171',
+                  borderRadius: '6px',
+                  padding: '12px 16px',
+                  marginBottom: '16px',
+                  color: '#b91c1c',
+                  fontSize: '13.5px',
+                  fontWeight: 600
+                }}>
+                  ⚠️ {formError}
+                </div>
+              )}
+
+              {/* Attached Inquiry Items from Catalog / Equipment / Leasing */}
+              {inquiryItems.length > 0 && (
+                <div className="attached-inquiry-box">
+                  <div className="attached-inquiry-header">
+                    <h4 className="attached-inquiry-title">
+                      Attached Procurement Items ({inquiryItems.length})
+                    </h4>
+                    <button
+                      type="button"
+                      className="attached-clear-all-btn"
+                      onClick={clearInquiry}
+                    >
+                      Clear All
+                    </button>
+                  </div>
+                  <div className="attached-items-list">
+                    {inquiryItems.map((item) => (
+                      <div key={item.id} className="attached-item-row">
+                        <div className="attached-item-info">
+                          <span className="attached-item-name">{item.title}</span>
+                          <span className="attached-item-sub">
+                            {item.category} {item.sku ? `• SKU: ${item.sku}` : ''} {item.specSummary ? `• ${item.specSummary}` : ''}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          className="attached-remove-btn"
+                          onClick={() => removeFromInquiry(item.id)}
+                          title="Remove item"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
               
               <form onSubmit={handleSubmit}>
                 <InputField
@@ -239,12 +322,12 @@ export const ContactPage: React.FC = () => {
                 <div style={{ height: '16px' }} />
 
                 <InputField
-                  label="Project Requirements &amp; Message"
-                  placeholder="Sizing specs, flow rate GPM/CFM targets, electricity kVA prime capacities, or site dispatch schedules needed..."
+                  label="Project Requirements &amp; Scope Details"
+                  placeholder="Detail CFM/pressure targets, prime power requirements, project duration, site delivery locations, or specific model inquiries..."
                   multiline
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  required
+                  required={inquiryItems.length === 0}
                 />
 
                 <CheckboxItem
@@ -256,7 +339,7 @@ export const ContactPage: React.FC = () => {
                 <div style={{ height: '28px' }} />
 
                 <Button
-                  label="Submit Sizing Proposal Request"
+                  label={submitting ? 'Submitting Proposal...' : `Submit Sizing Proposal Request ${inquiryItems.length > 0 ? `(${inquiryItems.length} items)` : ''}`}
                   variant="primary"
                   type="submit"
                   loading={submitting}
