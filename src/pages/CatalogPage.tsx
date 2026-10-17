@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Search, ChevronDown, Check, X, ShoppingCart, Sliders, ChevronLeft, ChevronRight, Send } from 'lucide-react';
 import { useInquiry } from '../context/InquiryContext';
+import { submitInquiry } from '../services/api';
 import './CatalogPage.css';
 
 // Import local premium assets representing the parts
@@ -303,9 +304,20 @@ export const CatalogPage: React.FC = () => {
     }, 4500);
   };
 
-  const handleProcureSubmit = (e: React.FormEvent) => {
+  const handleProcureSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!procurePartNo.trim()) return;
+    try {
+      await submitInquiry({
+        name: 'Procurement Request',
+        company: 'Catalog Parts Sourcing',
+        email: 'sourcing@customer.portal',
+        message: `Custom part sourcing request for SKU/Part No: ${procurePartNo.trim()}. Details: ${procureDetails.trim() || 'No additional details provided.'}`,
+        equipment_interests: [`Part Sourcing: ${procurePartNo.trim()}`],
+      });
+    } catch {
+      // Non-blocking fallback
+    }
     setProcureSuccess(true);
     setTimeout(() => {
       setProcureSuccess(false);

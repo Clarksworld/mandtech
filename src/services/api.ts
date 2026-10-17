@@ -1,0 +1,106 @@
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://mandtech-backend-rho.vercel.app';
+
+export interface InquiryPayload {
+  name: string;
+  company: string;
+  email: string;
+  phone?: string;
+  message: string;
+  equipment_interests?: string[];
+  newsletter_opt_in?: boolean;
+}
+
+export interface InquiryResponse {
+  message: string;
+  data: {
+    id: string;
+    name: string;
+    company: string;
+    email: string;
+    created_at: string;
+  };
+}
+
+export interface TicketPayload {
+  asset_serial_id: string;
+  service_type: string;
+  description: string;
+  urgency: 'Standard Route' | 'High Priority' | 'Emergency Site Breakdown';
+  authorize_dispatch: boolean;
+}
+
+export interface TicketResponse {
+  message: string;
+  ticket_id: string;
+}
+
+export interface TrackedTicket {
+  id: string;
+  asset_serial_id: string;
+  service_type: string;
+  description: string;
+  urgency: string;
+  status: string;
+  assigned_engineer: string | null;
+  eta: string | null;
+  created_at: string;
+  logs: Array<{ time: string; text: string }>;
+}
+
+export async function submitInquiry(payload: InquiryPayload): Promise<InquiryResponse> {
+  const res = await fetch(`${API_BASE_URL}/api/inquiries`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || err.message || `Failed to submit inquiry (${res.status})`);
+  }
+  return res.json();
+}
+
+export async function submitServiceTicket(payload: TicketPayload): Promise<TicketResponse> {
+  const res = await fetch(`${API_BASE_URL}/api/tickets`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || err.message || `Failed to submit service ticket (${res.status})`);
+  }
+  return res.json();
+}
+
+export async function trackServiceTicket(ticketId: string): Promise<TrackedTicket> {
+  const res = await fetch(`${API_BASE_URL}/api/tickets/${encodeURIComponent(ticketId.trim())}`);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Ticket not found. Make sure to input your correct MT ticket number (e.g. MT-824021).');
+  }
+  const json = await res.json();
+  return json.data;
+}
+
+export async function fetchProducts(params: Record<string, string> = {}) {
+  const query = new URLSearchParams(params).toString();
+  const url = `${API_BASE_URL}/api/products${query ? `?${query}` : ''}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('Failed to fetch products');
+  return res.json();
+}
+
+export async function fetchParts(params: Record<string, string> = {}) {
+  const query = new URLSearchParams(params).toString();
+  const url = `${API_BASE_URL}/api/parts${query ? `?${query}` : ''}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('Failed to fetch parts');
+  return res.json();
+}
+
+export async function fetchDocuments() {
+  const res = await fetch(`${API_BASE_URL}/api/documents`);
+  if (!res.ok) throw new Error('Failed to fetch technical documents');
+  return res.json();
+}

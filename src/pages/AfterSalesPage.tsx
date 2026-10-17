@@ -3,6 +3,7 @@ import { ClipboardList, Search, BookOpen, Check, ArrowRight, ShieldAlert, PhoneC
 import { InputField, CheckboxItem, RadioGroup } from '../components/FormFields';
 import { Button } from '../components/Button';
 import { InfoCard } from '../components/Card';
+import { submitServiceTicket, trackServiceTicket, fetchDocuments } from '../services/api';
 import './AfterSalesPage.css';
 
 const SERVICE_TYPES = [
@@ -20,6 +21,23 @@ const GUIDES = [
 
 export const AfterSalesPage: React.FC = () => {
   const [activeSubTab, setActiveSubTab] = useState<'intake' | 'track' | 'library'>('intake');
+  const [guidesList, setGuidesList] = useState(GUIDES);
+
+  React.useEffect(() => {
+    fetchDocuments()
+      .then((res) => {
+        if (res && res.data && res.data.length > 0) {
+          setGuidesList(res.data.map((d: any) => ({
+            id: d.id,
+            title: d.title,
+            size: d.file_size || 'PDF (2.5 MB)',
+            duration: d.read_duration || '5 min read',
+            icon: d.icon_emoji || '📄'
+          })));
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   // Intake form state
   const [assetId, setAssetId] = useState('');
@@ -52,7 +70,7 @@ interface TrackedTicketData {
   const [trackedTicket, setTrackedTicket] = useState<TrackedTicketData | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
 
-  const handleSubmitIntake = (e: React.FormEvent) => {
+  const handleSubmitIntake = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
     if (!assetId.trim()) {
@@ -69,16 +87,34 @@ interface TrackedTicketData {
     }
 
     setIntakeLoading(true);
-    setTimeout(() => {
-      setIntakeLoading(false);
-      const newTicket = 'MT-' + Math.floor(100000 + Math.random() * 900000);
-      setSuccessIntakeTicket(newTicket);
+    try {
+      const urgencyMap: Record<string, 'Standard Route' | 'High Priority' | 'Emergency Site Breakdown'> = {
+        'Standard': 'Standard Route',
+        'High': 'High Priority',
+        'Critical': 'Emergency Site Breakdown'
+      };
+      const apiUrgency = urgencyMap[urgency] || 'Standard Route';
+
+      const res = await submitServiceTicket({
+        asset_serial_id: assetId.trim(),
+        service_type: serviceType,
+        description: description.trim(),
+        urgency: apiUrgency,
+        authorize_dispatch: agreeLogs,
+      });
+
+      setSuccessIntakeTicket(res.ticket_id);
       window.scrollTo({ top: 0, behavior: 'smooth' });
       // Reset form
       setAssetId('');
       setDescription('');
       setAgreeLogs(false);
-    }, 1500);
+    } catch (err: unknown) {
+      const e = err as { message?: string };
+      setFormError(e?.message || 'Failed to submit service ticket. Please verify your connection.');
+    } finally {
+      setIntakeLoading(false);
+    }
   };
 
   const handleDownloadGuide = (title: string) => {
@@ -110,36 +146,33 @@ Lagos Yard VI | Port Harcourt Yard`;
     URL.revokeObjectURL(url);
   };
 
-  const handleTrackTicket = (e: React.FormEvent) => {
+  const handleTrackTicket = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!ticketSearch.trim()) return;
 
     setTrackerLoading(true);
     setTrackedTicket(null);
-    setTimeout(() => {
+    try {
+      const data = await trackServiceTicket(ticketSearch);
+      setTrackedTicket({
+        id: data.id,
+        status: (data.status || 'RECEIVED').toUpperCase().replace('_', ' '),
+        engineer: data.assigned_engineer || 'Pending Engineering Assignment',
+        eta: data.eta || 'Pending Dispatch Schedule',
+        severity: data.urgency || 'Standard Route',
+        logs: data.logs && data.logs.length > 0 ? data.logs : [
+          { time: 'Just now', text: 'Service ticket recorded in dispatch database.' }
+        ],
+      });
+    } catch (err: unknown) {
+      const e = err as { message?: string };
+      setTrackedTicket({
+        error: true,
+        message: e?.message || 'Ticket not found. Make sure to input your correct MT ticket number (e.g. MT-824021).'
+      });
+    } finally {
       setTrackerLoading(false);
-      const code = ticketSearch.toUpperCase().trim();
-      if (code.startsWith('MT-') || code.length >= 5) {
-        setTrackedTicket({
-          id: code,
-          status: 'IN DISPATCH',
-          engineer: 'Engr. Emeka Obi (Senior Rotary Specialist)',
-          eta: 'Today, 2:30 PM',
-          severity: 'High Priority',
-          logs: [
-            { time: '09:00 AM', text: 'Service ticket received and approved by yard dispatcher.' },
-            { time: '10:30 AM', text: 'Rotary engineering kit and spare components logged.' },
-            { time: '11:15 AM', text: 'Lead field specialist team dispatched from Lagos yard.' },
-            { time: '12:00 PM', text: 'En route via Victoria Island expressway.' },
-          ],
-        });
-      } else {
-        setTrackedTicket({
-          error: true,
-          message: 'Ticket not found. Make sure to input your correct MT ticket number (e.g. MT-824021).',
-        });
-      }
-    }, 1200);
+    }
   };
 
   return (
@@ -404,7 +437,7 @@ Lagos Yard VI | Port Harcourt Yard`;
                 </p>
 
                 <div className="guides-list-grid">
-                  {GUIDES.map((g) => (
+                  {guidesList.map((g) => (
                     <div key={g.id} className="library-guide-card">
                       <div className="guide-icon-wrapper">
                         <span className="guide-icon-emoji">{g.icon}</span>

@@ -4,6 +4,7 @@ import { useInquiry } from '../context/InquiryContext';
 import { InputField, CheckboxItem } from '../components/FormFields';
 import { Button } from '../components/Button';
 import { InfoCard } from '../components/Card';
+import { submitInquiry } from '../services/api';
 import './ContactPage.css';
 
 const BRANCHES = [
@@ -57,7 +58,7 @@ export const ContactPage: React.FC = () => {
     });
   }, [inquiryItems]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
 
@@ -78,11 +79,29 @@ export const ContactPage: React.FC = () => {
       return;
     }
 
+    const interests: string[] = [];
+    if (equipCompressors) interests.push('Air Compressors');
+    if (equipGenerators) interests.push('Generators');
+    if (equipPumps) interests.push('Pumps');
+    if (equipDryers) interests.push('Air Dryers');
+    inquiryItems.forEach(item => {
+      interests.push(`${item.title} (${item.category})`);
+    });
+
     setSubmitting(true);
-    setTimeout(() => {
-      setSubmitting(false);
-      const ticket = 'RFQ-' + Math.floor(100000 + Math.random() * 900000);
-      setSubmittedTicketNo(ticket);
+    try {
+      const response = await submitInquiry({
+        name: name.trim(),
+        company: company.trim(),
+        email: email.trim(),
+        phone: phone.trim() || undefined,
+        message: message.trim() || (inquiryItems.length > 0 ? `Inquiry for ${inquiryItems.length} selected catalog item(s)` : 'General RFQ inquiry'),
+        equipment_interests: interests,
+        newsletter_opt_in: newsletter,
+      });
+
+      const refNo = response.data?.id ? `RFQ-${response.data.id.substring(0, 8).toUpperCase()}` : 'RFQ-' + Math.floor(100000 + Math.random() * 900000);
+      setSubmittedTicketNo(refNo);
       setSubmitted(true);
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -97,11 +116,11 @@ export const ContactPage: React.FC = () => {
       setEquipGenerators(false);
       setEquipPumps(false);
       setEquipDryers(false);
-      
-      setTimeout(() => {
-        setSubmitted(false);
-      }, 7000);
-    }, 1500);
+    } catch (err: any) {
+      setFormError(err.message || 'Failed to submit proposal inquiry. Please check your connection.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
