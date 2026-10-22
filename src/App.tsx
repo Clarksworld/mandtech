@@ -1,5 +1,9 @@
-import React, { useState } from 'react';
-import { ShieldCheck, Search, Share2, Mail } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { 
+  ShieldCheck, Search, Share2, Mail, ChevronDown, ArrowRight, 
+  Zap, Activity, Layers, Sliders, Package, Cog, Wrench, Truck, 
+  FileText, Menu, X, Phone, CheckCircle, Flame
+} from 'lucide-react';
 import { MandtechLogo } from './components/Logo';
 import { useInquiry } from './context/InquiryContext';
 import HomePage from './pages/HomePage';
@@ -22,33 +26,57 @@ export default function App() {
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [infoModal, setInfoModal] = useState<InfoModalState | null>(null);
   const [navSearch, setNavSearch] = useState('');
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const dropdownTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { inquiryItems, setGlobalSearch } = useInquiry();
+
+  const handleMouseEnter = (key: string) => {
+    if (dropdownTimeoutRef.current) {
+      clearTimeout(dropdownTimeoutRef.current);
+    }
+    setActiveDropdown(key);
+  };
+
+  const handleMouseLeave = () => {
+    dropdownTimeoutRef.current = setTimeout(() => {
+      setActiveDropdown(null);
+    }, 180);
+  };
+
+  const navigateTo = (page: ActivePage) => {
+    setActivePage(page);
+    setActiveDropdown(null);
+    setMobileMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const handleNavSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (navSearch.trim()) {
       setGlobalSearch(navSearch.trim());
-      setActivePage('catalog');
+      navigateTo('catalog');
     }
   };
 
   const renderActivePage = () => {
     switch (activePage) {
       case 'home':
-        return <HomePage onNavigate={(page) => setActivePage(page as ActivePage)} />;
+        return <HomePage onNavigate={(page) => navigateTo(page as ActivePage)} />;
       case 'equipmentSales':
         return <EquipmentSalesPage />;
       case 'catalog':
         return <CatalogPage />;
       case 'leasing':
-        return <LeasingPage onNavigateToContact={() => setActivePage('contact')} />;
+        return <LeasingPage onNavigateToContact={() => navigateTo('contact')} />;
       case 'aftersales':
         return <AfterSalesPage />;
       case 'contact':
         return <ContactPage />;
       default:
-        return <HomePage onNavigate={(page) => setActivePage(page as ActivePage)} />;
+        return <HomePage onNavigate={(page) => navigateTo(page as ActivePage)} />;
     }
   };
 
@@ -112,55 +140,344 @@ export default function App() {
         </div>
       )}
 
-      {/* Global brand navigation navbar */}
+      {/* Professional Chainstack-Style Navbar */}
       <header className="global-navbar">
         <div className="container nav-container">
-          {/* Logo & Brand Name */}
-          <div className="nav-brand-group" onClick={() => setActivePage('home')} style={{ cursor: 'pointer' }}>
-            <MandtechLogo size={32} color="var(--deep-charcoal)" accentColor="var(--primary-container)" />
+          {/* Brand Logo & Name */}
+          <div className="nav-brand-group" onClick={() => navigateTo('home')} style={{ cursor: 'pointer' }}>
+            <MandtechLogo size={34} color="var(--black)" accentColor="var(--primary-container)" />
             <div className="brand-text-block">
-              <span className="brand-primary-name">Mandtech</span>
-              <span className="brand-secondary-name">Services</span>
+              <span className="brand-primary-name">MANDTECH</span>
+              <span className="brand-secondary-name">SERVICES</span>
             </div>
           </div>
 
-          {/* Nav links */}
-          <nav className="nav-links-list">
-            <button
-              className={`nav-item-btn ${activePage === 'home' ? 'nav-active' : ''}`}
-              onClick={() => setActivePage('home')}
+          {/* Desktop Chainstack-Style Mega Navigation */}
+          <nav className="desktop-nav-menu">
+            {/* Nav Item: Equipment */}
+            <div 
+              className="nav-dropdown-wrapper"
+              onMouseEnter={() => handleMouseEnter('equipment')}
+              onMouseLeave={handleMouseLeave}
             >
-              Home
-            </button>
-            <button
-              className={`nav-item-btn ${activePage === 'equipmentSales' ? 'nav-active' : ''}`}
-              onClick={() => setActivePage('equipmentSales')}
+              <button
+                className={`desktop-nav-link ${activePage === 'equipmentSales' ? 'nav-active' : ''} ${activeDropdown === 'equipment' ? 'dropdown-active' : ''}`}
+                onClick={() => navigateTo('equipmentSales')}
+              >
+                <span>Equipment</span>
+                <ChevronDown size={14} className="dropdown-chevron" />
+              </button>
+
+              {activeDropdown === 'equipment' && (
+                <div className="mega-menu-panel" onMouseEnter={() => handleMouseEnter('equipment')} onMouseLeave={handleMouseLeave}>
+                  <div className="mega-menu-content">
+                    <div className="mega-menu-main-col">
+                      <div className="mega-menu-col-header">HEAVY INDUSTRIAL MACHINERY</div>
+                      <div className="mega-menu-links-grid">
+                        <div className="mega-menu-item" onClick={() => navigateTo('equipmentSales')}>
+                          <div className="mega-item-icon-box">
+                            <Zap size={18} />
+                          </div>
+                          <div className="mega-item-text">
+                            <div className="mega-item-title">Air Compressors</div>
+                            <div className="mega-item-desc">Rotary screw & reciprocating units, diesel & electric power (100–1600 CFM)</div>
+                          </div>
+                        </div>
+
+                        <div className="mega-menu-item" onClick={() => navigateTo('equipmentSales')}>
+                          <div className="mega-item-icon-box">
+                            <Flame size={18} />
+                          </div>
+                          <div className="mega-item-text">
+                            <div className="mega-item-title">Industrial Generators</div>
+                            <div className="mega-item-desc">Heavy-duty soundproof prime & standby diesel sets (20kVA–2000kVA)</div>
+                          </div>
+                        </div>
+
+                        <div className="mega-menu-item" onClick={() => navigateTo('equipmentSales')}>
+                          <div className="mega-item-icon-box">
+                            <Layers size={18} />
+                          </div>
+                          <div className="mega-item-text">
+                            <div className="mega-item-title">Fluid Handling Pumps</div>
+                            <div className="mega-item-desc">High-volume slurry, trash, and centrifugal dewatering pump stations</div>
+                          </div>
+                        </div>
+
+                        <div className="mega-menu-item" onClick={() => navigateTo('equipmentSales')}>
+                          <div className="mega-item-icon-box">
+                            <Sliders size={18} />
+                          </div>
+                          <div className="mega-item-text">
+                            <div className="mega-item-title">Desiccant Air Dryers</div>
+                            <div className="mega-item-desc">High-efficiency absorption systems & particulate filtration</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mega-menu-side-col">
+                      <div className="mega-side-badge">CERTIFIED FLEET</div>
+                      <h4 className="mega-side-heading">Industrial Equipment Sales</h4>
+                      <p className="mega-side-desc">
+                        Full warranty coverage, OEM delivery, and commissioning by certified engineers across Nigeria.
+                      </p>
+                      <button className="mega-side-action-btn" onClick={() => navigateTo('equipmentSales')}>
+                        <span>View Sales Inventory</span>
+                        <ArrowRight size={14} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Nav Item: Spare Parts */}
+            <div 
+              className="nav-dropdown-wrapper"
+              onMouseEnter={() => handleMouseEnter('parts')}
+              onMouseLeave={handleMouseLeave}
             >
-              Equipment Sales
-            </button>
-            <button
-              className={`nav-item-btn ${activePage === 'catalog' ? 'nav-active' : ''}`}
-              onClick={() => setActivePage('catalog')}
+              <button
+                className={`desktop-nav-link ${activePage === 'catalog' ? 'nav-active' : ''} ${activeDropdown === 'parts' ? 'dropdown-active' : ''}`}
+                onClick={() => navigateTo('catalog')}
+              >
+                <span>Parts Catalog</span>
+                <ChevronDown size={14} className="dropdown-chevron" />
+              </button>
+
+              {activeDropdown === 'parts' && (
+                <div className="mega-menu-panel" onMouseEnter={() => handleMouseEnter('parts')} onMouseLeave={handleMouseLeave}>
+                  <div className="mega-menu-content">
+                    <div className="mega-menu-main-col">
+                      <div className="mega-menu-col-header">OEM CERTIFIED COMPONENTS</div>
+                      <div className="mega-menu-links-grid">
+                        <div className="mega-menu-item" onClick={() => navigateTo('catalog')}>
+                          <div className="mega-item-icon-box">
+                            <Package size={18} />
+                          </div>
+                          <div className="mega-item-text">
+                            <div className="mega-item-title">Filtration & Air Systems</div>
+                            <div className="mega-item-desc">Air intake filters, oil separators, and precision line elements</div>
+                          </div>
+                        </div>
+
+                        <div className="mega-menu-item" onClick={() => navigateTo('catalog')}>
+                          <div className="mega-item-icon-box">
+                            <Cog size={18} />
+                          </div>
+                          <div className="mega-item-text">
+                            <div className="mega-item-title">Valves & Hydraulics</div>
+                            <div className="mega-item-desc">Safety relief, unloader, non-return, and blow-down valve assemblies</div>
+                          </div>
+                        </div>
+
+                        <div className="mega-menu-item" onClick={() => navigateTo('catalog')}>
+                          <div className="mega-item-icon-box">
+                            <Activity size={18} />
+                          </div>
+                          <div className="mega-item-text">
+                            <div className="mega-item-title">Sensors & Control Units</div>
+                            <div className="mega-item-desc">Digital pressure transducers, temperature sensors, and PLC boards</div>
+                          </div>
+                        </div>
+
+                        <div className="mega-menu-item" onClick={() => navigateTo('catalog')}>
+                          <div className="mega-item-icon-box">
+                            <Wrench size={18} />
+                          </div>
+                          <div className="mega-item-text">
+                            <div className="mega-item-title">Overhaul & Gasket Sets</div>
+                            <div className="mega-item-desc">Complete scheduled overhaul kits with guaranteed OEM tolerance</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mega-menu-side-col">
+                      <div className="mega-side-badge">FAST PROCUREMENT</div>
+                      <h4 className="mega-side-heading">Technical Parts Sourcing</h4>
+                      <p className="mega-side-desc">
+                        Need an obsolete or specialized part? Our engineering desk sources directly from OEM manufacturers.
+                      </p>
+                      <button className="mega-side-action-btn" onClick={() => navigateTo('catalog')}>
+                        <span>Search Catalog</span>
+                        <ArrowRight size={14} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Nav Item: Leasing & Rentals */}
+            <div 
+              className="nav-dropdown-wrapper"
+              onMouseEnter={() => handleMouseEnter('leasing')}
+              onMouseLeave={handleMouseLeave}
             >
-              Parts Catalog
-            </button>
-            <button
-              className={`nav-item-btn ${activePage === 'leasing' ? 'nav-active' : ''}`}
-              onClick={() => setActivePage('leasing')}
+              <button
+                className={`desktop-nav-link ${activePage === 'leasing' ? 'nav-active' : ''} ${activeDropdown === 'leasing' ? 'dropdown-active' : ''}`}
+                onClick={() => navigateTo('leasing')}
+              >
+                <span>Leasing &amp; Fleet</span>
+                <ChevronDown size={14} className="dropdown-chevron" />
+              </button>
+
+              {activeDropdown === 'leasing' && (
+                <div className="mega-menu-panel" onMouseEnter={() => handleMouseEnter('leasing')} onMouseLeave={handleMouseLeave}>
+                  <div className="mega-menu-content">
+                    <div className="mega-menu-main-col">
+                      <div className="mega-menu-col-header">EQUIPMENT RENTAL SOLUTIONS</div>
+                      <div className="mega-menu-links-grid">
+                        <div className="mega-menu-item" onClick={() => navigateTo('leasing')}>
+                          <div className="mega-item-icon-box">
+                            <Truck size={18} />
+                          </div>
+                          <div className="mega-item-text">
+                            <div className="mega-item-title">Flexible Rental Agreements</div>
+                            <div className="mega-item-desc">Daily, monthly, and multi-year project lease packages with full support</div>
+                          </div>
+                        </div>
+
+                        <div className="mega-menu-item" onClick={() => navigateTo('leasing')}>
+                          <div className="mega-item-icon-box">
+                            <FileText size={18} />
+                          </div>
+                          <div className="mega-item-text">
+                            <div className="mega-item-title">Online Lease Rate Estimator</div>
+                            <div className="mega-item-desc">Instant pricing calculators based on machine capacity and operating duty</div>
+                          </div>
+                        </div>
+
+                        <div className="mega-menu-item" onClick={() => navigateTo('leasing')}>
+                          <div className="mega-item-icon-box">
+                            <ShieldCheck size={18} />
+                          </div>
+                          <div className="mega-item-text">
+                            <div className="mega-item-title">99.8% Uptime SLA Guarantee</div>
+                            <div className="mega-item-desc">Standby replacement machinery staged on site for critical operations</div>
+                          </div>
+                        </div>
+
+                        <div className="mega-menu-item" onClick={() => navigateTo('leasing')}>
+                          <div className="mega-item-icon-box">
+                            <CheckCircle size={18} />
+                          </div>
+                          <div className="mega-item-text">
+                            <div className="mega-item-title">Rapid Site Mobilization</div>
+                            <div className="mega-item-desc">24h transport and connection across Lagos, Rivers, and Delta hubs</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mega-menu-side-col">
+                      <div className="mega-side-badge">NO CAPEX REQUIRED</div>
+                      <h4 className="mega-side-heading">Fleet Rental Services</h4>
+                      <p className="mega-side-desc">
+                        Deploy heavy compressors and generators without heavy capital outlay. Maintenance included.
+                      </p>
+                      <button className="mega-side-action-btn" onClick={() => navigateTo('leasing')}>
+                        <span>Explore Leasing</span>
+                        <ArrowRight size={14} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Nav Item: Technical Support / After-Sales */}
+            <div 
+              className="nav-dropdown-wrapper"
+              onMouseEnter={() => handleMouseEnter('support')}
+              onMouseLeave={handleMouseLeave}
             >
-              Leasing &amp; Rentals
-            </button>
+              <button
+                className={`desktop-nav-link ${activePage === 'aftersales' ? 'nav-active' : ''} ${activeDropdown === 'support' ? 'dropdown-active' : ''}`}
+                onClick={() => navigateTo('aftersales')}
+              >
+                <span>After-Sales</span>
+                <ChevronDown size={14} className="dropdown-chevron" />
+              </button>
+
+              {activeDropdown === 'support' && (
+                <div className="mega-menu-panel" onMouseEnter={() => handleMouseEnter('support')} onMouseLeave={handleMouseLeave}>
+                  <div className="mega-menu-content">
+                    <div className="mega-menu-main-col">
+                      <div className="mega-menu-col-header">FIELD ENGINEERING &amp; MAINTENANCE</div>
+                      <div className="mega-menu-links-grid">
+                        <div className="mega-menu-item" onClick={() => navigateTo('aftersales')}>
+                          <div className="mega-item-icon-box">
+                            <Wrench size={18} />
+                          </div>
+                          <div className="mega-item-text">
+                            <div className="mega-item-title">24/7 Field Maintenance</div>
+                            <div className="mega-item-desc">Emergency mechanical, electrical, and pneumatic diagnostic dispatch</div>
+                          </div>
+                        </div>
+
+                        <div className="mega-menu-item" onClick={() => navigateTo('aftersales')}>
+                          <div className="mega-item-icon-box">
+                            <Activity size={18} />
+                          </div>
+                          <div className="mega-item-text">
+                            <div className="mega-item-title">Live Dispatch Tracker</div>
+                            <div className="mega-item-desc">Real-time status, technician ETA, and log breakdown for your tickets</div>
+                          </div>
+                        </div>
+
+                        <div className="mega-menu-item" onClick={() => navigateTo('aftersales')}>
+                          <div className="mega-item-icon-box">
+                            <ShieldCheck size={18} />
+                          </div>
+                          <div className="mega-item-text">
+                            <div className="mega-item-title">Preventative Service Contracts</div>
+                            <div className="mega-item-desc">Scheduled inspections, vibration analysis, and OEM fluid testing</div>
+                          </div>
+                        </div>
+
+                        <div className="mega-menu-item" onClick={() => navigateTo('contact')}>
+                          <div className="mega-item-icon-box">
+                            <Phone size={18} />
+                          </div>
+                          <div className="mega-item-text">
+                            <div className="mega-item-title">Emergency Hotline</div>
+                            <div className="mega-item-desc">Direct 24/7 contact: +234 (1) 460-7000 (average pickup: 8 seconds)</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mega-menu-side-col">
+                      <div className="mega-side-badge">8S AVERAGE ANSWER</div>
+                      <h4 className="mega-side-heading">Technical Support Hotline</h4>
+                      <p className="mega-side-desc">
+                        Our engineering response units are stationed in major industrial corridors with rapid dispatch readiness.
+                      </p>
+                      <button className="mega-side-action-btn" onClick={() => navigateTo('aftersales')}>
+                        <span>Access Support Hub</span>
+                        <ArrowRight size={14} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Direct Nav Item: Contact */}
             <button
-              className={`nav-item-btn ${activePage === 'aftersales' ? 'nav-active' : ''}`}
-              onClick={() => setActivePage('aftersales')}
+              className={`desktop-nav-link single-link ${activePage === 'contact' ? 'nav-active' : ''}`}
+              onClick={() => navigateTo('contact')}
             >
-              After-Sales
+              <span>Contact &amp; Yards</span>
             </button>
           </nav>
 
-          {/* Search box, Yard Status chip & Action Button */}
+          {/* Right Header Actions */}
           <div className="nav-actions-group">
-            {/* Live Yard Status Trigger Button */}
+            {/* Live Yard Status Pill */}
             <button
               className="nav-yard-status-pill"
               onClick={() => setShowStatusModal(true)}
@@ -170,30 +487,118 @@ export default function App() {
               <span>Yards: <strong>ONLINE</strong></span>
             </button>
 
-            {/* Global Search Bar */}
+            {/* Search Box */}
             <form onSubmit={handleNavSearch} className="nav-search-box">
-              <Search size={16} className="nav-search-icon" />
+              <Search size={15} className="nav-search-icon" />
               <input
                 type="text"
-                placeholder="Search components..."
+                placeholder="Search equipment, parts..."
                 className="nav-search-input"
                 value={navSearch}
                 onChange={(e) => setNavSearch(e.target.value)}
               />
             </form>
 
-            {/* Inquiry Basket Button */}
+            {/* Get an Inquiry CTA Button */}
             <button
               className="nav-inquiry-btn"
-              onClick={() => setActivePage('contact')}
+              onClick={() => navigateTo('contact')}
             >
-              Get an Inquiry
+              <span>Get an Inquiry</span>
               {inquiryItems.length > 0 && (
                 <span className="nav-inquiry-badge">{inquiryItems.length}</span>
               )}
             </button>
+
+            {/* Mobile Hamburger Button */}
+            <button
+              className="mobile-hamburger-btn"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle navigation menu"
+            >
+              {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Slide-down Drawer (Clean & organized) */}
+        {mobileMenuOpen && (
+          <div className="mobile-drawer-overlay" onClick={() => setMobileMenuOpen(false)}>
+            <div className="mobile-drawer-panel" onClick={(e) => e.stopPropagation()}>
+              <div className="mobile-drawer-search">
+                <form onSubmit={handleNavSearch} style={{ display: 'flex', width: '100%' }}>
+                  <input
+                    type="text"
+                    placeholder="Search equipment, parts..."
+                    className="mobile-search-input"
+                    value={navSearch}
+                    onChange={(e) => setNavSearch(e.target.value)}
+                  />
+                </form>
+              </div>
+
+              <div className="mobile-links-list">
+                <button
+                  className={`mobile-link-item ${activePage === 'home' ? 'mobile-active' : ''}`}
+                  onClick={() => navigateTo('home')}
+                >
+                  <span>Home</span>
+                </button>
+
+                <button
+                  className={`mobile-link-item ${activePage === 'equipmentSales' ? 'mobile-active' : ''}`}
+                  onClick={() => navigateTo('equipmentSales')}
+                >
+                  <span>Equipment Sales</span>
+                  <span className="mobile-link-tag">Machinery</span>
+                </button>
+
+                <button
+                  className={`mobile-link-item ${activePage === 'catalog' ? 'mobile-active' : ''}`}
+                  onClick={() => navigateTo('catalog')}
+                >
+                  <span>Parts Catalog</span>
+                  <span className="mobile-link-tag">OEM Spares</span>
+                </button>
+
+                <button
+                  className={`mobile-link-item ${activePage === 'leasing' ? 'mobile-active' : ''}`}
+                  onClick={() => navigateTo('leasing')}
+                >
+                  <span>Leasing &amp; Fleet</span>
+                  <span className="mobile-link-tag">Rentals</span>
+                </button>
+
+                <button
+                  className={`mobile-link-item ${activePage === 'aftersales' ? 'mobile-active' : ''}`}
+                  onClick={() => navigateTo('aftersales')}
+                >
+                  <span>After-Sales Support</span>
+                  <span className="mobile-link-tag">24/7 Field</span>
+                </button>
+
+                <button
+                  className={`mobile-link-item ${activePage === 'contact' ? 'mobile-active' : ''}`}
+                  onClick={() => navigateTo('contact')}
+                >
+                  <span>Contact &amp; Yards</span>
+                </button>
+              </div>
+
+              <div className="mobile-drawer-footer">
+                <button
+                  className="mobile-inquiry-btn"
+                  onClick={() => navigateTo('contact')}
+                >
+                  <span>Submit Inquiry Request</span>
+                  {inquiryItems.length > 0 && (
+                    <span className="nav-inquiry-badge">{inquiryItems.length}</span>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* Primary Page body render */}
