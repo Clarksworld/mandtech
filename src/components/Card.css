@@ -75,7 +75,7 @@
 }
 
 .badge-inStock {
-  background-color: var(--deep-charcoal);
+  background-color: #000000;
   color: #ffffff;
 }
 
@@ -88,7 +88,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: var(--success);
+  background-color: var(--primary-container);
   display: inline-block;
 }
 
@@ -137,7 +137,7 @@
   background-color: var(--primary);
   color: #ffffff;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(245, 130, 32, 0.2);
+  box-shadow: 0 4px 12px rgba(84, 180, 53, 0.25);
 }
 
 /* Info Card styling */

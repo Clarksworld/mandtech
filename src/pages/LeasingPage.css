@@ -39,9 +39,9 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(245, 130, 32, 0.15);
-  border: 1px solid rgba(245, 130, 32, 0.4);
-  color: #fca35d;
+  background: rgba(84, 180, 53, 0.15);
+  border: 1px solid rgba(84, 180, 53, 0.4);
+  color: #54b435;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 1.5px;
@@ -181,7 +181,7 @@
   outline: none;
   border-color: var(--primary-container);
   background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(245, 130, 32, 0.15);
+  box-shadow: 0 0 0 3px rgba(84, 180, 53, 0.2);
 }
 
 .calc-result-strip {
@@ -239,9 +239,9 @@
 }
 
 .calc-cta-btn:hover {
-  background: #e06e12;
+  background: var(--primary);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(245, 130, 32, 0.3);
+  box-shadow: 0 4px 12px rgba(84, 180, 53, 0.3);
 }
 
 /* Fleet Showcase Section */
@@ -461,7 +461,7 @@
 
 .model-card.featured-model {
   border: 2px solid var(--primary-container);
-  box-shadow: 0 10px 30px rgba(245, 130, 32, 0.12);
+  box-shadow: 0 10px 30px rgba(84, 180, 53, 0.15);
 }
 
 .model-card:hover {
@@ -575,7 +575,7 @@
   width: 44px;
   height: 44px;
   border-radius: 8px;
-  background: rgba(245, 130, 32, 0.1);
+  background: rgba(84, 180, 53, 0.12);
   color: var(--primary-container);
   display: flex;
   align-items: center;
@@ -599,7 +599,8 @@
 
 /* Bottom CTA */
 .leasing-cta-banner {
-  background: var(--deep-charcoal);
+  background: #000000;
+  border-left: 6px solid var(--primary-container);
   border-radius: 8px;
   padding: 44px;
   display: flex;
@@ -619,7 +620,7 @@
 
 .leasing-cta-sub {
   font-size: 15px;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.85);
   max-width: 600px;
 }
 
@@ -637,8 +638,8 @@
 }
 
 .leasing-cta-btn:hover {
-  background: #e06e12;
-  box-shadow: 0 4px 16px rgba(245, 130, 32, 0.4);
+  background: var(--primary);
+  box-shadow: 0 4px 16px rgba(84, 180, 53, 0.4);
 }
 
 @media (max-width: 768px) {

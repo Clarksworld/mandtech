@@ -206,7 +206,8 @@ export default function App() {
         <div className="container footer-grid">
           {/* Column 1: Brand description and social */}
           <div className="footer-brand-column">
-            <div className="footer-brand-logo" onClick={() => setActivePage('home')} style={{ cursor: 'pointer' }}>
+            <div className="footer-brand-logo" onClick={() => setActivePage('home')} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <MandtechLogo size={32} color="#ffffff" accentColor="var(--primary-container)" />
               <div className="brand-text-block" style={{ marginLeft: 0 }}>
                 <span className="brand-primary-name text-white">Mandtech</span>
                 <span className="brand-secondary-name text-white" style={{ display: 'block', marginTop: '2px' }}>Services</span>

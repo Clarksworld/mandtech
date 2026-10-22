@@ -36,7 +36,7 @@
 
 .field-input:focus {
   border-color: var(--primary-container);
-  box-shadow: 0 0 0 3px rgba(245, 130, 32, 0.15);
+  box-shadow: 0 0 0 3px rgba(84, 180, 53, 0.2);
 }
 
 .field-textarea {
@@ -80,7 +80,7 @@
 }
 
 .checkmark-icon {
-  color: var(--deep-charcoal);
+  color: #ffffff;
   font-size: 13px;
   font-weight: 900;
 }
@@ -129,7 +129,7 @@
 
 .radio-option.radio-selected {
   border-color: var(--primary-container);
-  background-color: rgba(245, 130, 32, 0.05);
+  background-color: rgba(84, 180, 53, 0.08);
 }
 
 .radio-circle {

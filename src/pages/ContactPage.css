@@ -101,7 +101,8 @@
   margin-bottom: 12px;
 }
 
-.orange-indicator-dot {
+.orange-indicator-dot,
+.green-indicator-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;

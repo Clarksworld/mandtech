@@ -11,8 +11,8 @@ interface LogoProps {
 export const MandtechLogo: React.FC<LogoProps> = ({
   size = 40,
   showText = false,
-  color = '#212529',
-  accentColor = '#F58220',
+  color = '#000000',
+  accentColor = '#54b435',
   className = '',
 }) => {
   return (

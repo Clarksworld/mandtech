@@ -570,7 +570,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background-color: #1F2327; /* Dark charcoal */
+  background-color: #000000;
   color: #ffffff;
   font-size: 13.5px;
   font-weight: 700;
@@ -581,7 +581,7 @@
 
 .part-card-inquiry-btn:hover {
   background-color: var(--primary-container);
-  box-shadow: 0 4px 10px rgba(245, 130, 32, 0.15);
+  box-shadow: 0 4px 10px rgba(84, 180, 53, 0.25);
 }
 
 /* Empty State */
@@ -673,9 +673,10 @@
 
 /* Technical Request Sourcing Banner styling */
 .parts-procurement-cta-banner {
-  background-color: #8E4413; /* Rich industrial brown-orange matching mockup */
+  background-color: #000000;
+  border-left: 6px solid var(--primary-container);
   padding: 40px 0;
-  border-top: 1px solid rgba(255,255,255,0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .procure-cta-inner {
@@ -706,16 +707,17 @@
 
 .procure-submit-btn {
   padding: 14px 28px;
-  background-color: #ffffff;
-  color: #8E4413;
+  background-color: var(--primary-container);
+  color: #ffffff;
   font-size: 14.5px;
   font-weight: 700;
   border-radius: var(--radius-xs);
   transition: var(--transition-smooth);
+  box-shadow: 0 4px 14px rgba(84, 180, 53, 0.35);
 }
 
 .procure-submit-btn:hover {
-  background-color: #F5F7F8;
+  background-color: var(--primary);
   transform: translateY(-1px);
 }
 
