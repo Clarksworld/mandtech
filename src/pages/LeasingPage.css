@@ -2,6 +2,8 @@
 
 .leasing-page-container {
   width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
   min-height: 100vh;
   background-color: var(--color-background);
   color: var(--color-on-background);
@@ -655,5 +657,28 @@
   }
   .leasing-cta-banner {
     padding: 30px 20px;
+  }
+  .fleet-grid {
+    grid-template-columns: 1fr;
+  }
+  .models-grid {
+    grid-template-columns: 1fr;
+  }
+  .sla-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .calc-card-wrapper {
+    padding: 20px 14px;
+  }
+  .calc-grid-form {
+    grid-template-columns: 1fr;
+  }
+  .leasing-cta-btn {
+    width: 100%;
+    text-align: center;
+    white-space: normal;
   }
 }

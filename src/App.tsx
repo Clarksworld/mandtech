@@ -587,6 +587,14 @@ export default function App() {
 
               <div className="mobile-drawer-footer">
                 <button
+                  className="mobile-yard-status-btn"
+                  onClick={() => { setShowStatusModal(true); setMobileMenuOpen(false); }}
+                >
+                  <span className="pulse-green-dot" />
+                  <span>Yard Operations: <strong>ONLINE</strong></span>
+                </button>
+
+                <button
                   className="mobile-inquiry-btn"
                   onClick={() => navigateTo('contact')}
                 >

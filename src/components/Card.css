@@ -8,6 +8,8 @@
   flex-direction: column;
   box-shadow: var(--shadow-card);
   transition: var(--transition-smooth);
+  overflow: hidden;
+  max-width: 100%;
 }
 
 .equipment-card:hover {

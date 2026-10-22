@@ -3,6 +3,9 @@
    ============================================ */
 
 .equip-sales-page {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
   background-color: var(--background);
   padding-bottom: 0;
 }

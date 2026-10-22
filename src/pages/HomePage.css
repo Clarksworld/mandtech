@@ -1,5 +1,7 @@
 .home-page-container {
   width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* Redesigned Hero Section */
@@ -466,30 +468,57 @@
 @media (max-width: 992px) {
   .power-solutions-grid {
     grid-template-columns: 1fr;
-    gap: 48px;
+    gap: 40px;
   }
   .power-left-column {
     max-width: 500px;
+    width: 100%;
     margin: 0 auto;
+    padding-right: 0;
+    padding-bottom: 0;
   }
   .power-quote-card {
-    bottom: -16px;
-    right: -16px;
-    padding: 16px;
-    max-width: 240px;
+    position: relative;
+    bottom: auto;
+    right: auto;
+    margin-top: 20px;
+    padding: 20px;
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
   }
 }
 
 @media (max-width: 868px) {
+  .hero-section {
+    padding: 100px 0 50px 0;
+  }
   .hero-title {
-    font-size: 42px;
+    font-size: 38px;
+  }
+  .hero-bottom-bar-wrapper {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    margin-top: 36px;
+    width: 100%;
+    transform: none;
   }
   .hero-bottom-bar {
-    padding: 16px 24px;
+    padding: 14px 16px;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+  .bar-divider {
+    display: none;
   }
   .bar-item {
     font-size: 13px;
-    padding: 4px 6px;
+    padding: 6px 12px;
+  }
+  .capabilities-section {
+    padding-top: 50px;
   }
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -508,26 +537,36 @@
 
 @media (max-width: 576px) {
   .hero-section {
-    padding: 100px 0 140px 0;
+    padding: 80px 0 40px 0;
   }
   .hero-title {
-    font-size: 32px;
+    font-size: 28px;
   }
   .hero-desc {
-    font-size: 15px;
+    font-size: 14.5px;
+    margin-bottom: 28px;
+  }
+  .hero-cta-group {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
   }
   .hero-cta-group button {
     width: 100%;
+    text-align: center;
+    justify-content: center;
   }
   .hero-bottom-bar-wrapper {
     position: relative;
     transform: none;
-    margin-top: 40px;
+    margin-top: 28px;
+    width: 100%;
   }
   .hero-bottom-bar {
     flex-direction: column;
-    gap: 12px;
-    padding: 20px;
+    gap: 8px;
+    padding: 14px;
+    width: 100%;
   }
   .bar-divider {
     display: none;
@@ -535,12 +574,16 @@
   .bar-item {
     width: 100%;
     text-align: center;
+    padding: 8px 10px;
   }
   .capabilities-section {
-    padding-top: 60px;
+    padding-top: 40px;
   }
   .capabilities-title {
-    font-size: 26px;
+    font-size: 24px;
+  }
+  .capabilities-grid {
+    grid-template-columns: 1fr;
   }
   .stats-grid {
     grid-template-columns: 1fr;

@@ -1,4 +1,7 @@
 .aftersales-page-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
   padding: 60px 0;
 }
 

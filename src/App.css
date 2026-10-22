@@ -3,6 +3,10 @@
   flex-direction: column;
   min-height: 100vh;
   background-color: var(--background);
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  position: relative;
 }
 
 /* Global Navbar Styling (Chainstack-Style Desktop Mega Navigation) */
@@ -797,14 +801,20 @@
   .nav-container {
     height: 64px;
     padding: 0 16px;
+    width: 100%;
+    max-width: 100%;
   }
 
   .nav-search-box {
     display: none;
   }
 
+  .nav-actions-group {
+    gap: 8px;
+  }
+
   .nav-inquiry-btn {
-    padding: 8px 14px;
+    padding: 7px 12px;
     font-size: 13px;
   }
 
@@ -817,6 +827,55 @@
     padding: 5px 10px;
     font-size: 11px;
   }
+}
+
+@media (max-width: 640px) {
+  .nav-actions-group .nav-yard-status-pill {
+    display: none !important;
+  }
+
+  .brand-secondary-name {
+    display: none !important;
+  }
+
+  .nav-brand-group {
+    gap: 8px;
+  }
+
+  .nav-container {
+    padding: 0 12px;
+  }
+
+  .nav-actions-group {
+    gap: 6px;
+  }
+
+  .nav-inquiry-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}
+
+.mobile-yard-status-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: background 0.2s;
+}
+
+.mobile-yard-status-btn:hover {
+  background: #dcfce7;
 }
 
 @media (max-width: 576px) {

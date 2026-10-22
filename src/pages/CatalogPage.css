@@ -1,4 +1,7 @@
 .parts-catalog-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
   padding: 0;
   background-color: var(--background);
 }
