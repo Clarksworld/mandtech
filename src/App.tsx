@@ -499,12 +499,12 @@ export default function App() {
               />
             </form>
 
-            {/* Get an Inquiry CTA Button */}
+            {/* Get Enquiry CTA Button */}
             <button
               className="nav-inquiry-btn"
               onClick={() => navigateTo('contact')}
             >
-              <span>Get an Inquiry</span>
+              <span>Get Enquiry</span>
               {inquiryItems.length > 0 && (
                 <span className="nav-inquiry-badge">{inquiryItems.length}</span>
               )}

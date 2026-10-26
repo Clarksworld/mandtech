@@ -34,11 +34,11 @@ export const ContactPage: React.FC = () => {
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
   
-  // Selected equipment checkbox states
-  const [equipCompressors, setEquipCompressors] = useState(false);
-  const [equipGenerators, setEquipGenerators] = useState(false);
-  const [equipPumps, setEquipPumps] = useState(false);
-  const [equipDryers, setEquipDryers] = useState(false);
+  // Selected equipment class of interest states
+  const [newEquipPurchase, setNewEquipPurchase] = useState(false);
+  const [equipRental, setEquipRental] = useState(false);
+  const [spareParts, setSpareParts] = useState(false);
+  const [serviceRequest, setServiceRequest] = useState(false);
   
   const [newsletter, setNewsletter] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -46,15 +46,18 @@ export const ContactPage: React.FC = () => {
   const [submittedTicketNo, setSubmittedTicketNo] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
 
-  // Auto-check equipment categories if items are in the basket
+  // Auto-check equipment classes if items are in the basket
   useEffect(() => {
     inquiryItems.forEach(item => {
+      if (item.type === 'equipment') setNewEquipPurchase(true);
+      if (item.type === 'lease') setEquipRental(true);
+      if (item.type === 'part') setSpareParts(true);
+
       const cat = item.category.toLowerCase();
       const title = item.title.toLowerCase();
-      if (cat.includes('compress') || title.includes('compress') || title.includes('cfm')) setEquipCompressors(true);
-      if (cat.includes('gen') || title.includes('gen') || title.includes('kva')) setEquipGenerators(true);
-      if (cat.includes('pump') || title.includes('pump') || title.includes('gpm')) setEquipPumps(true);
-      if (cat.includes('dry') || title.includes('dry')) setEquipDryers(true);
+      if (cat.includes('service') || title.includes('service') || cat.includes('repair') || title.includes('maintenance')) {
+        setServiceRequest(true);
+      }
     });
   }, [inquiryItems]);
 
@@ -80,10 +83,10 @@ export const ContactPage: React.FC = () => {
     }
 
     const interests: string[] = [];
-    if (equipCompressors) interests.push('Air Compressors');
-    if (equipGenerators) interests.push('Generators');
-    if (equipPumps) interests.push('Pumps');
-    if (equipDryers) interests.push('Air Dryers');
+    if (newEquipPurchase) interests.push('New Equipment Purchase');
+    if (equipRental) interests.push('Equipment Rental');
+    if (spareParts) interests.push('Spare Parts');
+    if (serviceRequest) interests.push('Service Request');
     inquiryItems.forEach(item => {
       interests.push(`${item.title} (${item.category})`);
     });
@@ -112,10 +115,10 @@ export const ContactPage: React.FC = () => {
       setEmail('');
       setPhone('');
       setMessage('');
-      setEquipCompressors(false);
-      setEquipGenerators(false);
-      setEquipPumps(false);
-      setEquipDryers(false);
+      setNewEquipPurchase(false);
+      setEquipRental(false);
+      setSpareParts(false);
+      setServiceRequest(false);
     } catch (err: any) {
       setFormError(err.message || 'Failed to submit proposal inquiry. Please check your connection.');
     } finally {
@@ -317,24 +320,24 @@ export const ContactPage: React.FC = () => {
                 </label>
                 <div className="equipment-checkboxes-grid">
                   <CheckboxItem
-                    label="Air Compressors"
-                    checked={equipCompressors}
-                    onToggle={() => setEquipCompressors(!equipCompressors)}
+                    label="New Equipment Purchase"
+                    checked={newEquipPurchase}
+                    onToggle={() => setNewEquipPurchase(!newEquipPurchase)}
                   />
                   <CheckboxItem
-                    label="Power Generators"
-                    checked={equipGenerators}
-                    onToggle={() => setEquipGenerators(!equipGenerators)}
+                    label="Equipment Rental"
+                    checked={equipRental}
+                    onToggle={() => setEquipRental(!equipRental)}
                   />
                   <CheckboxItem
-                    label="Fluid Pumps"
-                    checked={equipPumps}
-                    onToggle={() => setEquipPumps(!equipPumps)}
+                    label="Spare Parts"
+                    checked={spareParts}
+                    onToggle={() => setSpareParts(!spareParts)}
                   />
                   <CheckboxItem
-                    label="Air Dryers"
-                    checked={equipDryers}
-                    onToggle={() => setEquipDryers(!equipDryers)}
+                    label="Service Request"
+                    checked={serviceRequest}
+                    onToggle={() => setServiceRequest(!serviceRequest)}
                   />
                 </div>
 
