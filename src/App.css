@@ -1029,3 +1029,126 @@
 .info-modal-action-btn:hover {
   background: var(--primary-container);
 }
+
+/* Dedicated Air Compressors Hover Dropdown Menu */
+.compressor-dropdown-panel {
+  width: 520px !important;
+  max-width: 95vw;
+  padding: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.16), 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.compressor-dropdown-content {
+  padding: 20px;
+  background: #ffffff;
+}
+
+.compressor-dropdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #64748b;
+}
+
+.compressor-dropdown-badge {
+  background: #fff4ee;
+  color: var(--primary-container, #d9531e);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.compressor-dropdown-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.compressor-dropdown-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.compressor-dropdown-item:hover {
+  background: #ffffff;
+  border-color: var(--primary-container, #d9531e);
+  transform: translateX(4px);
+  box-shadow: 0 6px 20px rgba(217, 83, 30, 0.12);
+}
+
+.compressor-item-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.compressor-item-icon-box.electric {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.compressor-item-icon-box.diesel {
+  background: #fff7ed;
+  color: #ea580c;
+}
+
+.compressor-dropdown-item:hover .compressor-item-icon-box.electric {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.compressor-dropdown-item:hover .compressor-item-icon-box.diesel {
+  background: #ea580c;
+  color: #ffffff;
+}
+
+.compressor-item-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.compressor-item-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.2px;
+  margin-bottom: 4px;
+}
+
+.compressor-dropdown-item:hover .compressor-item-title {
+  color: var(--primary-container, #d9531e);
+}
+
+.compressor-item-desc {
+  font-size: 12.5px;
+  color: #64748b;
+  line-height: 1.45;
+  margin-bottom: 6px;
+}
+
+.compressor-item-tag {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #94a3b8;
+  letter-spacing: 0.4px;
+}

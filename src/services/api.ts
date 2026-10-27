@@ -104,3 +104,39 @@ export async function fetchDocuments() {
   if (!res.ok) throw new Error('Failed to fetch technical documents');
   return res.json();
 }
+
+export interface CompressorRequestPayload {
+  compressor_type: 'ELECTRIC AIR COMPRESSOR' | 'DIESEL AIR COMPRESSOR';
+  brand: 'ATLAS COPCO' | 'SULLAIR' | 'INGERSOLL RAND' | 'DENAIR';
+  company_name: string;
+  email: string;
+  phone: string;
+  notes?: string;
+}
+
+export interface CompressorRequestResponse {
+  message: string;
+  data: {
+    id: string;
+    compressor_type: string;
+    brand: string;
+    company_name: string;
+    email: string;
+    phone: string;
+    status: string;
+    created_at: string;
+  };
+}
+
+export async function submitCompressorRequest(payload: CompressorRequestPayload): Promise<CompressorRequestResponse> {
+  const res = await fetch(`${API_BASE_URL}/api/compressor-requests`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || err.message || `Failed to submit compressor request (${res.status})`);
+  }
+  return res.json();
+}

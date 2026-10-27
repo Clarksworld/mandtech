@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { 
   ShieldCheck, Search, Share2, Mail, ChevronDown, ArrowRight, 
-  Zap, Activity, Layers, Sliders, Package, Cog, Wrench, Truck, 
+  Zap, Activity, Package, Cog, Wrench, Truck, 
   FileText, Menu, X, Phone, CheckCircle, Flame
 } from 'lucide-react';
 import { MandtechLogo } from './components/Logo';
@@ -28,6 +28,12 @@ export default function App() {
   const [navSearch, setNavSearch] = useState('');
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [selectedCompressorType, setSelectedCompressorType] = useState<'ELECTRIC AIR COMPRESSOR' | 'DIESEL AIR COMPRESSOR' | null>(null);
+
+  const navigateToCompressors = (type?: 'ELECTRIC AIR COMPRESSOR' | 'DIESEL AIR COMPRESSOR') => {
+    setSelectedCompressorType(type || null);
+    navigateTo('equipmentSales');
+  };
 
   const dropdownTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -66,7 +72,7 @@ export default function App() {
       case 'home':
         return <HomePage onNavigate={(page) => navigateTo(page as ActivePage)} />;
       case 'equipmentSales':
-        return <EquipmentSalesPage />;
+        return <EquipmentSalesPage initialType={selectedCompressorType} />;
       case 'catalog':
         return <CatalogPage />;
       case 'leasing':
@@ -154,7 +160,7 @@ export default function App() {
 
           {/* Desktop Chainstack-Style Mega Navigation */}
           <nav className="desktop-nav-menu">
-            {/* Nav Item: Equipment */}
+            {/* Nav Item: Air Compressors */}
             <div 
               className="nav-dropdown-wrapper"
               onMouseEnter={() => handleMouseEnter('equipment')}
@@ -162,70 +168,49 @@ export default function App() {
             >
               <button
                 className={`desktop-nav-link ${activePage === 'equipmentSales' ? 'nav-active' : ''} ${activeDropdown === 'equipment' ? 'dropdown-active' : ''}`}
-                onClick={() => navigateTo('equipmentSales')}
+                onClick={() => navigateToCompressors()}
               >
-                <span>Equipment</span>
+                <span>Air Compressors</span>
                 <ChevronDown size={14} className="dropdown-chevron" />
               </button>
 
               {activeDropdown === 'equipment' && (
-                <div className="mega-menu-panel" onMouseEnter={() => handleMouseEnter('equipment')} onMouseLeave={handleMouseLeave}>
-                  <div className="mega-menu-content">
-                    <div className="mega-menu-main-col">
-                      <div className="mega-menu-col-header">HEAVY INDUSTRIAL MACHINERY</div>
-                      <div className="mega-menu-links-grid">
-                        <div className="mega-menu-item" onClick={() => navigateTo('equipmentSales')}>
-                          <div className="mega-item-icon-box">
-                            <Zap size={18} />
-                          </div>
-                          <div className="mega-item-text">
-                            <div className="mega-item-title">Air Compressors</div>
-                            <div className="mega-item-desc">Rotary screw & reciprocating units, diesel & electric power (100–1600 CFM)</div>
-                          </div>
+                <div className="mega-menu-panel compressor-dropdown-panel" onMouseEnter={() => handleMouseEnter('equipment')} onMouseLeave={handleMouseLeave}>
+                  <div className="compressor-dropdown-content">
+                    <div className="compressor-dropdown-header">
+                      <span>SELECT COMPRESSOR CONFIGURATION</span>
+                      <span className="compressor-dropdown-badge">2 OPTIONS</span>
+                    </div>
+                    <div className="compressor-dropdown-grid">
+                      {/* Option 1: ELECTRIC AIR COMPRESSOR */}
+                      <div 
+                        className="compressor-dropdown-item"
+                        onClick={() => navigateToCompressors('ELECTRIC AIR COMPRESSOR')}
+                      >
+                        <div className="compressor-item-icon-box electric">
+                          <Zap size={22} />
                         </div>
-
-                        <div className="mega-menu-item" onClick={() => navigateTo('equipmentSales')}>
-                          <div className="mega-item-icon-box">
-                            <Flame size={18} />
-                          </div>
-                          <div className="mega-item-text">
-                            <div className="mega-item-title">Industrial Generators</div>
-                            <div className="mega-item-desc">Heavy-duty soundproof prime & standby diesel sets (20kVA–2000kVA)</div>
-                          </div>
-                        </div>
-
-                        <div className="mega-menu-item" onClick={() => navigateTo('equipmentSales')}>
-                          <div className="mega-item-icon-box">
-                            <Layers size={18} />
-                          </div>
-                          <div className="mega-item-text">
-                            <div className="mega-item-title">Fluid Handling Pumps</div>
-                            <div className="mega-item-desc">High-volume slurry, trash, and centrifugal dewatering pump stations</div>
-                          </div>
-                        </div>
-
-                        <div className="mega-menu-item" onClick={() => navigateTo('equipmentSales')}>
-                          <div className="mega-item-icon-box">
-                            <Sliders size={18} />
-                          </div>
-                          <div className="mega-item-text">
-                            <div className="mega-item-title">Desiccant Air Dryers</div>
-                            <div className="mega-item-desc">High-efficiency absorption systems & particulate filtration</div>
-                          </div>
+                        <div className="compressor-item-info">
+                          <div className="compressor-item-title">ELECTRIC AIR COMPRESSOR</div>
+                          <div className="compressor-item-desc">High-efficiency stationary rotary screw units for industrial plants (400V 3-Phase).</div>
+                          <span className="compressor-item-tag">ATLAS COPCO • SULLAIR • INGERSOLL RAND • DENAIR</span>
                         </div>
                       </div>
-                    </div>
 
-                    <div className="mega-menu-side-col">
-                      <div className="mega-side-badge">CERTIFIED FLEET</div>
-                      <h4 className="mega-side-heading">Industrial Equipment Sales</h4>
-                      <p className="mega-side-desc">
-                        Full warranty coverage, OEM delivery, and commissioning by certified engineers across Nigeria.
-                      </p>
-                      <button className="mega-side-action-btn" onClick={() => navigateTo('equipmentSales')}>
-                        <span>View Sales Inventory</span>
-                        <ArrowRight size={14} />
-                      </button>
+                      {/* Option 2: DIESEL AIR COMPRESSOR */}
+                      <div 
+                        className="compressor-dropdown-item"
+                        onClick={() => navigateToCompressors('DIESEL AIR COMPRESSOR')}
+                      >
+                        <div className="compressor-item-icon-box diesel">
+                          <Flame size={22} />
+                        </div>
+                        <div className="compressor-item-info">
+                          <div className="compressor-item-title">DIESEL AIR COMPRESSOR</div>
+                          <div className="compressor-item-desc">Heavy-duty mobile trailer-mounted portable units for remote field operations.</div>
+                          <span className="compressor-item-tag">ATLAS COPCO • SULLAIR • INGERSOLL RAND • DENAIR</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -547,10 +532,10 @@ export default function App() {
 
                 <button
                   className={`mobile-link-item ${activePage === 'equipmentSales' ? 'mobile-active' : ''}`}
-                  onClick={() => navigateTo('equipmentSales')}
+                  onClick={() => navigateToCompressors()}
                 >
-                  <span>Equipment Sales</span>
-                  <span className="mobile-link-tag">Machinery</span>
+                  <span>Air Compressors</span>
+                  <span className="mobile-link-tag">Electric &amp; Diesel</span>
                 </button>
 
                 <button
@@ -735,7 +720,7 @@ export default function App() {
                   content: (
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
                       <div onClick={() => { setActivePage('home'); setInfoModal(null); }} style={{ cursor: 'pointer', color: 'var(--primary-container)' }}>• Home Page</div>
-                      <div onClick={() => { setActivePage('equipmentSales'); setInfoModal(null); }} style={{ cursor: 'pointer', color: 'var(--primary-container)' }}>• Equipment Sales</div>
+                      <div onClick={() => { navigateToCompressors(); setInfoModal(null); }} style={{ cursor: 'pointer', color: 'var(--primary-container)' }}>• Air Compressors</div>
                       <div onClick={() => { setActivePage('catalog'); setInfoModal(null); }} style={{ cursor: 'pointer', color: 'var(--primary-container)' }}>• Parts Catalog</div>
                       <div onClick={() => { setActivePage('leasing'); setInfoModal(null); }} style={{ cursor: 'pointer', color: 'var(--primary-container)' }}>• Leasing &amp; Rentals</div>
                       <div onClick={() => { setActivePage('aftersales'); setInfoModal(null); }} style={{ cursor: 'pointer', color: 'var(--primary-container)' }}>• After-Sales &amp; Service</div>
