@@ -1,10 +1,10 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  Zap, Shield, Check, X,
-  Phone, Activity,
-  Flame, Mail, Building, ArrowRight, CheckCircle2, RotateCcw, AlertCircle, Sparkles
+  Zap, Shield, Check,
+  Phone,
+  Flame, Mail, Building, ArrowRight, ArrowLeft, CheckCircle2, RotateCcw, AlertCircle, Sparkles,
+  ChevronRight
 } from 'lucide-react';
-import { useInquiry } from '../context/InquiryContext';
 import { submitCompressorRequest } from '../services/api';
 import './EquipmentSalesPage.css';
 
@@ -26,38 +26,43 @@ export const COMPRESSOR_BRANDS: {
   country: string;
   description: string;
   warranty: string;
+  keyFeature: string;
 }[] = [
   {
     id: 'ATLAS COPCO',
     name: 'Atlas Copco',
-    tagline: 'VSD+ Energy Recovery & Oil-Free Excellence',
+    tagline: 'VSD+ Energy Recovery & Oil-Free Precision',
     country: 'Sweden / Global',
-    description: 'World-leading rotary screw compressors engineered for maximum uptime, intelligent Elektronikon controls, and lowest total lifecycle cost.',
-    warranty: '5-Year OEM Air-End Protection',
+    description: 'Pioneering rotary screw technology with permanent magnet motors and smart Elektronikon control.',
+    warranty: '5-Year OEM Protection',
+    keyFeature: 'Up to 50% Energy Savings with VSD+',
   },
   {
     id: 'SULLAIR',
     name: 'Sullair',
     tagline: 'Legendary Bulletproof Rotary Screw Air-Ends',
     country: 'USA / Global',
-    description: 'Engineered for extreme heavy-duty environments, mining, infrastructure, and heavy plant air with zero unscheduled downtime.',
-    warranty: '10-Year Diamond Air-End Warranty',
+    description: 'Renowned for extreme durability in oil & gas, mining, and heavy industrial plant duty.',
+    warranty: '10-Year Diamond Warranty',
+    keyFeature: 'Heavy-Duty Sullube Fluid & Zero Breakdown',
   },
   {
     id: 'INGERSOLL RAND',
     name: 'Ingersoll Rand',
-    tagline: 'Industrial Power, Contact-Cooled Reliability',
+    tagline: 'High CFM Power & Ultra-Coolant Reliability',
     country: 'USA / Global',
-    description: 'Precision engineered rotary screw compressors delivering high CFM airflow with low noise attenuation and advanced micro-filtration.',
+    description: 'Next-generation industrial rotary compressors delivering constant air pressure with low decibel attenuation.',
     warranty: '5-Year Package Protection',
+    keyFeature: '8,000-Hour Factory Coolant Included',
   },
   {
     id: 'DENAIR',
     name: 'Denair',
-    tagline: 'German Engineering & High Efficiency',
+    tagline: 'German Engineering & High Ambient Resistance',
     country: 'Germany / Global',
-    description: 'Advanced dual-stage energy-saving rotary screw units designed for severe tropical ambient temperatures and 24/7 continuous duty.',
+    description: 'Precision dual-stage rotary systems optimized for tropical heat, humidity, and continuous 24/7 duty.',
     warranty: '5-Year Air-End Warranty',
+    keyFeature: 'Dual-Stage Compression Efficiency',
   },
 ];
 
@@ -69,7 +74,7 @@ interface ProductItem {
   image: string;
   badge?: string;
   badgeType: 'in-stock' | 'featured';
-  specs: { icon: React.ReactNode; label: string }[];
+  specs: { label: string }[];
   capacity: number;
   driven: 'Electric' | 'Diesel Driven';
 }
@@ -84,9 +89,9 @@ const PRODUCTS: ProductItem[] = [
     badge: 'IN STOCK',
     badgeType: 'in-stock',
     specs: [
-      { icon: <Activity size={14} />, label: '920 CFM Flow Rate' },
-      { icon: <Zap size={14} />, label: '160 kW Variable Speed' },
-      { icon: <Shield size={14} />, label: 'Elektronikon Touch' },
+      { label: '920 CFM Flow Rate' },
+      { label: '160 kW Variable Speed' },
+      { label: 'Elektronikon Touch' },
     ],
     capacity: 920,
     driven: 'Electric',
@@ -100,9 +105,9 @@ const PRODUCTS: ProductItem[] = [
     badge: 'FEATURED',
     badgeType: 'featured',
     specs: [
-      { icon: <Activity size={14} />, label: '185 CFM Capacity' },
-      { icon: <Flame size={14} />, label: 'Caterpillar Diesel' },
-      { icon: <Shield size={14} />, label: 'Road-Ready Trailer' },
+      { label: '185 CFM Capacity' },
+      { label: 'Caterpillar Diesel' },
+      { label: 'Road-Ready Trailer' },
     ],
     capacity: 185,
     driven: 'Diesel Driven',
@@ -116,9 +121,9 @@ const PRODUCTS: ProductItem[] = [
     badge: 'IN STOCK',
     badgeType: 'in-stock',
     specs: [
-      { icon: <Activity size={14} />, label: '415 CFM Flow' },
-      { icon: <Zap size={14} />, label: '75 kW Electric Drive' },
-      { icon: <Shield size={14} />, label: 'Ultra Coolant 8000hr' },
+      { label: '415 CFM Flow' },
+      { label: '75 kW Electric Drive' },
+      { label: 'Ultra Coolant 8000hr' },
     ],
     capacity: 415,
     driven: 'Electric',
@@ -132,9 +137,9 @@ const PRODUCTS: ProductItem[] = [
     badge: 'FEATURED',
     badgeType: 'featured',
     specs: [
-      { icon: <Activity size={14} />, label: '375 CFM Heavy Duty' },
-      { icon: <Flame size={14} />, label: 'Cummins Diesel Engine' },
-      { icon: <Shield size={14} />, label: 'High Altitude Package' },
+      { label: '375 CFM Heavy Duty' },
+      { label: 'Cummins Diesel Engine' },
+      { label: 'High Altitude Package' },
     ],
     capacity: 375,
     driven: 'Diesel Driven',
@@ -148,9 +153,9 @@ const PRODUCTS: ProductItem[] = [
     badge: 'IN STOCK',
     badgeType: 'in-stock',
     specs: [
-      { icon: <Activity size={14} />, label: '375 CFM @ 150 PSI' },
-      { icon: <Flame size={14} />, label: 'Diesel Engine Driven' },
-      { icon: <Shield size={14} />, label: 'Sound Attenuated Canopy' },
+      { label: '375 CFM @ 150 PSI' },
+      { label: 'Diesel Engine Driven' },
+      { label: 'Sound Attenuated Canopy' },
     ],
     capacity: 375,
     driven: 'Diesel Driven',
@@ -164,43 +169,11 @@ const PRODUCTS: ProductItem[] = [
     badge: 'IN STOCK',
     badgeType: 'in-stock',
     specs: [
-      { icon: <Activity size={14} />, label: '550 CFM Rotary Screw' },
-      { icon: <Zap size={14} />, label: 'Permanent Magnet Motor' },
-      { icon: <Shield size={14} />, label: '35% Energy Savings' },
+      { label: '550 CFM Rotary Screw' },
+      { label: 'Permanent Magnet Motor' },
+      { label: '35% Energy Savings' },
     ],
     capacity: 550,
-    driven: 'Electric',
-  },
-  {
-    id: 7,
-    title: 'Atlas Copco XATS 400 Diesel',
-    category: 'Air Compressors',
-    brand: 'Atlas Copco',
-    image: catalogBg,
-    badge: 'IN STOCK',
-    badgeType: 'in-stock',
-    specs: [
-      { icon: <Activity size={14} />, label: '400 CFM Portable' },
-      { icon: <Flame size={14} />, label: 'Deutz Stage V Engine' },
-      { icon: <Shield size={14} />, label: 'HardHat Polyethylene' },
-    ],
-    capacity: 400,
-    driven: 'Diesel Driven',
-  },
-  {
-    id: 8,
-    title: 'Ingersoll Rand UP6-50',
-    category: 'Air Compressors',
-    brand: 'Ingersoll Rand',
-    image: portableUnit,
-    badge: 'IN STOCK',
-    badgeType: 'in-stock',
-    specs: [
-      { icon: <Activity size={14} />, label: '235 CFM Continuous' },
-      { icon: <Zap size={14} />, label: '37 kW TEFC Electric' },
-      { icon: <Shield size={14} />, label: 'Integrated Air Dryer' },
-    ],
-    capacity: 235,
     driven: 'Electric',
   },
 ];
@@ -210,13 +183,14 @@ interface EquipmentSalesPageProps {
 }
 
 export default function EquipmentSalesPage({ initialType }: EquipmentSalesPageProps) {
-  const { addToInquiry } = useInquiry();
+  // Step State: 1 = Type, 2 = Brand, 3 = Details Form, 4 = Success
+  const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4>(initialType ? 2 : 1);
 
-  // Quotation Configurator State
+  // Configuration Choices
   const [selectedType, setSelectedType] = useState<CompressorType | null>(initialType || null);
   const [selectedBrand, setSelectedBrand] = useState<CompressorBrand | null>(null);
 
-  // Form inputs
+  // Contact Details Form inputs
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [companyName, setCompanyName] = useState('');
@@ -234,51 +208,57 @@ export default function EquipmentSalesPage({ initialType }: EquipmentSalesPagePr
   } | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  // UI Modals
+  // Optional Catalog Accordion
+  const [showCatalog, setShowCatalog] = useState(false);
   const [showConsultModal, setShowConsultModal] = useState(false);
-  const [quoteMsg, setQuoteMsg] = useState<string | null>(null);
 
-  // Sync initialType when passed via navigation
+  // Synchronize when initialType changes from Navbar dropdown
   useEffect(() => {
     if (initialType) {
       setSelectedType(initialType);
+      setCurrentStep(2);
     }
   }, [initialType]);
 
-  const handleTypeSelect = (type: CompressorType) => {
+  // Step 1: Select Type -> Advances to Step 2
+  const handleSelectType = (type: CompressorType) => {
     setSelectedType(type);
-    setSubmissionSuccess(null);
-    setSubmitError(null);
+    setCurrentStep(2);
+    window.scrollTo({ top: 120, behavior: 'smooth' });
   };
 
-  const handleBrandSelect = (brand: CompressorBrand) => {
+  // Step 2: Select Brand -> Advances to Step 3
+  const handleSelectBrand = (brand: CompressorBrand) => {
     setSelectedBrand(brand);
-    setSubmissionSuccess(null);
-    setSubmitError(null);
+    setCurrentStep(3);
+    window.scrollTo({ top: 120, behavior: 'smooth' });
   };
 
+  // Step 3: Form Submit -> Advances to Step 4
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitError(null);
 
     if (!selectedType) {
-      setSubmitError('Please select whether you need an Electric or Diesel air compressor.');
+      setSubmitError('Please select a compressor type.');
+      setCurrentStep(1);
       return;
     }
     if (!selectedBrand) {
-      setSubmitError('Please select a preferred manufacturer (Atlas Copco, Sullair, Ingersoll Rand, or Denair).');
+      setSubmitError('Please select an OEM brand.');
+      setCurrentStep(2);
       return;
     }
     if (!companyName.trim()) {
-      setSubmitError('Please provide your company or organization name.');
+      setSubmitError('Please enter your company or organization name.');
       return;
     }
     if (!email.trim() || !email.includes('@')) {
-      setSubmitError('Please provide a valid corporate or official email address.');
+      setSubmitError('Please enter a valid corporate email address.');
       return;
     }
     if (!phone.trim() || phone.trim().length < 6) {
-      setSubmitError('Please provide a valid telephone/mobile contact number.');
+      setSubmitError('Please enter a valid telephone or WhatsApp number.');
       return;
     }
 
@@ -302,89 +282,67 @@ export default function EquipmentSalesPage({ initialType }: EquipmentSalesPagePr
         phone: response.data.phone,
       });
 
-      // Clear input fields
+      // Clear form inputs
       setPhone('');
       setEmail('');
       setCompanyName('');
       setNotes('');
+
+      // Advance to Success Step
+      setCurrentStep(4);
+      window.scrollTo({ top: 100, behavior: 'smooth' });
     } catch (err: any) {
-      console.error('Error submitting compressor quote request:', err);
-      setSubmitError(err.message || 'Failed to submit quotation request. Please check your network and try again.');
+      console.error('Error submitting quotation request:', err);
+      setSubmitError(err.message || 'Unable to submit quotation request. Please check your network and try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  // Reset entire flow back to Step 1
   const handleResetFlow = () => {
     setSelectedType(null);
     setSelectedBrand(null);
     setSubmissionSuccess(null);
     setSubmitError(null);
-  };
-
-  // Filter catalog products matching selections
-  const filteredProducts = useMemo(() => {
-    return PRODUCTS.filter(p => {
-      if (selectedType) {
-        const requiredDriven = selectedType === 'ELECTRIC AIR COMPRESSOR' ? 'Electric' : 'Diesel Driven';
-        if (p.driven !== requiredDriven) return false;
-      }
-      if (selectedBrand) {
-        const brandMatch = p.brand.toUpperCase() === selectedBrand.toUpperCase();
-        if (!brandMatch) return false;
-      }
-      return true;
-    });
-  }, [selectedType, selectedBrand]);
-
-  const handleQuickAddBasket = (item: ProductItem) => {
-    addToInquiry({
-      id: `equip-${item.id}`,
-      title: item.title,
-      category: item.category,
-      type: 'equipment',
-      brand: item.brand,
-      image: item.image,
-      specSummary: item.specs.map(s => s.label).join(' • '),
-    });
-    setQuoteMsg(item.title);
-    setTimeout(() => setQuoteMsg(null), 5000);
+    setCurrentStep(1);
+    window.scrollTo({ top: 80, behavior: 'smooth' });
   };
 
   return (
     <div className="equip-sales-page">
 
-      {/* Expert Consultation Modal */}
+      {/* Engineering Hotline Modal */}
       {showConsultModal && (
         <div className="status-modal-overlay" onClick={() => setShowConsultModal(false)}>
           <div className="status-modal-card" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3 className="modal-title">
                 <Phone size={20} className="text-orange" />
-                <span>Air Systems Engineering Consultation</span>
+                <span>Commercial &amp; Technical Desk</span>
               </h3>
               <button className="modal-close-btn" onClick={() => setShowConsultModal(false)}>✕</button>
             </div>
             <div className="modal-body-content" style={{ padding: '24px' }}>
               <p style={{ fontSize: '14px', lineHeight: '1.6', color: '#4b5563', marginBottom: '16px' }}>
-                Our application engineers will review your air pressure (PSI/Bar), airflow demand (CFM/m³/min), duty cycle, and site conditions to size the ideal compressor setup.
+                Speak directly with Mandtech compressed air specialists for sizing, CFM calculations, and delivery schedules across Nigeria.
               </p>
-              <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '6px', border: '1px solid #e2e8f0', marginBottom: '20px' }}>
+              <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '8px', border: '1px solid #e2e8f0', marginBottom: '20px' }}>
                 <strong style={{ fontSize: '13px', color: '#1e252b' }}>Direct Engineering Contacts:</strong>
                 <p style={{ fontSize: '13px', color: '#4b5563', marginTop: '6px' }}>
-                  Lagos Technical Centre: <strong>+234 (1) 460-7000</strong><br />
-                  Port Harcourt Operations: <strong>+234 (84) 303-900</strong><br />
+                  Lagos Corporate Office: <strong>+234 (1) 460-7000</strong><br />
+                  Port Harcourt Hub: <strong>+234 (84) 303-900</strong><br />
                   Email: <strong>compressors@mandtech.com.ng</strong>
                 </p>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <button
                   onClick={() => setShowConsultModal(false)}
                   style={{
                     background: 'var(--primary-container)',
                     color: '#fff',
                     border: 'none',
-                    padding: '10px 20px',
+                    padding: '10px 22px',
                     borderRadius: '6px',
                     fontWeight: 700,
                     cursor: 'pointer'
@@ -398,249 +356,259 @@ export default function EquipmentSalesPage({ initialType }: EquipmentSalesPagePr
         </div>
       )}
 
-      {/* Quote success banner */}
-      {quoteMsg && (
-        <div className="equip-quote-banner container">
-          <span className="equip-banner-badge"><Check size={16} /></span>
-          <div className="equip-banner-content">
-            <h4>Added to Procurement Checklist</h4>
-            <p><strong>{quoteMsg}</strong> has been saved. You can also finalize your quotation request below.</p>
-          </div>
-          <button className="equip-banner-close" onClick={() => setQuoteMsg(null)}><X size={18} /></button>
-        </div>
-      )}
-
-      {/* Hero Header */}
-      <section className="compressor-hero-banner">
+      {/* Executive Clean Hero */}
+      <section className="wizard-hero-section">
         <div className="container">
-          <div className="compressor-hero-badge">
+          <div className="wizard-hero-badge">
             <Sparkles size={14} />
-            <span>OEM CERTIFIED INDUSTRIAL FLEET</span>
+            <span>OEM CERTIFIED INDUSTRIAL AIR SYSTEMS</span>
           </div>
-          <h1 className="compressor-hero-title">Air Compressors & Sizing Quotations</h1>
-          <p className="compressor-hero-desc">
-            Direct Nigerian sales, turnkey installation, and OEM factory warranty for high-performance electric and diesel rotary screw air compressors.
+          <h1 className="wizard-hero-title">Air Compressors & Sizing Quotations</h1>
+          <p className="wizard-hero-sub">
+            Follow our guided 3-step formal quotation process. Certified factory warranty, delivery, and commissioning across Nigeria.
           </p>
         </div>
       </section>
 
-      {/* MAIN STEP-BY-STEP FLOW */}
-      <div className="container compressor-flow-container">
+      {/* Main Single-Step Wizard Container */}
+      <div className="container wizard-outer-wrap">
+        <div className="wizard-card-box">
 
-        {/* Step Indicator */}
-        <div className="compressor-stepper">
-          <div className={`step-node ${selectedType ? 'step-completed' : 'step-current'}`}>
-            <div className="step-circle">{selectedType ? <Check size={14} /> : '1'}</div>
-            <div className="step-label">Select Compressor Type</div>
-          </div>
-          <div className="step-line" />
-          <div className={`step-node ${selectedBrand ? 'step-completed' : selectedType ? 'step-current' : 'step-upcoming'}`}>
-            <div className="step-circle">{selectedBrand ? <Check size={14} /> : '2'}</div>
-            <div className="step-label">Choose Brand</div>
-          </div>
-          <div className="step-line" />
-          <div className={`step-node ${submissionSuccess ? 'step-completed' : selectedBrand ? 'step-current' : 'step-upcoming'}`}>
-            <div className="step-circle">{submissionSuccess ? <Check size={14} /> : '3'}</div>
-            <div className="step-label">Request Formal Quotation</div>
-          </div>
-        </div>
-
-        {/* STEP 1: COMPRESSOR TYPE SELECTION */}
-        <section className="flow-card-section">
-          <div className="section-title-wrap">
-            <span className="section-step-tag">STEP 1</span>
-            <h2 className="section-main-heading">Choose Air Compressor Type</h2>
-            <p className="section-subheading">Select power configuration based on plant electrical supply or remote field requirements.</p>
-          </div>
-
-          <div className="type-selection-grid">
-            {/* ELECTRIC */}
-            <div
-              className={`type-card ${selectedType === 'ELECTRIC AIR COMPRESSOR' ? 'type-card-selected' : ''}`}
-              onClick={() => handleTypeSelect('ELECTRIC AIR COMPRESSOR')}
+          {/* Top Progress & Stepper Bar */}
+          <div className="wizard-stepper-header">
+            {/* Step 1 Pill */}
+            <button
+              type="button"
+              className={`wizard-step-pill ${currentStep === 1 ? 'pill-active' : currentStep > 1 ? 'pill-completed' : 'pill-disabled'}`}
+              onClick={() => {
+                if (currentStep > 1 && currentStep < 4) setCurrentStep(1);
+              }}
+              disabled={currentStep === 4}
             >
-              <div className="type-icon-circle electric-icon">
-                <Zap size={28} />
-              </div>
-              <div className="type-card-badge">STATIONARY & PLANT</div>
-              <h3 className="type-card-title">ELECTRIC AIR COMPRESSOR</h3>
-              <p className="type-card-desc">
-                High-efficiency rotary screw systems with variable speed drive (VSD), permanent magnet motors, and ultra-quiet stationary acoustic canopies.
-              </p>
-              <ul className="type-highlights">
-                <li><Check size={14} /> Zero emissions & lowest operating cost</li>
-                <li><Check size={14} /> 400V 3-Phase industrial plant power</li>
-                <li><Check size={14} /> Integrated moisture separators & dryers</li>
-              </ul>
-              <button
-                type="button"
-                className={`type-select-btn ${selectedType === 'ELECTRIC AIR COMPRESSOR' ? 'selected-btn' : ''}`}
-              >
-                {selectedType === 'ELECTRIC AIR COMPRESSOR' ? 'Selected Type ✓' : 'Select Electric'}
-              </button>
-            </div>
+              <span className="step-num">{currentStep > 1 ? <Check size={14} /> : '1'}</span>
+              <span className="step-text">
+                <span className="step-sublabel">Configuration</span>
+                <span className="step-mainlabel">{selectedType ? (selectedType === 'ELECTRIC AIR COMPRESSOR' ? 'Electric' : 'Diesel') : 'Select Type'}</span>
+              </span>
+            </button>
 
-            {/* DIESEL */}
-            <div
-              className={`type-card ${selectedType === 'DIESEL AIR COMPRESSOR' ? 'type-card-selected' : ''}`}
-              onClick={() => handleTypeSelect('DIESEL AIR COMPRESSOR')}
+            <ChevronRight size={18} className="stepper-arrow" />
+
+            {/* Step 2 Pill */}
+            <button
+              type="button"
+              className={`wizard-step-pill ${currentStep === 2 ? 'pill-active' : currentStep > 2 ? 'pill-completed' : 'pill-disabled'}`}
+              onClick={() => {
+                if (selectedType && currentStep > 2 && currentStep < 4) setCurrentStep(2);
+              }}
+              disabled={!selectedType || currentStep === 4}
             >
-              <div className="type-icon-circle diesel-icon">
-                <Flame size={28} />
-              </div>
-              <div className="type-card-badge">MOBILE & RUGGED FIELD</div>
-              <h3 className="type-card-title">DIESEL AIR COMPRESSOR</h3>
-              <p className="type-card-desc">
-                Heavy-duty diesel-driven mobile units built on robust trailer running gear with heavy soundproofing, high CFM capacity, and field autonomy.
-              </p>
-              <ul className="type-highlights">
-                <li><Check size={14} /> CAT / Cummins / Deutz diesel engines</li>
-                <li><Check size={14} /> High mobility trailer mount with highway brakes</li>
-                <li><Check size={14} /> Severe duty filtration & high-ambient package</li>
-              </ul>
-              <button
-                type="button"
-                className={`type-select-btn ${selectedType === 'DIESEL AIR COMPRESSOR' ? 'selected-btn' : ''}`}
-              >
-                {selectedType === 'DIESEL AIR COMPRESSOR' ? 'Selected Type ✓' : 'Select Diesel'}
-              </button>
-            </div>
+              <span className="step-num">{currentStep > 2 ? <Check size={14} /> : '2'}</span>
+              <span className="step-text">
+                <span className="step-sublabel">Manufacturer</span>
+                <span className="step-mainlabel">{selectedBrand || 'Select Brand'}</span>
+              </span>
+            </button>
+
+            <ChevronRight size={18} className="stepper-arrow" />
+
+            {/* Step 3 Pill */}
+            <button
+              type="button"
+              className={`wizard-step-pill ${currentStep === 3 ? 'pill-active' : currentStep === 4 ? 'pill-completed' : 'pill-disabled'}`}
+              disabled={!selectedBrand || currentStep === 4}
+            >
+              <span className="step-num">{currentStep === 4 ? <Check size={14} /> : '3'}</span>
+              <span className="step-text">
+                <span className="step-sublabel">Formal Quote</span>
+                <span className="step-mainlabel">Commercial Details</span>
+              </span>
+            </button>
           </div>
-        </section>
 
-        {/* STEP 2: BRAND SELECTION (Appears when type is selected) */}
-        {selectedType && (
-          <section className="flow-card-section animated-fade-in" id="brand-selection-step">
-            <div className="section-title-wrap">
-              <div className="selected-summary-pill">
-                <span>Selected Type:</span> <strong>{selectedType}</strong>
+          {/* Progress Bar Line */}
+          <div className="wizard-progress-track">
+            <div
+              className="wizard-progress-fill"
+              style={{
+                width: currentStep === 1 ? '20%' : currentStep === 2 ? '55%' : currentStep === 3 ? '85%' : '100%'
+              }}
+            />
+          </div>
+
+          {/* STEP 1: ONLY COMPRESSOR TYPE SELECTION */}
+          {currentStep === 1 && (
+            <div className="wizard-step-body wizard-anim-enter">
+              <div className="step-title-zone">
+                <span className="step-badge-indicator">STEP 1 OF 3</span>
+                <h2 className="step-headline">Select Compressor Configuration</h2>
+                <p className="step-explanation">
+                  Choose the power source required for your industrial facility or remote field job site.
+                </p>
               </div>
-              <span className="section-step-tag">STEP 2</span>
-              <h2 className="section-main-heading">Select Manufacturer Brand</h2>
-              <p className="section-subheading">Choose your preferred OEM brand. Mandtech provides certified direct import, commissioning, and warranty support.</p>
-            </div>
 
-            <div className="brands-selection-grid">
-              {COMPRESSOR_BRANDS.map(brand => {
-                const isSelected = selectedBrand === brand.id;
-                return (
+              <div className="step-cards-grid-two">
+                {/* ELECTRIC AIR COMPRESSOR */}
+                <div
+                  className="interactive-type-card"
+                  onClick={() => handleSelectType('ELECTRIC AIR COMPRESSOR')}
+                  role="button"
+                  tabIndex={0}
+                >
+                  <div className="type-card-badge-top">PLANT &amp; STATIONARY</div>
+                  <div className="type-icon-wrapper electric-theme">
+                    <Zap size={36} />
+                  </div>
+                  <h3 className="type-card-heading">ELECTRIC AIR COMPRESSOR</h3>
+                  <p className="type-card-summary">
+                    High-efficiency rotary screw systems with variable speed drives (VSD) designed for permanent indoor factory power.
+                  </p>
+                  <div className="type-card-spec-list">
+                    <div className="spec-bullet"><Check size={14} /> 400V 3-Phase Continuous Plant Duty</div>
+                    <div className="spec-bullet"><Check size={14} /> Ultra-low acoustic decibel canopy</div>
+                    <div className="spec-bullet"><Check size={14} /> Lowest total cost of electricity &amp; maintenance</div>
+                  </div>
+                  <div className="type-card-cta-btn">
+                    <span>Configure Electric</span>
+                    <ArrowRight size={16} />
+                  </div>
+                </div>
+
+                {/* DIESEL AIR COMPRESSOR */}
+                <div
+                  className="interactive-type-card"
+                  onClick={() => handleSelectType('DIESEL AIR COMPRESSOR')}
+                  role="button"
+                  tabIndex={0}
+                >
+                  <div className="type-card-badge-top diesel">MOBILE &amp; FIELD AUTONOMY</div>
+                  <div className="type-icon-wrapper diesel-theme">
+                    <Flame size={36} />
+                  </div>
+                  <h3 className="type-card-heading">DIESEL AIR COMPRESSOR</h3>
+                  <p className="type-card-summary">
+                    Rugged trailer-mounted portable units powered by CAT, Cummins, or Deutz diesel engines for remote operations.
+                  </p>
+                  <div className="type-card-spec-list">
+                    <div className="spec-bullet"><Check size={14} /> Heavy-duty highway running gear &amp; tow bar</div>
+                    <div className="spec-bullet"><Check size={14} /> High CFM output for sandblasting &amp; drilling</div>
+                    <div className="spec-bullet"><Check size={14} /> Tropical high-ambient cooling package</div>
+                  </div>
+                  <div className="type-card-cta-btn diesel">
+                    <span>Configure Diesel</span>
+                    <ArrowRight size={16} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 2: ONLY BRAND SELECTION */}
+          {currentStep === 2 && selectedType && (
+            <div className="wizard-step-body wizard-anim-enter">
+              {/* Back & Breadcrumb Bar */}
+              <div className="wizard-nav-subbar">
+                <button
+                  type="button"
+                  className="wizard-back-btn"
+                  onClick={() => setCurrentStep(1)}
+                >
+                  <ArrowLeft size={16} />
+                  <span>Change Configuration</span>
+                </button>
+
+                <div className="wizard-current-selection-badge">
+                  <span>Selected:</span>
+                  <strong>{selectedType}</strong>
+                </div>
+              </div>
+
+              <div className="step-title-zone">
+                <span className="step-badge-indicator">STEP 2 OF 3</span>
+                <h2 className="step-headline">Select Manufacturer Brand</h2>
+                <p className="step-explanation">
+                  Select your preferred OEM manufacturer. Mandtech is an authorized distributor providing full factory warranty in Nigeria.
+                </p>
+              </div>
+
+              <div className="step-brands-grid-four">
+                {COMPRESSOR_BRANDS.map((brand) => (
                   <div
                     key={brand.id}
-                    className={`brand-choice-card ${isSelected ? 'brand-card-selected' : ''}`}
-                    onClick={() => handleBrandSelect(brand.id)}
+                    className="interactive-brand-card"
+                    onClick={() => handleSelectBrand(brand.id)}
+                    role="button"
+                    tabIndex={0}
                   >
-                    <div className="brand-header-row">
-                      <h4 className="brand-title">{brand.name.toUpperCase()}</h4>
-                      <span className="brand-warranty-badge">{brand.warranty}</span>
+                    <div className="brand-card-top-row">
+                      <span className="brand-oem-tag">{brand.country}</span>
+                      <span className="brand-warranty-pill">{brand.warranty}</span>
                     </div>
-                    <div className="brand-tagline">{brand.tagline}</div>
-                    <p className="brand-desc">{brand.description}</p>
-                    <div className="brand-footer-row">
-                      <span className="brand-origin">{brand.country}</span>
-                      <button
-                        type="button"
-                        className={`brand-select-btn ${isSelected ? 'brand-btn-selected' : ''}`}
-                      >
-                        {isSelected ? 'Selected ✓' : 'Choose Brand'}
-                      </button>
+
+                    <h3 className="brand-card-name">{brand.name.toUpperCase()}</h3>
+                    <p className="brand-card-tagline">{brand.tagline}</p>
+                    <p className="brand-card-desc">{brand.description}</p>
+
+                    <div className="brand-key-feature">
+                      <Sparkles size={13} />
+                      <span>{brand.keyFeature}</span>
+                    </div>
+
+                    <div className="brand-card-select-action">
+                      <span>Select {brand.name}</span>
+                      <ArrowRight size={14} />
                     </div>
                   </div>
-                );
-              })}
+                ))}
+              </div>
             </div>
-          </section>
-        )}
+          )}
 
-        {/* STEP 3: FORMAL QUOTATION REQUEST FORM */}
-        {selectedType && selectedBrand && (
-          <section className="flow-card-section quotation-form-section animated-fade-in" id="quotation-form-step">
-            <div className="section-title-wrap">
-              <span className="section-step-tag">STEP 3</span>
-              <h2 className="section-main-heading">Request a Formal Quotation</h2>
-              <p className="section-subheading">
-                Enter your commercial contact details below. Our technical sales desk will prepare an official commercial invoice and sizing specification.
-              </p>
-            </div>
+          {/* STEP 3: ONLY FORMAL QUOTATION FORM */}
+          {currentStep === 3 && selectedType && selectedBrand && (
+            <div className="wizard-step-body wizard-anim-enter">
+              {/* Back & Breadcrumb Bar */}
+              <div className="wizard-nav-subbar">
+                <button
+                  type="button"
+                  className="wizard-back-btn"
+                  onClick={() => setCurrentStep(2)}
+                >
+                  <ArrowLeft size={16} />
+                  <span>Change Brand</span>
+                </button>
 
-            {/* Success Card */}
-            {submissionSuccess ? (
-              <div className="formal-quote-success-card">
-                <div className="success-icon-wrap">
-                  <CheckCircle2 size={48} className="text-success" />
-                </div>
-                <h3 className="success-title">Official Quotation Request Registered</h3>
-                <p className="success-reference">
-                  Quotation Tracking Reference: <strong>MT-Q-{submissionSuccess.id.slice(0, 8).toUpperCase()}</strong>
-                </p>
-                <div className="success-summary-box">
-                  <div className="success-summary-item">
-                    <span>Compressor Type:</span>
-                    <strong>{submissionSuccess.compressor_type}</strong>
-                  </div>
-                  <div className="success-summary-item">
-                    <span>Selected Brand:</span>
-                    <strong>{submissionSuccess.brand}</strong>
-                  </div>
-                  <div className="success-summary-item">
-                    <span>Company:</span>
-                    <strong>{submissionSuccess.company_name}</strong>
-                  </div>
-                  <div className="success-summary-item">
-                    <span>Official Email:</span>
-                    <strong>{submissionSuccess.email}</strong>
-                  </div>
-                  <div className="success-summary-item">
-                    <span>Telephone:</span>
-                    <strong>{submissionSuccess.phone}</strong>
-                  </div>
-                </div>
-                <p className="success-delivery-notice">
-                  A regional technical sales engineer has been assigned. You will receive an official PDF quotation and technical data sheet via email within <strong>2 to 4 business hours</strong>.
-                </p>
-                <div className="success-actions">
-                  <button type="button" className="btn-reset-flow" onClick={handleResetFlow}>
-                    <RotateCcw size={16} />
-                    <span>Submit Another Request</span>
-                  </button>
-                  <button type="button" className="btn-consult-hotline" onClick={() => setShowConsultModal(true)}>
-                    <Phone size={16} />
-                    <span>Call Engineering Hotlines</span>
-                  </button>
+                <div className="wizard-current-selection-badge">
+                  <span>Configuration:</span>
+                  <strong>{selectedType}</strong>
+                  <span className="sep">•</span>
+                  <strong className="text-orange">{selectedBrand}</strong>
                 </div>
               </div>
-            ) : (
-              <form onSubmit={handleFormSubmit} className="formal-quote-form">
-                {/* Configuration summary chip */}
-                <div className="form-summary-banner">
-                  <div className="summary-left">
-                    <span className="summary-label">Quotation Package:</span>
-                    <span className="summary-val">{selectedType}</span>
-                    <span className="summary-divider">•</span>
-                    <span className="summary-val highlight">{selectedBrand}</span>
-                  </div>
-                  <button
-                    type="button"
-                    className="summary-change-btn"
-                    onClick={() => setSelectedBrand(null)}
-                  >
-                    Change Brand
-                  </button>
-                </div>
 
+              <div className="step-title-zone">
+                <span className="step-badge-indicator">STEP 3 OF 3</span>
+                <h2 className="step-headline">Request a Formal Quotation</h2>
+                <p className="step-explanation">
+                  Enter your company and procurement contact details. Our regional commercial engineering desk will formulate your official proforma quotation.
+                </p>
+              </div>
+
+              <form onSubmit={handleFormSubmit} className="wizard-quote-form">
                 {submitError && (
-                  <div className="form-error-banner">
+                  <div className="wizard-form-error">
                     <AlertCircle size={18} />
                     <span>{submitError}</span>
                   </div>
                 )}
 
-                <div className="form-inputs-grid">
+                <div className="wizard-form-grid">
                   {/* Company Name */}
-                  <div className="form-input-group">
-                    <label htmlFor="companyName" className="form-label">
+                  <div className="wizard-field-group">
+                    <label htmlFor="companyName" className="wizard-label">
                       Company Name <span className="req">*</span>
                     </label>
-                    <div className="input-with-icon">
+                    <div className="wizard-input-wrap">
                       <Building size={18} className="field-icon" />
                       <input
                         id="companyName"
@@ -649,17 +617,18 @@ export default function EquipmentSalesPage({ initialType }: EquipmentSalesPagePr
                         value={companyName}
                         onChange={(e) => setCompanyName(e.target.value)}
                         required
-                        className="form-control"
+                        className="wizard-input"
+                        autoFocus
                       />
                     </div>
                   </div>
 
-                  {/* Email */}
-                  <div className="form-input-group">
-                    <label htmlFor="email" className="form-label">
+                  {/* Corporate Email */}
+                  <div className="wizard-field-group">
+                    <label htmlFor="email" className="wizard-label">
                       Corporate / Official Email <span className="req">*</span>
                     </label>
-                    <div className="input-with-icon">
+                    <div className="wizard-input-wrap">
                       <Mail size={18} className="field-icon" />
                       <input
                         id="email"
@@ -668,17 +637,17 @@ export default function EquipmentSalesPage({ initialType }: EquipmentSalesPagePr
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
-                        className="form-control"
+                        className="wizard-input"
                       />
                     </div>
                   </div>
 
-                  {/* Phone */}
-                  <div className="form-input-group">
-                    <label htmlFor="phone" className="form-label">
-                      Telephone / WhatsApp Number <span className="req">*</span>
+                  {/* Phone Number */}
+                  <div className="wizard-field-group">
+                    <label htmlFor="phone" className="wizard-label">
+                      Phone Number / WhatsApp <span className="req">*</span>
                     </label>
-                    <div className="input-with-icon">
+                    <div className="wizard-input-wrap">
                       <Phone size={18} className="field-icon" />
                       <input
                         id="phone"
@@ -687,36 +656,36 @@ export default function EquipmentSalesPage({ initialType }: EquipmentSalesPagePr
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                         required
-                        className="form-control"
+                        className="wizard-input"
                       />
                     </div>
                   </div>
 
-                  {/* Notes / Sizing */}
-                  <div className="form-input-group full-width">
-                    <label htmlFor="notes" className="form-label">
-                      Required CFM / Pressure / Project Notes (Optional)
+                  {/* Optional Notes / CFM Requirements */}
+                  <div className="wizard-field-group full-span">
+                    <label htmlFor="notes" className="wizard-label">
+                      Target Airflow (CFM) / Operating Pressure / Project Site Details (Optional)
                     </label>
                     <textarea
                       id="notes"
                       rows={2}
-                      placeholder="e.g. Need 300 to 500 CFM at 8 Bar for continuous sandblasting plant in Ogun state..."
+                      placeholder="e.g. Require 300–500 CFM at 8 Bar for continuous plant operation in Ogun State..."
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
-                      className="form-control"
+                      className="wizard-input textarea"
                     />
                   </div>
                 </div>
 
-                {/* Submit Button */}
-                <div className="form-action-row">
+                {/* Form Action Button */}
+                <div className="wizard-action-container">
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="btn-formal-quotation"
+                    className="wizard-cta-submit-btn"
                   >
                     {isSubmitting ? (
-                      <span>Submitting Formal Quotation Request...</span>
+                      <span>Formulating &amp; Sending Quotation Request...</span>
                     ) : (
                       <>
                         <span>REQUEST A FORMAL QUOTATION</span>
@@ -726,117 +695,168 @@ export default function EquipmentSalesPage({ initialType }: EquipmentSalesPagePr
                   </button>
                 </div>
 
-                <div className="form-guarantees">
-                  <div className="guarantee-item">
+                <div className="wizard-guarantees-bar">
+                  <div className="guarantee-chip">
                     <Shield size={14} />
                     <span>Official OEM Quotation</span>
                   </div>
-                  <div className="guarantee-item">
+                  <div className="guarantee-chip">
                     <Check size={14} />
-                    <span>Turnaround: 2-4 Hours</span>
+                    <span>Turnaround: 2–4 Business Hours</span>
                   </div>
-                  <div className="guarantee-item">
-                    <Activity size={14} />
-                    <span>PDI &amp; Delivery Across Nigeria</span>
+                  <div className="guarantee-chip">
+                    <Sparkles size={14} />
+                    <span>Commissioning &amp; Warranty Across Nigeria</span>
                   </div>
                 </div>
               </form>
-            )}
-          </section>
-        )}
-
-      </div>
-
-      {/* TECHNICAL FLEET & INVENTORY SECTION */}
-      <section className="container fleet-inventory-section">
-        <div className="fleet-section-header">
-          <div>
-            <h3 className="fleet-title">Technical Fleet & Available Models</h3>
-            <p className="fleet-sub">
-              {selectedType || selectedBrand
-                ? `Showing models matching ${selectedType || ''} ${selectedBrand ? `• ${selectedBrand}` : ''}`
-                : 'Browse popular certified industrial air compressor units in stock in Nigeria'}
-            </p>
-          </div>
-          {(selectedType || selectedBrand) && (
-            <button className="clear-filter-btn" onClick={handleResetFlow}>
-              Clear Selections &amp; Show All
-            </button>
+            </div>
           )}
-        </div>
 
-        <div className="equip-products-grid">
-          {filteredProducts.map(p => (
-            <div key={p.id} className="equip-product-card">
-              <div className="equip-card-image-wrap">
-                <img src={p.image} alt={p.title} className="equip-card-img" />
-                {p.badge && (
-                  <span className={`equip-card-badge badge-${p.badgeType}`}>
-                    {p.badge}
-                  </span>
-                )}
-                <span className="equip-card-driven-tag">
-                  {p.driven === 'Electric' ? <Zap size={12} /> : <Flame size={12} />}
-                  <span>{p.driven}</span>
-                </span>
-              </div>
-              <div className="equip-card-body">
-                <div className="equip-card-meta">
-                  <span className="equip-card-brand">{p.brand}</span>
-                  <span className="equip-card-category">{p.category}</span>
+          {/* STEP 4: ONLY SUCCESS CONFIRMATION */}
+          {currentStep === 4 && submissionSuccess && (
+            <div className="wizard-step-body wizard-anim-enter">
+              <div className="wizard-success-card">
+                <div className="success-badge-circle">
+                  <CheckCircle2 size={54} className="text-emerald" />
                 </div>
-                <h4 className="equip-card-title">{p.title}</h4>
-                <div className="equip-card-specs">
-                  {p.specs.map((s, idx) => (
-                    <div key={idx} className="equip-card-spec-item">
-                      <span className="equip-card-spec-icon">{s.icon}</span>
-                      <span>{s.label}</span>
-                    </div>
-                  ))}
+                <h2 className="success-headline">Formal Quotation Request Registered</h2>
+                <p className="success-subheadline">
+                  Your quotation ticket has been assigned to our senior commercial desk.
+                </p>
+
+                <div className="success-reference-banner">
+                  <span className="ref-label">Official Tracking Reference</span>
+                  <span className="ref-id">MT-Q-{submissionSuccess.id.slice(0, 8).toUpperCase()}</span>
                 </div>
-                <div className="equip-card-footer">
+
+                <div className="success-recap-box">
+                  <div className="recap-item">
+                    <span className="recap-label">Compressor Configuration</span>
+                    <strong className="recap-value">{submissionSuccess.compressor_type}</strong>
+                  </div>
+                  <div className="recap-item">
+                    <span className="recap-label">Selected OEM Brand</span>
+                    <strong className="recap-value text-orange">{submissionSuccess.brand}</strong>
+                  </div>
+                  <div className="recap-item">
+                    <span className="recap-label">Company Name</span>
+                    <strong className="recap-value">{submissionSuccess.company_name}</strong>
+                  </div>
+                  <div className="recap-item">
+                    <span className="recap-label">Destination Email</span>
+                    <strong className="recap-value">{submissionSuccess.email}</strong>
+                  </div>
+                </div>
+
+                <p className="success-sla-notice">
+                  A regional application engineer will email your formal proforma invoice and technical specification sheet within <strong>2 to 4 business hours</strong>.
+                </p>
+
+                <div className="success-buttons-row">
                   <button
-                    className="equip-btn-quote"
-                    onClick={() => {
-                      const matchedType = p.driven === 'Electric' ? 'ELECTRIC AIR COMPRESSOR' : 'DIESEL AIR COMPRESSOR';
-                      setSelectedType(matchedType);
-                      const upperBrand = p.brand.toUpperCase();
-                      if (upperBrand.includes('ATLAS')) setSelectedBrand('ATLAS COPCO');
-                      else if (upperBrand.includes('SULLAIR')) setSelectedBrand('SULLAIR');
-                      else if (upperBrand.includes('INGERSOLL')) setSelectedBrand('INGERSOLL RAND');
-                      else if (upperBrand.includes('DENAIR')) setSelectedBrand('DENAIR');
-                      // Scroll to quotation form
-                      document.getElementById('quotation-form-step')?.scrollIntoView({ behavior: 'smooth' });
-                    }}
+                    type="button"
+                    className="btn-wizard-restart"
+                    onClick={handleResetFlow}
                   >
-                    Select for Quotation
+                    <RotateCcw size={16} />
+                    <span>Request Another Quotation</span>
                   </button>
                   <button
-                    className="equip-btn-checklist"
-                    title="Add to procurement checklist"
-                    onClick={() => handleQuickAddBasket(p)}
+                    type="button"
+                    className="btn-wizard-call"
+                    onClick={() => setShowConsultModal(true)}
                   >
-                    + Checklist
+                    <Phone size={16} />
+                    <span>Speak with Commercial Desk</span>
                   </button>
                 </div>
               </div>
             </div>
-          ))}
-        </div>
-      </section>
+          )}
 
-      {/* Engineering Support CTA Bar */}
-      <section className="container equip-cta-section" style={{ marginTop: '48px', marginBottom: '48px' }}>
-        <div className="equip-cta-card">
-          <div className="equip-cta-text">
-            <h3>Need Custom Piping, Air Audits or Dual-Stage Configurations?</h3>
-            <p>Our certified rotating machinery engineers conduct on-site pressure drop assessments and air audits across Nigeria.</p>
+        </div>
+      </div>
+
+      {/* Optional Discreet Catalog View */}
+      <section className="container fleet-accordion-section">
+        <div className="fleet-toggle-card">
+          <div className="fleet-toggle-left">
+            <h4 className="fleet-toggle-title">Need to Inspect Technical Models &amp; Specifications?</h4>
+            <p className="fleet-toggle-desc">
+              Browse available certified units currently stationed in our Lagos and Port Harcourt yards.
+            </p>
           </div>
-          <button className="equip-cta-btn" onClick={() => setShowConsultModal(true)}>
-            <Phone size={16} />
-            <span>Speak with Application Engineer</span>
+          <button
+            type="button"
+            className="fleet-toggle-button"
+            onClick={() => setShowCatalog(!showCatalog)}
+          >
+            <span>{showCatalog ? 'Hide Fleet Specifications' : 'View Available Models'}</span>
+            <ChevronRight
+              size={16}
+              style={{
+                transform: showCatalog ? 'rotate(90deg)' : 'rotate(0deg)',
+                transition: 'transform 0.2s ease',
+              }}
+            />
           </button>
         </div>
+
+        {showCatalog && (
+          <div className="fleet-cards-container wizard-anim-enter">
+            <div className="equip-products-grid">
+              {PRODUCTS.map((p) => (
+                <div key={p.id} className="equip-product-card">
+                  <div className="equip-card-image-wrap">
+                    <img src={p.image} alt={p.title} className="equip-card-img" />
+                    {p.badge && (
+                      <span className={`equip-card-badge badge-${p.badgeType}`}>
+                        {p.badge}
+                      </span>
+                    )}
+                    <span className="equip-card-driven-tag">
+                      {p.driven === 'Electric' ? <Zap size={12} /> : <Flame size={12} />}
+                      <span>{p.driven}</span>
+                    </span>
+                  </div>
+                  <div className="equip-card-body">
+                    <div className="equip-card-meta">
+                      <span className="equip-card-brand">{p.brand}</span>
+                      <span className="equip-card-category">{p.category}</span>
+                    </div>
+                    <h4 className="equip-card-title">{p.title}</h4>
+                    <div className="equip-card-specs">
+                      {p.specs.map((s, idx) => (
+                        <div key={idx} className="equip-card-spec-item">
+                          <span>{s.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="equip-card-footer">
+                      <button
+                        className="equip-btn-quote"
+                        onClick={() => {
+                          const matchedType = p.driven === 'Electric' ? 'ELECTRIC AIR COMPRESSOR' : 'DIESEL AIR COMPRESSOR';
+                          setSelectedType(matchedType);
+                          const upperBrand = p.brand.toUpperCase();
+                          if (upperBrand.includes('ATLAS')) setSelectedBrand('ATLAS COPCO');
+                          else if (upperBrand.includes('SULLAIR')) setSelectedBrand('SULLAIR');
+                          else if (upperBrand.includes('INGERSOLL')) setSelectedBrand('INGERSOLL RAND');
+                          else if (upperBrand.includes('DENAIR')) setSelectedBrand('DENAIR');
+                          setCurrentStep(3);
+                          window.scrollTo({ top: 120, behavior: 'smooth' });
+                        }}
+                      >
+                        Select for Quotation
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </section>
 
     </div>
