@@ -11,6 +11,7 @@ import CatalogPage from './pages/CatalogPage';
 import AfterSalesPage from './pages/AfterSalesPage';
 import ContactPage from './pages/ContactPage';
 import EquipmentSalesPage from './pages/EquipmentSalesPage';
+import CompressorQuoteModal from './components/CompressorQuoteModal';
 import LeasingPage from './pages/LeasingPage';
 import './App.css';
 
@@ -29,6 +30,15 @@ export default function App() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [selectedCompressorType, setSelectedCompressorType] = useState<'ELECTRIC AIR COMPRESSOR' | 'DIESEL AIR COMPRESSOR' | null>(null);
+  const [compressorModalOpen, setCompressorModalOpen] = useState(false);
+  const [modalInitialType, setModalInitialType] = useState<'ELECTRIC AIR COMPRESSOR' | 'DIESEL AIR COMPRESSOR' | null>(null);
+
+  const openCompressorModal = (type?: 'ELECTRIC AIR COMPRESSOR' | 'DIESEL AIR COMPRESSOR') => {
+    setModalInitialType(type || null);
+    setCompressorModalOpen(true);
+    setActiveDropdown(null);
+    setMobileMenuOpen(false);
+  };
 
   const navigateToCompressors = (type?: 'ELECTRIC AIR COMPRESSOR' | 'DIESEL AIR COMPRESSOR') => {
     setSelectedCompressorType(type || null);
@@ -185,7 +195,7 @@ export default function App() {
                       {/* Option 1: ELECTRIC AIR COMPRESSOR */}
                       <div 
                         className="compressor-dropdown-item"
-                        onClick={() => navigateToCompressors('ELECTRIC AIR COMPRESSOR')}
+                        onClick={() => openCompressorModal('ELECTRIC AIR COMPRESSOR')}
                       >
                         <div className="compressor-item-icon-box electric">
                           <Zap size={22} />
@@ -200,7 +210,7 @@ export default function App() {
                       {/* Option 2: DIESEL AIR COMPRESSOR */}
                       <div 
                         className="compressor-dropdown-item"
-                        onClick={() => navigateToCompressors('DIESEL AIR COMPRESSOR')}
+                        onClick={() => openCompressorModal('DIESEL AIR COMPRESSOR')}
                       >
                         <div className="compressor-item-icon-box diesel">
                           <Flame size={22} />
@@ -770,6 +780,13 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      {/* Global Air Compressor Quotation Modal */}
+      <CompressorQuoteModal
+        isOpen={compressorModalOpen}
+        onClose={() => setCompressorModalOpen(false)}
+        initialType={modalInitialType}
+      />
     </div>
   );
 }
