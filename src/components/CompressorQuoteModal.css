@@ -232,6 +232,47 @@
   border-color: #ea580c;
 }
 
+/* Condition cards: New (green) and Used (amber) */
+.cq-type-card.new-hover:hover {
+  border-color: #16a34a;
+}
+
+.cq-type-card.used-hover:hover {
+  border-color: #d97706;
+}
+
+.cq-card-icon-box.new-condition {
+  background: #f0fdf4;
+  color: #16a34a;
+}
+
+.cq-card-icon-box.used-condition {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+.cq-type-card:hover .cq-card-icon-box.new-condition {
+  background: #16a34a;
+  color: #ffffff;
+}
+
+.cq-type-card:hover .cq-card-icon-box.used-condition {
+  background: #d97706;
+  color: #ffffff;
+}
+
+.cq-card-badge.new-badge {
+  color: #16a34a;
+}
+
+.cq-card-badge.used-badge {
+  color: #d97706;
+}
+
+/* Utility color classes for context pill and recap */
+.text-green { color: #16a34a !important; }
+.text-amber { color: #d97706 !important; }
+
 .cq-card-icon-box {
   width: 44px;
   height: 44px;
