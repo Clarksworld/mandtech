@@ -7,11 +7,12 @@ import {
 import { MandtechLogo } from './components/Logo';
 import { useInquiry } from './context/InquiryContext';
 import HomePage from './pages/HomePage';
-import CatalogPage from './pages/CatalogPage';
+import SparePartsPage from './pages/SparePartsPage';
 import AfterSalesPage from './pages/AfterSalesPage';
 import ContactPage from './pages/ContactPage';
 import EquipmentSalesPage from './pages/EquipmentSalesPage';
 import CompressorQuoteModal from './components/CompressorQuoteModal';
+import { type SparePartsBrand } from './components/SparePartsQuoteModal';
 import LeasingPage from './pages/LeasingPage';
 import './App.css';
 
@@ -32,6 +33,7 @@ export default function App() {
   const [selectedCompressorType, setSelectedCompressorType] = useState<'ELECTRIC AIR COMPRESSOR' | 'DIESEL AIR COMPRESSOR' | null>(null);
   const [compressorModalOpen, setCompressorModalOpen] = useState(false);
   const [modalInitialType, setModalInitialType] = useState<'ELECTRIC AIR COMPRESSOR' | 'DIESEL AIR COMPRESSOR' | null>(null);
+  const [selectedSparePartsBrand, setSelectedSparePartsBrand] = useState<SparePartsBrand | null>(null);
 
   const openCompressorModal = (type?: 'ELECTRIC AIR COMPRESSOR' | 'DIESEL AIR COMPRESSOR') => {
     setModalInitialType(type || null);
@@ -43,6 +45,11 @@ export default function App() {
   const navigateToCompressors = (type?: 'ELECTRIC AIR COMPRESSOR' | 'DIESEL AIR COMPRESSOR') => {
     setSelectedCompressorType(type || null);
     navigateTo('equipmentSales');
+  };
+
+  const navigateToSpareParts = (brand?: SparePartsBrand) => {
+    setSelectedSparePartsBrand(brand || null);
+    navigateTo('catalog');
   };
 
   const dropdownTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -84,7 +91,7 @@ export default function App() {
       case 'equipmentSales':
         return <EquipmentSalesPage initialType={selectedCompressorType} />;
       case 'catalog':
-        return <CatalogPage />;
+        return <SparePartsPage initialBrand={selectedSparePartsBrand} />;
       case 'leasing':
         return <LeasingPage onNavigateToContact={() => navigateTo('contact')} />;
       case 'aftersales':
@@ -235,70 +242,75 @@ export default function App() {
             >
               <button
                 className={`desktop-nav-link ${activePage === 'catalog' ? 'nav-active' : ''} ${activeDropdown === 'parts' ? 'dropdown-active' : ''}`}
-                onClick={() => navigateTo('catalog')}
+                onClick={() => navigateToSpareParts()}
               >
-                <span>Parts Catalog</span>
+                <span>Spare Parts</span>
                 <ChevronDown size={14} className="dropdown-chevron" />
               </button>
 
               {activeDropdown === 'parts' && (
-                <div className="mega-menu-panel" onMouseEnter={() => handleMouseEnter('parts')} onMouseLeave={handleMouseLeave}>
-                  <div className="mega-menu-content">
-                    <div className="mega-menu-main-col">
-                      <div className="mega-menu-col-header">OEM CERTIFIED COMPONENTS</div>
-                      <div className="mega-menu-links-grid">
-                        <div className="mega-menu-item" onClick={() => navigateTo('catalog')}>
-                          <div className="mega-item-icon-box">
-                            <Package size={18} />
-                          </div>
-                          <div className="mega-item-text">
-                            <div className="mega-item-title">Filtration & Air Systems</div>
-                            <div className="mega-item-desc">Air intake filters, oil separators, and precision line elements</div>
-                          </div>
+                <div className="mega-menu-panel spareparts-dropdown-panel" onMouseEnter={() => handleMouseEnter('parts')} onMouseLeave={handleMouseLeave}>
+                  <div className="spareparts-dropdown-content">
+                    <div className="spareparts-dropdown-header">
+                      <span>SELECT OEM COMPONENT BRAND</span>
+                      <span className="compressor-dropdown-badge">4 BRANDS</span>
+                    </div>
+                    <div className="spareparts-dropdown-grid">
+                      {/* Option 1: ATLAS COPCO */}
+                      <div 
+                        className="spareparts-dropdown-item"
+                        onClick={() => navigateToSpareParts('ATLAS COPCO')}
+                      >
+                        <div className="spareparts-item-icon-box">
+                          <Package size={20} />
                         </div>
-
-                        <div className="mega-menu-item" onClick={() => navigateTo('catalog')}>
-                          <div className="mega-item-icon-box">
-                            <Cog size={18} />
-                          </div>
-                          <div className="mega-item-text">
-                            <div className="mega-item-title">Valves & Hydraulics</div>
-                            <div className="mega-item-desc">Safety relief, unloader, non-return, and blow-down valve assemblies</div>
-                          </div>
-                        </div>
-
-                        <div className="mega-menu-item" onClick={() => navigateTo('catalog')}>
-                          <div className="mega-item-icon-box">
-                            <Activity size={18} />
-                          </div>
-                          <div className="mega-item-text">
-                            <div className="mega-item-title">Sensors & Control Units</div>
-                            <div className="mega-item-desc">Digital pressure transducers, temperature sensors, and PLC boards</div>
-                          </div>
-                        </div>
-
-                        <div className="mega-menu-item" onClick={() => navigateTo('catalog')}>
-                          <div className="mega-item-icon-box">
-                            <Wrench size={18} />
-                          </div>
-                          <div className="mega-item-text">
-                            <div className="mega-item-title">Overhaul & Gasket Sets</div>
-                            <div className="mega-item-desc">Complete scheduled overhaul kits with guaranteed OEM tolerance</div>
-                          </div>
+                        <div className="spareparts-item-info">
+                          <div className="spareparts-item-title">ATLAS COPCO</div>
+                          <div className="spareparts-item-desc">GA, GX &amp; VSD+ Series filters, separators, valves &amp; service kits</div>
                         </div>
                       </div>
-                    </div>
 
-                    <div className="mega-menu-side-col">
-                      <div className="mega-side-badge">FAST PROCUREMENT</div>
-                      <h4 className="mega-side-heading">Technical Parts Sourcing</h4>
-                      <p className="mega-side-desc">
-                        Need an obsolete or specialized part? Our engineering desk sources directly from OEM manufacturers.
-                      </p>
-                      <button className="mega-side-action-btn" onClick={() => navigateTo('catalog')}>
-                        <span>Search Catalog</span>
-                        <ArrowRight size={14} />
-                      </button>
+                      {/* Option 2: SULLAIR */}
+                      <div 
+                        className="spareparts-dropdown-item"
+                        onClick={() => navigateToSpareParts('SULLAIR')}
+                      >
+                        <div className="spareparts-item-icon-box">
+                          <ShieldCheck size={20} />
+                        </div>
+                        <div className="spareparts-item-info">
+                          <div className="spareparts-item-title">SULLAIR</div>
+                          <div className="spareparts-item-desc">Rotary screw elements, Sullube fluid &amp; intake valve sets</div>
+                        </div>
+                      </div>
+
+                      {/* Option 3: INGERSOLL RAND */}
+                      <div 
+                        className="spareparts-dropdown-item"
+                        onClick={() => navigateToSpareParts('INGERSOLL RAND')}
+                      >
+                        <div className="spareparts-item-icon-box">
+                          <Cog size={20} />
+                        </div>
+                        <div className="spareparts-item-info">
+                          <div className="spareparts-item-title">INGERSOLL RAND</div>
+                          <div className="spareparts-item-desc">Ultra Coolant, SSR/M series spares &amp; precision sensor boards</div>
+                        </div>
+                      </div>
+
+                      {/* Option 4: DENAIR */}
+                      <div 
+                        className="spareparts-dropdown-item"
+                        onClick={() => navigateToSpareParts('DENAIR')}
+                      >
+                        <div className="spareparts-item-icon-box">
+                          <Zap size={20} />
+                        </div>
+                        <div className="spareparts-item-info">
+                          <div className="spareparts-item-title">DENAIR</div>
+                          <div className="spareparts-item-desc">Dual-stage compressor elements, air-ends &amp; coolers</div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -550,9 +562,9 @@ export default function App() {
 
                 <button
                   className={`mobile-link-item ${activePage === 'catalog' ? 'mobile-active' : ''}`}
-                  onClick={() => navigateTo('catalog')}
+                  onClick={() => navigateToSpareParts()}
                 >
-                  <span>Parts Catalog</span>
+                  <span>Spare Parts</span>
                   <span className="mobile-link-tag">OEM Spares</span>
                 </button>
 
@@ -682,7 +694,7 @@ export default function App() {
                   System Audits
                 </button>
               </li>
-              <li><button onClick={() => setActivePage('catalog')} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>Parts &amp; Spares</button></li>
+              <li><button onClick={() => navigateToSpareParts()} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>Spare Parts</button></li>
             </ul>
           </div>
 
@@ -731,7 +743,7 @@ export default function App() {
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
                       <div onClick={() => { setActivePage('home'); setInfoModal(null); }} style={{ cursor: 'pointer', color: 'var(--primary-container)' }}>• Home Page</div>
                       <div onClick={() => { navigateToCompressors(); setInfoModal(null); }} style={{ cursor: 'pointer', color: 'var(--primary-container)' }}>• Air Compressors</div>
-                      <div onClick={() => { setActivePage('catalog'); setInfoModal(null); }} style={{ cursor: 'pointer', color: 'var(--primary-container)' }}>• Parts Catalog</div>
+                      <div onClick={() => { navigateToSpareParts(); setInfoModal(null); }} style={{ cursor: 'pointer', color: 'var(--primary-container)' }}>• Spare Parts</div>
                       <div onClick={() => { setActivePage('leasing'); setInfoModal(null); }} style={{ cursor: 'pointer', color: 'var(--primary-container)' }}>• Leasing &amp; Rentals</div>
                       <div onClick={() => { setActivePage('aftersales'); setInfoModal(null); }} style={{ cursor: 'pointer', color: 'var(--primary-container)' }}>• After-Sales &amp; Service</div>
                       <div onClick={() => { setActivePage('contact'); setInfoModal(null); }} style={{ cursor: 'pointer', color: 'var(--primary-container)' }}>• Contact &amp; Inquiry</div>

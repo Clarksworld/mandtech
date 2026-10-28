@@ -141,3 +141,40 @@ export async function submitCompressorRequest(payload: CompressorRequestPayload)
   }
   return res.json();
 }
+
+export interface SparePartsRequestPayload {
+  brand: 'ATLAS COPCO' | 'SULLAIR' | 'INGERSOLL RAND' | 'DENAIR';
+  part_name: string;
+  company_name: string;
+  email: string;
+  phone: string;
+  notes?: string;
+}
+
+export interface SparePartsRequestResponse {
+  message: string;
+  data: {
+    id: string;
+    brand: string;
+    part_name: string;
+    company_name: string;
+    email: string;
+    phone: string;
+    notes?: string;
+    status: string;
+    created_at: string;
+  };
+}
+
+export async function submitSparePartsRequest(payload: SparePartsRequestPayload): Promise<SparePartsRequestResponse> {
+  const res = await fetch(`${API_BASE_URL}/api/spare-parts-requests`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || err.message || `Failed to submit spare parts request (${res.status})`);
+  }
+  return res.json();
+}
