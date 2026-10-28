@@ -3,7 +3,8 @@ import {
   ShieldCheck, Search, ChevronDown, 
   Zap, Wrench, Droplet,
   Menu, X, Flame,
-  Gauge, Shield, Cpu
+  Gauge, Shield, Cpu,
+  HeadphonesIcon, Phone
 } from 'lucide-react';
 import { MandtechLogo } from './components/Logo';
 import { useInquiry } from './context/InquiryContext';
@@ -12,14 +13,16 @@ import SparePartsPage from './pages/SparePartsPage';
 import { AfterSalesPage } from './pages/AfterSalesPage';
 import ContactPage from './pages/ContactPage';
 import EquipmentSalesPage from './pages/EquipmentSalesPage';
+import TechnicalSupportPage, { type TechnicalServiceType } from './pages/TechnicalSupportPage';
 import CompressorQuoteModal from './components/CompressorQuoteModal';
+import ContactSupportModal from './components/ContactSupportModal';
 import { type SparePartsBrand } from './components/SparePartsQuoteModal';
 import LeasingQuoteModal, { type LeasingCompressorType, type LeasingBrand } from './components/LeasingQuoteModal';
 import LubricantsQuoteModal, { type LubricantBrand } from './components/LubricantsQuoteModal';
 import LeasingPage from './pages/LeasingPage';
 import './App.css';
 
-export type ActivePage = 'home' | 'catalog' | 'equipmentSales' | 'leasing' | 'aftersales' | 'contact';
+export type ActivePage = 'home' | 'catalog' | 'equipmentSales' | 'leasing' | 'aftersales' | 'contact' | 'techsupport';
 
 interface InfoModalState {
   title: string;
@@ -46,6 +49,12 @@ export default function App() {
   // Lubricants & Special Fluids Modal State
   const [lubricantsModalOpen, setLubricantsModalOpen] = useState(false);
   const [selectedLubricantBrand, setSelectedLubricantBrand] = useState<LubricantBrand | null>(null);
+
+  // Contact Support Modal State
+  const [contactSupportModalOpen, setContactSupportModalOpen] = useState(false);
+
+  // Technical Support selected service
+  const [techSupportService, setTechSupportService] = useState<TechnicalServiceType | null>(null);
 
   const openLeasingModal = (type?: LeasingCompressorType, brand?: LeasingBrand) => {
     setLeasingModalType(type || null);
@@ -82,6 +91,11 @@ export default function App() {
   const navigateToLubricants = (brand?: LubricantBrand) => {
     setSelectedLubricantBrand(brand || null);
     navigateTo('aftersales');
+  };
+
+  const navigateToTechSupport = (service?: TechnicalServiceType) => {
+    setTechSupportService(service || null);
+    navigateTo('techsupport');
   };
 
   const dropdownTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -139,6 +153,13 @@ export default function App() {
         );
       case 'contact':
         return <ContactPage />;
+      case 'techsupport':
+        return (
+          <TechnicalSupportPage
+            initialService={techSupportService}
+            onBack={() => navigateTo('home')}
+          />
+        );
       default:
         return <HomePage onNavigate={(page) => navigateTo(page as ActivePage)} />;
     }
@@ -474,13 +495,97 @@ export default function App() {
               )}
             </div>
 
-            {/* Direct Nav Item: Contact */}
-            <button
-              className={`desktop-nav-link single-link ${activePage === 'contact' ? 'nav-active' : ''}`}
-              onClick={() => navigateTo('contact')}
+            {/* Nav Item: Support (Technical + Contact) */}
+            <div
+              className="nav-dropdown-wrapper"
+              onMouseEnter={() => handleMouseEnter('support-main')}
+              onMouseLeave={handleMouseLeave}
             >
-              <span>Contact &amp; Yards</span>
-            </button>
+              <button
+                className={`desktop-nav-link ${(activePage === 'contact' || activePage === 'techsupport') ? 'nav-active' : ''} ${activeDropdown === 'support-main' ? 'dropdown-active' : ''}`}
+                onClick={() => navigateTo('contact')}
+              >
+                <span>Support</span>
+                <ChevronDown size={14} className="dropdown-chevron" />
+              </button>
+
+              {activeDropdown === 'support-main' && (
+                <div
+                  className="mega-menu-panel support-dropdown-panel"
+                  onMouseEnter={() => handleMouseEnter('support-main')}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  <div className="support-dropdown-content">
+                    <div className="support-dropdown-header">
+                      <span>HOW CAN WE HELP YOU?</span>
+                    </div>
+                    <div className="support-dropdown-options">
+                      {/* Technical Support */}
+                      <div
+                        className="support-dropdown-item"
+                        onMouseEnter={() => handleMouseEnter('support-tech')}
+                        onMouseLeave={handleMouseLeave}
+                      >
+                        <div
+                          className="support-option-row"
+                          onClick={() => navigateToTechSupport()}
+                        >
+                          <div className="support-option-icon tech-icon">
+                            <HeadphonesIcon size={20} />
+                          </div>
+                          <div className="support-option-info">
+                            <span className="support-option-title">Technical Support</span>
+                            <span className="support-option-desc">Engineering services & maintenance</span>
+                          </div>
+                          <ChevronDown size={14} className="support-submenu-chevron rotated" />
+                        </div>
+                        {activeDropdown === 'support-tech' && (
+                          <div
+                            className="support-submenu"
+                            onMouseEnter={() => handleMouseEnter('support-tech')}
+                            onMouseLeave={handleMouseLeave}
+                          >
+                            {[
+                              'CONSULTATIONS/INSPECTION',
+                              'PREVENTIVE/CORRECTIVE MAINTENANCE',
+                              'ANNUAL MAINTENANCE CONTRACTS (AMCs)',
+                              'DEPUTATION OF ENGINEERS',
+                              'TECHNICAL ADVICE',
+                            ].map((svc) => (
+                              <div
+                                key={svc}
+                                className="support-submenu-item"
+                                onClick={() => navigateToTechSupport(svc as TechnicalServiceType)}
+                              >
+                                <span className="support-submenu-dot">•</span>
+                                {svc}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Contact Support */}
+                      <div
+                        className="support-option-row contact-support-row"
+                        onClick={() => {
+                          setContactSupportModalOpen(true);
+                          setActiveDropdown(null);
+                        }}
+                      >
+                        <div className="support-option-icon contact-icon">
+                          <Phone size={20} />
+                        </div>
+                        <div className="support-option-info">
+                          <span className="support-option-title">Contact Support</span>
+                          <span className="support-option-desc">Call, WhatsApp or Email us</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </nav>
 
           {/* Right Header Actions */}
@@ -586,10 +691,27 @@ export default function App() {
                 </button>
 
                 <button
-                  className={`mobile-link-item ${activePage === 'contact' ? 'mobile-active' : ''}`}
+                  className={`mobile-link-item ${(activePage === 'contact' || activePage === 'techsupport') ? 'mobile-active' : ''}`}
                   onClick={() => navigateTo('contact')}
                 >
-                  <span>Contact &amp; Yards</span>
+                  <span>Support</span>
+                  <span className="mobile-link-tag">Contact &amp; Yards</span>
+                </button>
+
+                <button
+                  className="mobile-link-item"
+                  onClick={() => { navigateToTechSupport(); }}
+                >
+                  <span>Technical Support</span>
+                  <span className="mobile-link-tag">Maintenance &amp; Services</span>
+                </button>
+
+                <button
+                  className="mobile-link-item"
+                  onClick={() => { setContactSupportModalOpen(true); setMobileMenuOpen(false); }}
+                >
+                  <span>Contact Support</span>
+                  <span className="mobile-link-tag">Call / WhatsApp / Email</span>
                 </button>
               </div>
 
@@ -773,6 +895,12 @@ export default function App() {
         isOpen={lubricantsModalOpen}
         onClose={() => setLubricantsModalOpen(false)}
         initialBrand={selectedLubricantBrand}
+      />
+
+      {/* Contact Support Modal */}
+      <ContactSupportModal
+        isOpen={contactSupportModalOpen}
+        onClose={() => setContactSupportModalOpen(false)}
       />
     </div>
   );

@@ -1,0 +1,276 @@
+/* Backdrop */
+.cs-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.52);
+  backdrop-filter: blur(4px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: csBackdropIn 0.2s ease;
+}
+
+@keyframes csBackdropIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Modal Panel */
+.cs-modal-panel {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18), 0 6px 20px rgba(0, 0, 0, 0.06);
+  width: 100%;
+  max-width: 520px;
+  overflow: hidden;
+  animation: csPanelIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes csPanelIn {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Header */
+.cs-modal-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 28px 28px 0;
+}
+
+.cs-modal-title-group {
+  flex: 1;
+}
+
+.cs-modal-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--primary-container);
+  background: rgba(var(--primary-container-rgb, 214, 82, 35), 0.1);
+  padding: 3px 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.cs-modal-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--deep-charcoal, #1a1a2e);
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+
+.cs-modal-subtitle {
+  font-size: 13.5px;
+  color: var(--on-surface-muted, #6b7280);
+  line-height: 1.5;
+}
+
+.cs-modal-close {
+  background: #f4f5f6;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #64748b;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  margin-top: 2px;
+}
+
+.cs-modal-close:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+/* Options List */
+.cs-options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px 28px;
+}
+
+/* Option Card */
+.cs-option-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  border-radius: 12px;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.22s ease;
+  position: relative;
+}
+
+.cs-option-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.22s ease;
+}
+
+.cs-option-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cs-option-label {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--deep-charcoal, #1a1a2e);
+  display: block;
+}
+
+.cs-option-desc {
+  font-size: 12.5px;
+  color: var(--on-surface-muted, #6b7280);
+  display: block;
+}
+
+.cs-option-value {
+  font-size: 13px;
+  font-weight: 700;
+  display: block;
+  margin-top: 2px;
+}
+
+.cs-option-action {
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: transform 0.2s ease;
+}
+
+/* Phone Option */
+.cs-option-phone {
+  background: #f0f9ff;
+  border-color: #bae6fd;
+}
+
+.cs-option-phone:hover {
+  background: #e0f2fe;
+  border-color: #38bdf8;
+  transform: translateX(4px);
+}
+
+.cs-option-phone .cs-option-icon {
+  background: #0ea5e9;
+  color: #ffffff;
+}
+
+.cs-option-phone .cs-option-value,
+.cs-option-phone .cs-option-action {
+  color: #0369a1;
+}
+
+/* WhatsApp Option */
+.cs-option-whatsapp {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.cs-option-whatsapp:hover {
+  background: #dcfce7;
+  border-color: #4ade80;
+  transform: translateX(4px);
+}
+
+.cs-option-whatsapp .cs-option-icon {
+  background: #25d366;
+  color: #ffffff;
+}
+
+.cs-option-whatsapp .cs-option-value,
+.cs-option-whatsapp .cs-option-action {
+  color: #15803d;
+}
+
+/* Email Option */
+.cs-option-email {
+  background: #fdf4ff;
+  border-color: #e9d5ff;
+}
+
+.cs-option-email:hover {
+  background: #fae8ff;
+  border-color: #c084fc;
+  transform: translateX(4px);
+}
+
+.cs-option-email .cs-option-icon {
+  background: #a855f7;
+  color: #ffffff;
+}
+
+.cs-option-email .cs-option-value,
+.cs-option-email .cs-option-action {
+  color: #7e22ce;
+}
+
+/* Footer */
+.cs-modal-footer {
+  padding: 0 28px 24px;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 16px;
+  margin-top: -4px;
+}
+
+.cs-footer-note {
+  font-size: 12.5px;
+  color: var(--on-surface-muted, #6b7280);
+  line-height: 1.5;
+}
+
+.cs-footer-note a {
+  color: var(--primary-container);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.cs-footer-note a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .cs-modal-panel {
+    border-radius: 12px;
+  }
+
+  .cs-modal-header {
+    padding: 20px 20px 0;
+  }
+
+  .cs-options-list {
+    padding: 20px 20px;
+  }
+
+  .cs-modal-footer {
+    padding: 0 20px 20px;
+    padding-top: 16px;
+  }
+
+  .cs-option-action {
+    display: none;
+  }
+}
+
