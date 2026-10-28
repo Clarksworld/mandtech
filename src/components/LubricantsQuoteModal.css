@@ -1,0 +1,467 @@
+/* LubricantsQuoteModal.css - Clean, Professional Mandtech Styling */
+
+.lub-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(18, 20, 18, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 16px;
+  animation: lubFadeIn 0.22s ease-out;
+}
+
+@keyframes lubFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.lub-modal-box {
+  background: #ffffff;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 780px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  animation: lubSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+@keyframes lubSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Header */
+.lub-modal-header {
+  padding: 22px 28px 18px;
+  border-bottom: 1px solid #edf2f7;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  background: #fafbfa;
+}
+
+.lub-modal-badge {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--primary-container, #54b435);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.lub-modal-heading {
+  font-size: 20px;
+  font-weight: 800;
+  color: #121412;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.lub-close-btn {
+  background: #f1f5f1;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.lub-close-btn:hover {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+/* Body */
+.lub-modal-body {
+  padding: 24px 28px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Step 1: Brands Grid */
+.lub-brands-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+  padding: 10px 0;
+}
+
+.lub-brand-card {
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 24px 12px;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.lub-brand-card:hover {
+  border-color: var(--primary-container, #54b435);
+  background: #f8faf8;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 22px rgba(84, 180, 53, 0.12);
+}
+
+.lub-brand-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: #f1f5f1;
+  color: var(--primary-container, #54b435);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.lub-brand-card:hover .lub-brand-icon {
+  background: var(--primary-container, #54b435);
+  color: #ffffff;
+}
+
+.lub-brand-name {
+  font-size: 13px;
+  font-weight: 800;
+  color: #121412;
+  letter-spacing: 0.3px;
+}
+
+/* Step 2: Form */
+.lub-selected-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8faf8;
+  border: 1px solid #d1e7dd;
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin-bottom: 20px;
+}
+
+.lub-selected-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lub-sel-lbl {
+  font-size: 12.5px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.lub-sel-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  color: #121412;
+}
+
+.lub-sel-badge svg {
+  color: var(--primary-container, #54b435);
+}
+
+.lub-change-brand-btn {
+  background: transparent;
+  border: none;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary-container, #54b435);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.lub-error-banner {
+  background: #fef2f2;
+  border: 1px solid #f87171;
+  color: #b91c1c;
+  padding: 11px 14px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.lub-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.lub-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.lub-field-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.lub-field-label .req {
+  color: #ef4444;
+}
+
+.lub-input,
+.lub-select,
+.lub-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 7px;
+  font-size: 13.5px;
+  color: #121412;
+  background: #ffffff;
+  outline: none;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lub-input:focus,
+.lub-select:focus,
+.lub-textarea:focus {
+  border-color: var(--primary-container, #54b435);
+  box-shadow: 0 0 0 3px rgba(84, 180, 53, 0.15);
+}
+
+.lub-form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+  gap: 14px;
+}
+
+.lub-btn-back {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  padding: 10px 16px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lub-btn-submit {
+  background: var(--primary-container, #54b435);
+  border: none;
+  padding: 10px 22px;
+  border-radius: 7px;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 14px rgba(84, 180, 53, 0.35);
+  transition: all 0.2s ease;
+}
+
+.lub-btn-submit:hover:not(:disabled) {
+  background: #469c2b;
+  transform: translateY(-1px);
+}
+
+.lub-btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Step 3: Success */
+.lub-success-view {
+  text-align: center;
+  padding: 12px 8px;
+}
+
+.lub-success-icon-wrap {
+  display: inline-flex;
+  margin-bottom: 12px;
+}
+
+.lub-check-icon {
+  color: var(--primary-container, #54b435);
+}
+
+.lub-success-heading {
+  font-size: 22px;
+  font-weight: 800;
+  color: #121412;
+  margin: 0 0 6px;
+}
+
+.lub-success-text {
+  font-size: 13.5px;
+  color: #555d55;
+  max-width: 520px;
+  margin: 0 auto 18px;
+  line-height: 1.5;
+}
+
+.lub-ticket-box {
+  background: #fafbfa;
+  border: 1.5px solid #d1e7dd;
+  border-radius: 10px;
+  padding: 16px 20px;
+  max-width: 480px;
+  margin: 0 auto 20px;
+  text-align: left;
+}
+
+.lub-ticket-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px dashed #cbd5e1;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+}
+
+.lub-ticket-header span {
+  font-size: 11px;
+  font-weight: 800;
+  color: #64748b;
+  letter-spacing: 0.5px;
+}
+
+.lub-ticket-header strong {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--primary-container, #54b435);
+}
+
+.lub-ticket-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12.5px;
+  margin-bottom: 6px;
+}
+
+.lub-ticket-row span {
+  color: #64748b;
+}
+
+.lub-ticket-row strong {
+  color: #121412;
+}
+
+.lub-hotlines-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  max-width: 480px;
+  margin: 0 auto 20px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.lub-hotlines-row div {
+  display: flex;
+  flex-direction: column;
+  font-size: 11px;
+  gap: 2px;
+}
+
+.lub-hotlines-row span {
+  color: #64748b;
+}
+
+.lub-hotlines-row a {
+  color: var(--primary-container, #54b435);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.lub-success-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.lub-btn-reset {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  padding: 9px 16px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #334155;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lub-btn-done {
+  background: #121412;
+  border: none;
+  padding: 9px 22px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+@media (max-width: 680px) {
+  .lub-brands-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .lub-form-grid,
+  .lub-hotlines-row {
+    grid-template-columns: 1fr;
+  }
+  .lub-modal-header,
+  .lub-modal-body {
+    padding: 18px 20px;
+  }
+}

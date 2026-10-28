@@ -1,20 +1,21 @@
 import React, { useState, useRef } from 'react';
 import { 
-  ShieldCheck, Search, ChevronDown, ArrowRight, 
-  Zap, Activity, Wrench,
-  Menu, X, Phone, Flame,
+  ShieldCheck, Search, ChevronDown, 
+  Zap, Wrench, Droplet,
+  Menu, X, Flame,
   Gauge, Shield, Cpu
 } from 'lucide-react';
 import { MandtechLogo } from './components/Logo';
 import { useInquiry } from './context/InquiryContext';
 import HomePage from './pages/HomePage';
 import SparePartsPage from './pages/SparePartsPage';
-import AfterSalesPage from './pages/AfterSalesPage';
+import { AfterSalesPage } from './pages/AfterSalesPage';
 import ContactPage from './pages/ContactPage';
 import EquipmentSalesPage from './pages/EquipmentSalesPage';
 import CompressorQuoteModal from './components/CompressorQuoteModal';
 import { type SparePartsBrand } from './components/SparePartsQuoteModal';
 import LeasingQuoteModal, { type LeasingCompressorType, type LeasingBrand } from './components/LeasingQuoteModal';
+import LubricantsQuoteModal, { type LubricantBrand } from './components/LubricantsQuoteModal';
 import LeasingPage from './pages/LeasingPage';
 import './App.css';
 
@@ -42,6 +43,10 @@ export default function App() {
   const [leasingModalType, setLeasingModalType] = useState<LeasingCompressorType | null>(null);
   const [leasingModalBrand, setLeasingModalBrand] = useState<LeasingBrand | null>(null);
 
+  // Lubricants & Special Fluids Modal State
+  const [lubricantsModalOpen, setLubricantsModalOpen] = useState(false);
+  const [selectedLubricantBrand, setSelectedLubricantBrand] = useState<LubricantBrand | null>(null);
+
   const openLeasingModal = (type?: LeasingCompressorType, brand?: LeasingBrand) => {
     setLeasingModalType(type || null);
     setLeasingModalBrand(brand || null);
@@ -57,6 +62,13 @@ export default function App() {
     setMobileMenuOpen(false);
   };
 
+  const openLubricantsModal = (brand?: LubricantBrand) => {
+    setSelectedLubricantBrand(brand || null);
+    setLubricantsModalOpen(true);
+    setActiveDropdown(null);
+    setMobileMenuOpen(false);
+  };
+
   const navigateToCompressors = (type?: 'ELECTRIC AIR COMPRESSOR' | 'DIESEL AIR COMPRESSOR') => {
     setSelectedCompressorType(type || null);
     navigateTo('equipmentSales');
@@ -65,6 +77,11 @@ export default function App() {
   const navigateToSpareParts = (brand?: SparePartsBrand) => {
     setSelectedSparePartsBrand(brand || null);
     navigateTo('catalog');
+  };
+
+  const navigateToLubricants = (brand?: LubricantBrand) => {
+    setSelectedLubricantBrand(brand || null);
+    navigateTo('aftersales');
   };
 
   const dropdownTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -115,7 +132,12 @@ export default function App() {
           />
         );
       case 'aftersales':
-        return <AfterSalesPage />;
+        return (
+          <AfterSalesPage 
+            initialBrand={selectedLubricantBrand}
+            onOpenQuoteModal={openLubricantsModal}
+          />
+        );
       case 'contact':
         return <ContactPage />;
       default:
@@ -377,7 +399,7 @@ export default function App() {
               )}
             </div>
 
-            {/* Nav Item: Technical Support / After-Sales */}
+            {/* Nav Item: Lubricants / Special Fluids */}
             <div 
               className="nav-dropdown-wrapper"
               onMouseEnter={() => handleMouseEnter('support')}
@@ -385,70 +407,68 @@ export default function App() {
             >
               <button
                 className={`desktop-nav-link ${activePage === 'aftersales' ? 'nav-active' : ''} ${activeDropdown === 'support' ? 'dropdown-active' : ''}`}
-                onClick={() => navigateTo('aftersales')}
+                onClick={() => navigateToLubricants()}
               >
-                <span>After-Sales</span>
+                <span>Lubricants/special fluids</span>
                 <ChevronDown size={14} className="dropdown-chevron" />
               </button>
 
               {activeDropdown === 'support' && (
-                <div className="mega-menu-panel" onMouseEnter={() => handleMouseEnter('support')} onMouseLeave={handleMouseLeave}>
-                  <div className="mega-menu-content">
-                    <div className="mega-menu-main-col">
-                      <div className="mega-menu-col-header">FIELD ENGINEERING &amp; MAINTENANCE</div>
-                      <div className="mega-menu-links-grid">
-                        <div className="mega-menu-item" onClick={() => navigateTo('aftersales')}>
-                          <div className="mega-item-icon-box">
-                            <Wrench size={18} />
-                          </div>
-                          <div className="mega-item-text">
-                            <div className="mega-item-title">24/7 Field Maintenance</div>
-                            <div className="mega-item-desc">Emergency mechanical, electrical, and pneumatic diagnostic dispatch</div>
-                          </div>
-                        </div>
-
-                        <div className="mega-menu-item" onClick={() => navigateTo('aftersales')}>
-                          <div className="mega-item-icon-box">
-                            <Activity size={18} />
-                          </div>
-                          <div className="mega-item-text">
-                            <div className="mega-item-title">Live Dispatch Tracker</div>
-                            <div className="mega-item-desc">Real-time status, technician ETA, and log breakdown for your tickets</div>
-                          </div>
-                        </div>
-
-                        <div className="mega-menu-item" onClick={() => navigateTo('aftersales')}>
-                          <div className="mega-item-icon-box">
-                            <ShieldCheck size={18} />
-                          </div>
-                          <div className="mega-item-text">
-                            <div className="mega-item-title">Preventative Service Contracts</div>
-                            <div className="mega-item-desc">Scheduled inspections, vibration analysis, and OEM fluid testing</div>
-                          </div>
-                        </div>
-
-                        <div className="mega-menu-item" onClick={() => navigateTo('contact')}>
-                          <div className="mega-item-icon-box">
-                            <Phone size={18} />
-                          </div>
-                          <div className="mega-item-text">
-                            <div className="mega-item-title">Emergency Hotline</div>
-                            <div className="mega-item-desc">Direct 24/7 contact: +234 (1) 460-7000 (average pickup: 8 seconds)</div>
-                          </div>
-                        </div>
+                <div className="mega-menu-panel lubricants-dropdown-panel" onMouseEnter={() => handleMouseEnter('support')} onMouseLeave={handleMouseLeave}>
+                  <div className="lubricants-minimal-grid">
+                    {/* Option 1: ATLAS COPCO */}
+                    <div 
+                      className="lubricants-minimal-item"
+                      onClick={() => openLubricantsModal('ATLAS COPCO')}
+                    >
+                      <div className="lubricants-minimal-icon">
+                        <Gauge size={24} />
                       </div>
+                      <span className="lubricants-minimal-name">ATLAS COPCO</span>
                     </div>
 
-                    <div className="mega-menu-side-col">
-                      <div className="mega-side-badge">8S AVERAGE ANSWER</div>
-                      <h4 className="mega-side-heading">Technical Support Hotline</h4>
-                      <p className="mega-side-desc">
-                        Our engineering response units are stationed in major industrial corridors with rapid dispatch readiness.
-                      </p>
-                      <button className="mega-side-action-btn" onClick={() => navigateTo('aftersales')}>
-                        <span>Access Support Hub</span>
-                        <ArrowRight size={14} />
-                      </button>
+                    {/* Option 2: SULLAIR */}
+                    <div 
+                      className="lubricants-minimal-item"
+                      onClick={() => openLubricantsModal('SULLAIR')}
+                    >
+                      <div className="lubricants-minimal-icon">
+                        <Shield size={24} />
+                      </div>
+                      <span className="lubricants-minimal-name">SULLAIR</span>
+                    </div>
+
+                    {/* Option 3: INGERSOLL RAND */}
+                    <div 
+                      className="lubricants-minimal-item"
+                      onClick={() => openLubricantsModal('INGERSOLL RAND')}
+                    >
+                      <div className="lubricants-minimal-icon">
+                        <Cpu size={24} />
+                      </div>
+                      <span className="lubricants-minimal-name">INGERSOLL RAND</span>
+                    </div>
+
+                    {/* Option 4: DENAIR */}
+                    <div 
+                      className="lubricants-minimal-item"
+                      onClick={() => openLubricantsModal('DENAIR')}
+                    >
+                      <div className="lubricants-minimal-icon">
+                        <Wrench size={24} />
+                      </div>
+                      <span className="lubricants-minimal-name">DENAIR</span>
+                    </div>
+
+                    {/* Option 5: OTHERS */}
+                    <div 
+                      className="lubricants-minimal-item"
+                      onClick={() => openLubricantsModal('OTHERS')}
+                    >
+                      <div className="lubricants-minimal-icon">
+                        <Droplet size={24} />
+                      </div>
+                      <span className="lubricants-minimal-name">OTHERS</span>
                     </div>
                   </div>
                 </div>
@@ -562,8 +582,8 @@ export default function App() {
                   className={`mobile-link-item ${activePage === 'aftersales' ? 'mobile-active' : ''}`}
                   onClick={() => navigateTo('aftersales')}
                 >
-                  <span>After-Sales Support</span>
-                  <span className="mobile-link-tag">24/7 Field</span>
+                  <span>Lubricants/special fluids</span>
+                  <span className="mobile-link-tag">Fluids</span>
                 </button>
 
                 <button
@@ -628,7 +648,7 @@ export default function App() {
               <li><button onClick={() => setActivePage('equipmentSales')} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>Air Dryer</button></li>
               <li><button onClick={() => setActivePage('equipmentSales')} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>Air Receiver</button></li>
               <li><button onClick={() => navigateToSpareParts()} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>Spare Parts</button></li>
-              <li><button onClick={() => navigateToSpareParts()} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>Lubricants</button></li>
+              <li><button onClick={() => navigateToLubricants()} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>Lubricants</button></li>
             </ul>
           </div>
 
@@ -747,6 +767,13 @@ export default function App() {
         onClose={() => setLeasingModalOpen(false)}
         initialType={leasingModalType}
         initialBrand={leasingModalBrand}
+      />
+
+      {/* Global Lubricants & Special Fluids Modal */}
+      <LubricantsQuoteModal
+        isOpen={lubricantsModalOpen}
+        onClose={() => setLubricantsModalOpen(false)}
+        initialBrand={selectedLubricantBrand}
       />
     </div>
   );

@@ -4,6 +4,7 @@ import { InputField, CheckboxItem, RadioGroup } from '../components/FormFields';
 import { Button } from '../components/Button';
 import { InfoCard } from '../components/Card';
 import { submitServiceTicket, trackServiceTicket, fetchDocuments } from '../services/api';
+import LubricantsQuoteModal, { type LubricantBrand, LUBRICANT_BRANDS } from '../components/LubricantsQuoteModal';
 import './AfterSalesPage.css';
 
 const SERVICE_TYPES = [
@@ -19,7 +20,24 @@ const GUIDES = [
   { id: '3', title: 'Emergency Troubleshooting for Generator Overheating', size: 'PDF (1.2 MB)', duration: '8 min read', icon: '⚠️' },
 ];
 
-export const AfterSalesPage: React.FC = () => {
+interface AfterSalesPageProps {
+  initialBrand?: LubricantBrand | null;
+  onOpenQuoteModal?: (brand?: LubricantBrand) => void;
+}
+
+export const AfterSalesPage: React.FC<AfterSalesPageProps> = ({ initialBrand, onOpenQuoteModal }) => {
+  const [localModalOpen, setLocalModalOpen] = useState(false);
+  const [localBrand, setLocalBrand] = useState<LubricantBrand | null>(initialBrand || null);
+
+  const handleOpenQuote = (brand?: LubricantBrand) => {
+    if (onOpenQuoteModal) {
+      onOpenQuoteModal(brand);
+    } else {
+      setLocalBrand(brand || null);
+      setLocalModalOpen(true);
+    }
+  };
+
   const [activeSubTab, setActiveSubTab] = useState<'intake' | 'track' | 'library'>('intake');
   const [guidesList, setGuidesList] = useState(GUIDES);
 
@@ -178,13 +196,75 @@ Lagos Yard VI | Port Harcourt Yard`;
   return (
     <div className="aftersales-page-container">
       <div className="container">
-        {/* Header Block */}
-        <div className="aftersales-header">
-          <h1 className="aftersales-title">Service Intake &amp; After-Sales</h1>
-          <p className="aftersales-subtitle">
-            Routine calibration, scheduled preventative maintenance contracts, and rapid emergency dispatch alerts.
+        {/* Header Block - max 2 lines */}
+        <div className="aftersales-header" style={{ marginBottom: '24px' }}>
+          <h1 className="aftersales-title" style={{ fontSize: '32px', margin: '0 0 6px' }}>
+            Lubricants / Special Fluids
+          </h1>
+          <p className="aftersales-subtitle" style={{ margin: 0, fontSize: '14.5px', color: '#555d55', maxWidth: '680px' }}>
+            Factory-approved synthetic compressor fluids, cooling lubricants, and food-grade oils.
           </p>
         </div>
+
+        {/* 5-Brand Selection: Icon on top, Brand name below, no other text */}
+        <div style={{ background: '#ffffff', borderRadius: '12px', border: '1.5px solid #e2e8f0', padding: '20px 24px', marginBottom: '28px', boxShadow: '0 4px 16px rgba(0,0,0,0.03)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '12px' }}>
+            {LUBRICANT_BRANDS.map((b) => (
+              <div
+                key={b.id}
+                onClick={() => handleOpenQuote(b.id)}
+                style={{
+                  border: '1.5px solid #e2e8f0',
+                  borderRadius: '10px',
+                  padding: '20px 10px',
+                  background: '#fafbfa',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '10px',
+                  textAlign: 'center',
+                  transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--primary-container)';
+                  e.currentTarget.style.background = '#ffffff';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 6px 18px rgba(84, 180, 53, 0.12)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = '#e2e8f0';
+                  e.currentTarget.style.background = '#fafbfa';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <div style={{
+                  width: '46px',
+                  height: '46px',
+                  borderRadius: '10px',
+                  background: '#f1f5f1',
+                  color: 'var(--primary-container)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  {b.icon}
+                </div>
+                <span style={{ fontSize: '12px', fontWeight: 800, color: '#121412', letterSpacing: '0.3px', whiteSpace: 'nowrap' }}>
+                  {b.name}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <LubricantsQuoteModal
+          isOpen={localModalOpen}
+          onClose={() => setLocalModalOpen(false)}
+          initialBrand={localBrand}
+        />
 
         {/* Dynamic page subtabs */}
         <div className="aftersales-tabs-row">
