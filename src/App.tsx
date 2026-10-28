@@ -56,6 +56,10 @@ export default function App() {
   // Technical Support selected service
   const [techSupportService, setTechSupportService] = useState<TechnicalServiceType | null>(null);
 
+  // Tech sub-menu hover state (separate from activeDropdown to avoid type comparison issues)
+  const [techSubMenuOpen, setTechSubMenuOpen] = useState(false);
+  const techSubMenuTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const openLeasingModal = (type?: LeasingCompressorType, brand?: LeasingBrand) => {
     setLeasingModalType(type || null);
     setLeasingModalBrand(brand || null);
@@ -523,8 +527,13 @@ export default function App() {
                       {/* Technical Support */}
                       <div
                         className="support-dropdown-item"
-                        onMouseEnter={() => handleMouseEnter('support-tech')}
-                        onMouseLeave={handleMouseLeave}
+                        onMouseEnter={() => {
+                          if (techSubMenuTimeoutRef.current) clearTimeout(techSubMenuTimeoutRef.current);
+                          setTechSubMenuOpen(true);
+                        }}
+                        onMouseLeave={() => {
+                          techSubMenuTimeoutRef.current = setTimeout(() => setTechSubMenuOpen(false), 180);
+                        }}
                       >
                         <div
                           className="support-option-row"
@@ -535,15 +544,20 @@ export default function App() {
                           </div>
                           <div className="support-option-info">
                             <span className="support-option-title">Technical Support</span>
-                            <span className="support-option-desc">Engineering services & maintenance</span>
+                            <span className="support-option-desc">Engineering services &amp; maintenance</span>
                           </div>
                           <ChevronDown size={14} className="support-submenu-chevron rotated" />
                         </div>
-                        {activeDropdown === 'support-tech' && (
+                        {techSubMenuOpen && (
                           <div
                             className="support-submenu"
-                            onMouseEnter={() => handleMouseEnter('support-tech')}
-                            onMouseLeave={handleMouseLeave}
+                            onMouseEnter={() => {
+                              if (techSubMenuTimeoutRef.current) clearTimeout(techSubMenuTimeoutRef.current);
+                              setTechSubMenuOpen(true);
+                            }}
+                            onMouseLeave={() => {
+                              techSubMenuTimeoutRef.current = setTimeout(() => setTechSubMenuOpen(false), 180);
+                            }}
                           >
                             {[
                               'CONSULTATIONS/INSPECTION',

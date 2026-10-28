@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Phone, MessageCircle, Mail } from 'lucide-react';
+import { X, Phone, Mail } from 'lucide-react';
 import './ContactSupportModal.css';
 
 interface ContactSupportModalProps {
