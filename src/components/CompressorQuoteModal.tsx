@@ -127,13 +127,13 @@ export default function CompressorQuoteModal({
     setStep(2);
   };
 
-  const handleSelectCondition = (condition: CompressorCondition) => {
-    setSelectedCondition(condition);
+  const handleSelectBrand = (brand: CompressorBrand) => {
+    setSelectedBrand(brand);
     setStep(3);
   };
 
-  const handleSelectBrand = (brand: CompressorBrand) => {
-    setSelectedBrand(brand);
+  const handleSelectCondition = (condition: CompressorCondition) => {
+    setSelectedCondition(condition);
     setStep(4);
   };
 
@@ -148,8 +148,8 @@ export default function CompressorQuoteModal({
     setSubmitError(null);
 
     if (!selectedType) { setSubmitError('Please select a compressor type.'); setStep(1); return; }
-    if (!selectedCondition) { setSubmitError('Please select a compressor condition.'); setStep(2); return; }
-    if (!selectedBrand) { setSubmitError('Please select a brand.'); setStep(3); return; }
+    if (!selectedBrand) { setSubmitError('Please select a brand.'); setStep(2); return; }
+    if (!selectedCondition) { setSubmitError('Please select a compressor condition.'); setStep(3); return; }
     if (!companyName.trim()) { setSubmitError('Please provide your company name.'); return; }
     if (!email.trim() || !email.includes('@')) { setSubmitError('Please provide a valid corporate email.'); return; }
     if (!phone.trim() || phone.trim().length < 6) { setSubmitError('Please provide a valid phone number.'); return; }
@@ -259,13 +259,40 @@ export default function CompressorQuoteModal({
             </div>
           )}
 
-          {/* ── STEP 2: CONDITION (New / Used) ── */}
+          {/* ── STEP 2: OEM BRAND ── */}
           {step === 2 && (
             <div className="cq-step-content cq-fade-in">
               <div className="cq-header-block">
                 <div className="cq-context-pill">
                   <span>Type:</span>
                   <strong>{selectedType === 'ELECTRIC AIR COMPRESSOR' ? 'Electric' : 'Diesel'}</strong>
+                </div>
+                <h3 className="cq-title">Select Manufacturer Brand</h3>
+                <p className="cq-subtitle">Choose your preferred industrial OEM manufacturer.</p>
+              </div>
+              <div className="cq-brands-grid">
+                {BRANDS_DATA.map((brand) => (
+                  <div key={brand.id} className="cq-brand-card" onClick={() => handleSelectBrand(brand.id)} role="button" tabIndex={0}>
+                    <div className="cq-brand-icon-box">{brand.icon}</div>
+                    <div className="cq-brand-text">
+                      <div className="cq-brand-name">{brand.name.toUpperCase()}</div>
+                      <div className="cq-brand-badge">{brand.badge}</div>
+                    </div>
+                    <div className="cq-brand-origin">{brand.origin}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ── STEP 3: CONDITION (New / Used) ── */}
+          {step === 3 && (
+            <div className="cq-step-content cq-fade-in">
+              <div className="cq-header-block">
+                <div className="cq-context-pill">
+                  <span>{selectedType === 'ELECTRIC AIR COMPRESSOR' ? 'Electric' : 'Diesel'}</span>
+                  <span className="dot">•</span>
+                  <strong className="text-orange">{selectedBrand}</strong>
                 </div>
                 <h3 className="cq-title">Select Compressor Condition</h3>
                 <p className="cq-subtitle">Are you requesting a quote for a new or used unit?</p>
@@ -295,35 +322,6 @@ export default function CompressorQuoteModal({
             </div>
           )}
 
-          {/* ── STEP 3: OEM BRAND ── */}
-          {step === 3 && (
-            <div className="cq-step-content cq-fade-in">
-              <div className="cq-header-block">
-                <div className="cq-context-pill">
-                  <span>{selectedType === 'ELECTRIC AIR COMPRESSOR' ? 'Electric' : 'Diesel'}</span>
-                  <span className="dot">•</span>
-                  <strong className={selectedCondition === 'NEW' ? 'text-green' : 'text-amber'}>
-                    {selectedCondition === 'NEW' ? 'New Unit' : 'Used Unit'}
-                  </strong>
-                </div>
-                <h3 className="cq-title">Select Manufacturer Brand</h3>
-                <p className="cq-subtitle">Choose your preferred industrial OEM manufacturer.</p>
-              </div>
-              <div className="cq-brands-grid">
-                {BRANDS_DATA.map((brand) => (
-                  <div key={brand.id} className="cq-brand-card" onClick={() => handleSelectBrand(brand.id)} role="button" tabIndex={0}>
-                    <div className="cq-brand-icon-box">{brand.icon}</div>
-                    <div className="cq-brand-text">
-                      <div className="cq-brand-name">{brand.name.toUpperCase()}</div>
-                      <div className="cq-brand-badge">{brand.badge}</div>
-                    </div>
-                    <div className="cq-brand-origin">{brand.origin}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* ── STEP 4: CONTACT FORM ── */}
           {step === 4 && (
             <div className="cq-step-content cq-fade-in">
@@ -331,11 +329,11 @@ export default function CompressorQuoteModal({
                 <div className="cq-context-pill">
                   <span>{selectedType === 'ELECTRIC AIR COMPRESSOR' ? 'Electric' : 'Diesel'}</span>
                   <span className="dot">•</span>
+                  <strong className="text-orange">{selectedBrand}</strong>
+                  <span className="dot">•</span>
                   <span className={selectedCondition === 'NEW' ? 'text-green' : 'text-amber'}>
                     {selectedCondition === 'NEW' ? 'New' : 'Used'}
                   </span>
-                  <span className="dot">•</span>
-                  <strong className="text-orange">{selectedBrand}</strong>
                 </div>
                 <h3 className="cq-title">Request a Formal Quotation</h3>
                 <p className="cq-subtitle">
