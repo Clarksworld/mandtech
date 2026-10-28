@@ -5,7 +5,7 @@ import {
   AlertCircle, Shield, Cpu, Gauge, Wrench, Droplet,
   Package, MapPin
 } from 'lucide-react';
-import { submitInquiry } from '../services/api';
+import { submitLubricantRequest } from '../services/api';
 import './LubricantsQuoteModal.css';
 
 export type LubricantBrand = 'ATLAS COPCO' | 'SULLAIR' | 'INGERSOLL RAND' | 'DENAIR' | 'OTHERS';
@@ -101,29 +101,15 @@ export default function LubricantsQuoteModal({
     setSubmitError(null);
 
     try {
-      const interests = [
-        'Lubricants',
-        `Brand: ${selectedBrand}`,
-        `Grade: ${fluidType}`,
-        `Packaging: ${volume}`,
-        `Hub: ${hub}`,
-      ];
-
-      const fullMessage = `LUBRICANTS & SPECIAL FLUIDS QUOTE REQUEST:
-Brand: ${selectedBrand}
-Fluid Specification: ${fluidType}
-Volume / Packaging: ${volume}
-Delivery Hub: ${hub}
-Contact Person: ${contactName}
-${notes.trim() ? `Application / Equipment Notes: ${notes.trim()}` : ''}`;
-
-      const res = await submitInquiry({
-        name: contactName.trim(),
-        company: companyName.trim(),
+      const res = await submitLubricantRequest({
+        brand: selectedBrand,
+        fluid_type: fluidType,
+        volume,
+        hub,
+        company_name: companyName.trim(),
         email: email.trim(),
         phone: phone.trim(),
-        message: fullMessage,
-        equipment_interests: interests,
+        notes: notes.trim() ? `Contact: ${contactName.trim()} | ${notes.trim()}` : `Contact: ${contactName.trim()}`,
       });
 
       const ticketRef = res.data?.id

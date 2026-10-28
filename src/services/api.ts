@@ -178,3 +178,86 @@ export async function submitSparePartsRequest(payload: SparePartsRequestPayload)
   }
   return res.json();
 }
+
+
+export interface LeasingRequestPayload {
+  compressor_type: string;
+  brand: string;
+  duration: string;
+  hub: string;
+  company_name: string;
+  email: string;
+  phone: string;
+  notes?: string;
+}
+
+export interface LeasingRequestResponse {
+  message: string;
+  data: {
+    id: string;
+    compressor_type: string;
+    brand: string;
+    duration: string;
+    hub: string;
+    company_name: string;
+    email: string;
+    phone: string;
+    status: string;
+    notes?: string;
+    created_at: string;
+  };
+}
+
+export async function submitLeasingRequest(payload: LeasingRequestPayload): Promise<LeasingRequestResponse> {
+  const res = await fetch(`${API_BASE_URL}/api/leasing-requests`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || err.message || `Failed to submit leasing request (${res.status})`);
+  }
+  return res.json();
+}
+
+export interface LubricantRequestPayload {
+  brand: string;
+  fluid_type: string;
+  volume: string;
+  hub: string;
+  company_name: string;
+  email: string;
+  phone: string;
+  notes?: string;
+}
+
+export interface LubricantRequestResponse {
+  message: string;
+  data: {
+    id: string;
+    brand: string;
+    fluid_type: string;
+    volume: string;
+    hub: string;
+    company_name: string;
+    email: string;
+    phone: string;
+    status: string;
+    notes?: string;
+    created_at: string;
+  };
+}
+
+export async function submitLubricantRequest(payload: LubricantRequestPayload): Promise<LubricantRequestResponse> {
+  const res = await fetch(`${API_BASE_URL}/api/lubricant-requests`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || err.message || `Failed to submit lubricant quotation request (${res.status})`);
+  }
+  return res.json();
+}

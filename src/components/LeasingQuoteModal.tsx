@@ -5,7 +5,7 @@ import {
   AlertCircle, Shield, Cpu, Gauge, Wrench, Clock,
   Truck, Calendar, MapPin
 } from 'lucide-react';
-import { submitInquiry } from '../services/api';
+import { submitLeasingRequest } from '../services/api';
 import './LeasingQuoteModal.css';
 
 export type LeasingCompressorType = 'ELECTRIC AIR COMPRESSOR' | 'DIESEL AIR COMPRESSOR';
@@ -144,28 +144,15 @@ export default function LeasingQuoteModal({
     setSubmitError(null);
 
     try {
-      const interests = [
-        'Equipment Rentals',
-        selectedType,
-        selectedBrand,
-        `Term: ${duration}`,
-        `Mobilization: ${hub}`,
-      ];
-
-      const fullMessage = `LEASING & RENTAL INQUIRY:
-Selected Equipment: ${selectedType} (${selectedBrand})
-Duration / Term: ${duration}
-Mobilization Hub: ${hub}
-Contact Person: ${contactName}
-${notes.trim() ? `Project Requirements: ${notes.trim()}` : ''}`;
-
-      const res = await submitInquiry({
-        name: contactName.trim(),
-        company: companyName.trim(),
+      const res = await submitLeasingRequest({
+        compressor_type: selectedType,
+        brand: selectedBrand,
+        duration,
+        hub,
+        company_name: companyName.trim(),
         email: email.trim(),
         phone: phone.trim(),
-        message: fullMessage,
-        equipment_interests: interests,
+        notes: notes.trim() ? `Contact: ${contactName.trim()} | ${notes.trim()}` : `Contact: ${contactName.trim()}`,
       });
 
       const ticketRef = res.data?.id
