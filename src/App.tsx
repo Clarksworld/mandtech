@@ -135,7 +135,6 @@ export default function App() {
         return (
           <AfterSalesPage 
             initialBrand={selectedLubricantBrand}
-            onOpenQuoteModal={openLubricantsModal}
           />
         );
       case 'contact':
