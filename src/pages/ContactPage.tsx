@@ -9,18 +9,31 @@ import './ContactPage.css';
 
 const BRANCHES = [
   {
-    city: 'Lagos Headquarters & Yard',
-    addr: 'Industrial Park Phase II, Victoria Island, Lagos, Nigeria',
-    phone: '+234 (1) 460-7000',
-    email: 'lagos@mandtech.com.ng',
-    gps: '6.4281° N, 3.4219° E',
+    city: 'Port-Harcourt (Headquarters)',
+    isHq: true,
+    company: 'Mandtech Services Limited',
+    addr: '42 Old Refinery Road, Elelenwo, Port-Harcourt, Rivers',
+    phone: '08064204187',
+    email: 'info@mandtech.com.ng',
+    gps: '4.8324° N, 7.0712° E',
   },
   {
-    city: 'Port Harcourt Trans-Amadi Hub',
-    addr: 'Plot 15, Trans-Amadi Industrial Layout, Port Harcourt, Nigeria',
-    phone: '+234 (84) 303-900',
-    email: 'ph@mandtech.com.ng',
-    gps: '4.8156° N, 7.0498° E',
+    city: 'Lagos Branch',
+    isHq: false,
+    company: 'Mandtech Services Limited',
+    addr: '16 Oshuketan Street, Return, Lagos',
+    phone: '08027779298',
+    email: 'info@mandtech.com.ng',
+    gps: '6.5956° N, 3.3854° E',
+  },
+  {
+    city: 'Abuja Branch',
+    isHq: false,
+    company: 'Mandtech Services Limited',
+    addr: 'Camp David Garden Estate, Karsana District, Abuja',
+    phone: '08067980479',
+    email: 'sales@mandtech.com.ng',
+    gps: '9.1352° N, 7.3218° E',
   },
 ];
 
@@ -34,11 +47,20 @@ export const ContactPage: React.FC = () => {
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
   
-  // Selected equipment class of interest states
-  const [newEquipPurchase, setNewEquipPurchase] = useState(false);
-  const [equipRental, setEquipRental] = useState(false);
-  const [spareParts, setSpareParts] = useState(false);
-  const [serviceRequest, setServiceRequest] = useState(false);
+  // Selected product lines of interest
+  const [interestCompressors, setInterestCompressors] = useState(false);
+  const [interestAirDryer, setInterestAirDryer] = useState(false);
+  const [interestAirReceiver, setInterestAirReceiver] = useState(false);
+  const [interestSpareParts, setInterestSpareParts] = useState(false);
+  const [interestLubricants, setInterestLubricants] = useState(false);
+
+  // Selected services of interest
+  const [interestRentals, setInterestRentals] = useState(false);
+  const [interestMaintenance, setInterestMaintenance] = useState(false);
+  const [interestAudit, setInterestAudit] = useState(false);
+  const [interestTechSupport, setInterestTechSupport] = useState(false);
+  const [interestInstallation, setInterestInstallation] = useState(false);
+  const [interestTroubleshooting, setInterestTroubleshooting] = useState(false);
   
   const [newsletter, setNewsletter] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -46,18 +68,18 @@ export const ContactPage: React.FC = () => {
   const [submittedTicketNo, setSubmittedTicketNo] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
 
-  // Auto-check equipment classes if items are in the basket
+  // Auto-check classes if items are in the basket
   useEffect(() => {
     inquiryItems.forEach(item => {
-      if (item.type === 'equipment') setNewEquipPurchase(true);
-      if (item.type === 'lease') setEquipRental(true);
-      if (item.type === 'part') setSpareParts(true);
-
-      const cat = item.category.toLowerCase();
       const title = item.title.toLowerCase();
-      if (cat.includes('service') || title.includes('service') || cat.includes('repair') || title.includes('maintenance')) {
-        setServiceRequest(true);
-      }
+      const cat = item.category.toLowerCase();
+      if (item.type === 'equipment' || title.includes('compressor')) setInterestCompressors(true);
+      if (title.includes('dryer') || cat.includes('dryer')) setInterestAirDryer(true);
+      if (title.includes('receiver') || cat.includes('receiver')) setInterestAirReceiver(true);
+      if (item.type === 'part' || title.includes('part') || title.includes('filter')) setInterestSpareParts(true);
+      if (title.includes('lubricant') || title.includes('oil') || title.includes('fluid')) setInterestLubricants(true);
+      if (item.type === 'lease') setInterestRentals(true);
+      if (cat.includes('service') || title.includes('maintenance')) setInterestMaintenance(true);
     });
   }, [inquiryItems]);
 
@@ -83,10 +105,19 @@ export const ContactPage: React.FC = () => {
     }
 
     const interests: string[] = [];
-    if (newEquipPurchase) interests.push('New Equipment Purchase');
-    if (equipRental) interests.push('Equipment Rental');
-    if (spareParts) interests.push('Spare Parts');
-    if (serviceRequest) interests.push('Service Request');
+    if (interestCompressors) interests.push('Air Compressors');
+    if (interestAirDryer) interests.push('Air Dryer');
+    if (interestAirReceiver) interests.push('Air Receiver');
+    if (interestSpareParts) interests.push('Spare Parts');
+    if (interestLubricants) interests.push('Lubricants');
+
+    if (interestRentals) interests.push('Equipment Rentals');
+    if (interestMaintenance) interests.push('On-Site Maintenance');
+    if (interestAudit) interests.push('System Audit');
+    if (interestTechSupport) interests.push('Technical Support / Advice');
+    if (interestInstallation) interests.push('Installation');
+    if (interestTroubleshooting) interests.push('Troubleshooting');
+
     inquiryItems.forEach(item => {
       interests.push(`${item.title} (${item.category})`);
     });
@@ -115,10 +146,17 @@ export const ContactPage: React.FC = () => {
       setEmail('');
       setPhone('');
       setMessage('');
-      setNewEquipPurchase(false);
-      setEquipRental(false);
-      setSpareParts(false);
-      setServiceRequest(false);
+      setInterestCompressors(false);
+      setInterestAirDryer(false);
+      setInterestAirReceiver(false);
+      setInterestSpareParts(false);
+      setInterestLubricants(false);
+      setInterestRentals(false);
+      setInterestMaintenance(false);
+      setInterestAudit(false);
+      setInterestTechSupport(false);
+      setInterestInstallation(false);
+      setInterestTroubleshooting(false);
     } catch (err: any) {
       setFormError(err.message || 'Failed to submit proposal inquiry. Please check your connection.');
     } finally {
@@ -165,13 +203,16 @@ export const ContactPage: React.FC = () => {
                 <InfoCard key={i} className="branch-info-card">
                   <div className="branch-card-header">
                     <span className="orange-indicator-dot"></span>
-                    <h3 className="branch-card-city">{b.city}</h3>
+                    <h3 className="branch-card-city">
+                      {b.city}
+                      {b.isHq && <span style={{ marginLeft: '8px', fontSize: '10px', background: 'var(--primary-container)', color: '#fff', padding: '2px 6px', borderRadius: '3px', fontWeight: 800 }}>HQ</span>}
+                    </h3>
                   </div>
                   <p className="branch-card-addr"><MapPin size={14} /> {b.addr}</p>
                   <span className="branch-gps-coord">GPS: {b.gps}</span>
                   
                   <div className="branch-card-footer">
-                    <a href={`tel:${b.phone.replace(/\s+/g, '')}`} className="branch-footer-link">
+                    <a href={`tel:${b.phone}`} className="branch-footer-link">
                       <Phone size={14} /> {b.phone}
                     </a>
                     <a href={`mailto:${b.email}`} className="branch-footer-link">
@@ -184,15 +225,20 @@ export const ContactPage: React.FC = () => {
 
             {/* Quick Contact triggers */}
             <div className="quick-tiles-grid">
-              <a href="tel:+23414607000" className="quick-contact-tile">
+              <a href="tel:08064204187" className="quick-contact-tile">
                 <span className="tile-icon-wrapper">📞</span>
-                <span className="tile-title">Lagos Dispatch Annex</span>
-                <span className="tile-desc">Direct hotline for emergency dispatch.</span>
+                <span className="tile-title">PHC HQ Hotline</span>
+                <span className="tile-desc">08064204187 — Direct corporate line.</span>
               </a>
-              <a href="mailto:proposals@mandtech.com.ng" className="quick-contact-tile">
+              <a href="mailto:info@mandtech.com.ng" className="quick-contact-tile">
                 <span className="tile-icon-wrapper">✉️</span>
-                <span className="tile-title">Corporate RFQ Mailbox</span>
-                <span className="tile-desc">Fast-track route for bid tender packages.</span>
+                <span className="tile-title">General Inquiries</span>
+                <span className="tile-desc">info@mandtech.com.ng</span>
+              </a>
+              <a href="mailto:sales@mandtech.com.ng" className="quick-contact-tile">
+                <span className="tile-icon-wrapper">📑</span>
+                <span className="tile-title">Sales &amp; RFQ Desk</span>
+                <span className="tile-desc">sales@mandtech.com.ng</span>
               </a>
             </div>
 
@@ -315,29 +361,70 @@ export const ContactPage: React.FC = () => {
                   />
                 </div>
 
-                <label className="field-label" style={{ marginBottom: '8px', display: 'block' }}>
-                  Equipment Class of Interest
+                <label className="field-label" style={{ marginBottom: '8px', display: 'block', fontWeight: 600 }}>
+                  Product Line of Interest
                 </label>
-                <div className="equipment-checkboxes-grid">
+                <div className="equipment-checkboxes-grid" style={{ marginBottom: '14px' }}>
                   <CheckboxItem
-                    label="New Equipment Purchase"
-                    checked={newEquipPurchase}
-                    onToggle={() => setNewEquipPurchase(!newEquipPurchase)}
+                    label="Air Compressors"
+                    checked={interestCompressors}
+                    onToggle={() => setInterestCompressors(!interestCompressors)}
                   />
                   <CheckboxItem
-                    label="Equipment Rental"
-                    checked={equipRental}
-                    onToggle={() => setEquipRental(!equipRental)}
+                    label="Air Dryer"
+                    checked={interestAirDryer}
+                    onToggle={() => setInterestAirDryer(!interestAirDryer)}
+                  />
+                  <CheckboxItem
+                    label="Air Receiver"
+                    checked={interestAirReceiver}
+                    onToggle={() => setInterestAirReceiver(!interestAirReceiver)}
                   />
                   <CheckboxItem
                     label="Spare Parts"
-                    checked={spareParts}
-                    onToggle={() => setSpareParts(!spareParts)}
+                    checked={interestSpareParts}
+                    onToggle={() => setInterestSpareParts(!interestSpareParts)}
                   />
                   <CheckboxItem
-                    label="Service Request"
-                    checked={serviceRequest}
-                    onToggle={() => setServiceRequest(!serviceRequest)}
+                    label="Lubricants"
+                    checked={interestLubricants}
+                    onToggle={() => setInterestLubricants(!interestLubricants)}
+                  />
+                </div>
+
+                <label className="field-label" style={{ marginBottom: '8px', display: 'block', fontWeight: 600 }}>
+                  Industrial Services Required
+                </label>
+                <div className="equipment-checkboxes-grid">
+                  <CheckboxItem
+                    label="Equipment Rentals"
+                    checked={interestRentals}
+                    onToggle={() => setInterestRentals(!interestRentals)}
+                  />
+                  <CheckboxItem
+                    label="On-Site Maintenance"
+                    checked={interestMaintenance}
+                    onToggle={() => setInterestMaintenance(!interestMaintenance)}
+                  />
+                  <CheckboxItem
+                    label="System Audit"
+                    checked={interestAudit}
+                    onToggle={() => setInterestAudit(!interestAudit)}
+                  />
+                  <CheckboxItem
+                    label="Technical Support / Advice"
+                    checked={interestTechSupport}
+                    onToggle={() => setInterestTechSupport(!interestTechSupport)}
+                  />
+                  <CheckboxItem
+                    label="Installation"
+                    checked={interestInstallation}
+                    onToggle={() => setInterestInstallation(!interestInstallation)}
+                  />
+                  <CheckboxItem
+                    label="Troubleshooting"
+                    checked={interestTroubleshooting}
+                    onToggle={() => setInterestTroubleshooting(!interestTroubleshooting)}
                   />
                 </div>
 

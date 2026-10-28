@@ -15,31 +15,43 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
   const handleSimulateDownload = () => {
     setDownloadSuccess(true);
     // Create an actual downloadable text/spec file dynamically
-    const specContent = `MANDTECH SERVICES INDUSTRIAL SPECIFICATIONS CATALOG
-------------------------------------------------------
-Revision: 2026.Q4
-Engineering Standards: ISO 8573.1 Class 0, CE, ASME, SONCAP
+    const specContent = `MANDTECH SERVICES LIMITED - CORPORATE SPECIFICATIONS & DIRECTORY
+----------------------------------------------------------------------
+ENGINEERING STANDARDS: ISO 8573.1 Class 0, CE, ASME, SONCAP
 
-1. ROTARY SCREW AIR COMPRESSORS
-   - Sullair 185 - 1600 CFM Series (Diesel Driven & Electric)
-   - Atlas Copco GA VSD+ Intelligent Variable Speed
-   - Kaeser Sigma Profile High-Efficiency Air Ends
+PRODUCT LINE:
+1. AIR COMPRESSORS (Rotary Screw, Portable & Stationary, New & Used)
+   - Atlas Copco, Sullair, Ingersoll Rand, Denair
+2. AIR DRYER (Refrigerated & Desiccant Industrial Dryers)
+3. AIR RECEIVER (High-Pressure Industrial Tanks & Vessels)
+4. SPARE PARTS (OEM Filters, Separators, Valves, Airends, Coolers, Sensors)
+5. LUBRICANTS (Synthetic & Mineral Industrial Compressor Fluids)
 
-2. INDUSTRIAL DIESEL GENERATORS
-   - Prime Ratings: 50 kVA - 2250 kVA
-   - Engines: Perkins, Cummins, Caterpillar Heavy-Duty
-   - Sound Attenuation: 68 dBA @ 7m
+INDUSTRIAL SERVICES:
+- Equipment Rentals
+- On-Site Maintenance
+- System Audit
+- Technical Support / Advice
+- Installation
+- Troubleshooting
 
-3. FLUID MANAGEMENT & PROCESS PUMPS
-   - High-Volume Trash & Slurry Pumps (Up to 1500 GPM)
-   - Corrosion-Resistant Stainless Impellers
+REGIONAL OPERATING HUBS & HEADQUARTERS:
+1. HEADQUARTERS (PORT-HARCOURT):
+   Mandtech Services Limited
+   42 Old Refinery Road, Elelenwo, Port-Harcourt, Rivers State
+   Phone: 08064204187 | Email: info@mandtech.com.ng
 
-4. REGIONAL HUBS & DISPATCH
-   - Lagos VI Operational Hub: +234 (1) 460-7000
-   - Port Harcourt Trans-Amadi Hub: +234 (84) 303-900
-   - Technical SLA: 24/7 Mobile Dispatch Unit
+2. LAGOS BRANCH:
+   Mandtech Services Limited
+   16 Oshuketan Street, Return, Lagos State
+   Phone: 08027779298 | Email: info@mandtech.com.ng
 
-Mandtech Services Ltd. | engineering@mandtech.com.ng`;
+3. ABUJA BRANCH:
+   Mandtech Services Limited
+   Camp David Garden Estate, Karsana District, Abuja FCT
+   Phone: 08067980479 | Email: sales@mandtech.com.ng
+
+Corporate Web: https://mandtech.com.ng`;
 
     const blob = new Blob([specContent], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);

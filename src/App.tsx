@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { 
-  ShieldCheck, Search, Share2, Mail, ChevronDown, ArrowRight, 
+  ShieldCheck, Search, ChevronDown, ArrowRight, 
   Zap, Activity, Wrench, Truck, 
   FileText, Menu, X, Phone, CheckCircle, Flame,
   Gauge, Shield, Cpu
@@ -126,10 +126,10 @@ export default function App() {
                 </div>
               </div>
               <ul className="status-check-list">
-                <li>🟢 Lagos VI Annex: <strong>ONLINE</strong> (12 dispatches active)</li>
-                <li>🟢 PH Trans-Amadi Yard: <strong>ONLINE</strong> (8 dispatches active)</li>
-                <li>🟢 Escravos Offshore Staging: <strong>STANDBY</strong> (2 barges on call)</li>
-                <li>🟢 24/7 Technical Hotline: <strong>OPERATIONAL</strong> (Average answer: 8s)</li>
+                <li>🟢 Port-Harcourt (Headquarters): <strong>ONLINE</strong> (Elelenwo Ops Yard)</li>
+                <li>🟢 Lagos Hub: <strong>ONLINE</strong> (16 Oshuketan Street, Return)</li>
+                <li>🟢 Abuja Hub: <strong>ONLINE</strong> (Camp David Garden Estate, Karsana)</li>
+                <li>🟢 24/7 Technical Hotline: <strong>OPERATIONAL</strong> (08064204187 / 08027779298)</li>
               </ul>
               <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
                 <button
@@ -625,10 +625,11 @@ export default function App() {
           <div className="footer-links-column">
             <h4 className="footer-section-title" style={{ fontSize: '11px', letterSpacing: '0.8px', textTransform: 'uppercase', color: '#ffffff', marginBottom: '18px' }}>Product Lines</h4>
             <ul className="footer-items-list" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <li><button onClick={() => setActivePage('equipmentSales')} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>Air Compressors</button></li>
-              <li><button onClick={() => setActivePage('equipmentSales')} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>Industrial Generators</button></li>
-              <li><button onClick={() => setActivePage('equipmentSales')} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>Fluid Management Pumps</button></li>
-              <li><button onClick={() => setActivePage('equipmentSales')} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>Desiccant Air Dryers</button></li>
+              <li><button onClick={() => navigateToCompressors()} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>Air Compressors</button></li>
+              <li><button onClick={() => setActivePage('equipmentSales')} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>Air Dryer</button></li>
+              <li><button onClick={() => setActivePage('equipmentSales')} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>Air Receiver</button></li>
+              <li><button onClick={() => navigateToSpareParts()} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>Spare Parts</button></li>
+              <li><button onClick={() => navigateToSpareParts()} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>Lubricants</button></li>
             </ul>
           </div>
 
@@ -636,79 +637,37 @@ export default function App() {
           <div className="footer-links-column">
             <h4 className="footer-section-title" style={{ fontSize: '11px', letterSpacing: '0.8px', textTransform: 'uppercase', color: '#ffffff', marginBottom: '18px' }}>Services</h4>
             <ul className="footer-items-list" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <li>
-                <button
-                  onClick={() => setInfoModal({
-                    title: 'On-Site Maintenance & Overhaul Service',
-                    content: (
-                      <div>
-                        <p>Mandtech provides on-site field maintenance by OEM-certified mechanical and electrical specialists across Nigeria:</p>
-                        <ul style={{ paddingLeft: '20px', marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                          <li><strong>Routine Service Contracts:</strong> 250h, 500h, 1000h, and 2000h scheduled preventative maintenance.</li>
-                          <li><strong>Diagnostic Testing:</strong> Laser alignment, oil sampling, vibration telemetry, and pressure decay auditing.</li>
-                          <li><strong>24/7 Rapid Emergency Response:</strong> Dedicated dispatch vans stationed at Lagos and Port Harcourt yards.</li>
-                        </ul>
-                      </div>
-                    )
-                  })}
-                  style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}
-                >
-                  On-Site Maintenance
-                </button>
-              </li>
               <li><button onClick={() => setActivePage('leasing')} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>Equipment Rentals</button></li>
-              <li>
-                <button
-                  onClick={() => setInfoModal({
-                    title: 'Industrial Compressed Air & Power Audits',
-                    content: (
-                      <div>
-                        <p>Save up to 30% on industrial plant energy consumption through Mandtech's comprehensive technical audits:</p>
-                        <ul style={{ paddingLeft: '20px', marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                          <li><strong>Flow &amp; Pressure Profiling:</strong> Identify artificial demand and line leaks.</li>
-                          <li><strong>Power Quality Logging:</strong> Evaluate generator fuel efficiency and peak power factor.</li>
-                          <li><strong>Air Purity Testing:</strong> Verify ISO 8573.1 Class 1/Class 0 air quality compliance.</li>
-                        </ul>
-                      </div>
-                    )
-                  })}
-                  style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}
-                >
-                  System Audits
-                </button>
-              </li>
-              <li><button onClick={() => navigateToSpareParts()} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>Spare Parts</button></li>
+              <li><button onClick={() => setActivePage('aftersales')} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>On-Site Maintenance</button></li>
+              <li><button onClick={() => setActivePage('aftersales')} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>System Audit</button></li>
+              <li><button onClick={() => setActivePage('contact')} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>Technical Support / Advice</button></li>
+              <li><button onClick={() => setActivePage('aftersales')} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>Installation</button></li>
+              <li><button onClick={() => setActivePage('aftersales')} style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>Troubleshooting</button></li>
             </ul>
           </div>
 
-          {/* Column 4: Connect */}
+          {/* Column 4: Locations & Contact */}
           <div className="footer-links-column">
-            <h4 className="footer-section-title" style={{ fontSize: '11px', letterSpacing: '0.8px', textTransform: 'uppercase', color: '#ffffff', marginBottom: '18px' }}>Connect</h4>
-            <div className="footer-social-icons" style={{ display: 'flex', gap: '12px', marginBottom: '24px' }}>
-              <a
-                href="mailto:info@mandtech.com.ng"
-                style={{ width: '36px', height: '36px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', textDecoration: 'none' }}
-                title="Email Mandtech"
-              >
-                <Mail size={16} />
-              </a>
-              <button
-                onClick={() => setInfoModal({
-                  title: 'Corporate Share & Media Inquiries',
-                  content: (
-                    <p>For corporate media, public relations, and tender bid distributions, please contact <strong>corporate@mandtech.com.ng</strong> or visit our Lagos Headquarters.</p>
-                  )
-                })}
-                style={{ width: '36px', height: '36px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', backgroundColor: 'transparent' }}
-                title="Share & Media"
-              >
-                <Share2 size={16} />
-              </button>
+            <h4 className="footer-section-title" style={{ fontSize: '11px', letterSpacing: '0.8px', textTransform: 'uppercase', color: '#ffffff', marginBottom: '18px' }}>Locations &amp; Contact</h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', color: 'rgba(255,255,255,0.75)', fontSize: '12.5px', lineHeight: '1.5' }}>
+              <div>
+                <strong style={{ color: '#fff', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  Port-Harcourt <span style={{ fontSize: '9px', background: 'var(--primary-container)', color: '#fff', padding: '1px 5px', borderRadius: '3px' }}>HQ</span>
+                </strong>
+                <div>42 Old Refinery Road, Elelenwo, Port-Harcourt, Rivers</div>
+                <div><a href="tel:08064204187" style={{ color: 'var(--primary-container)' }}>08064204187</a> • <a href="mailto:info@mandtech.com.ng" style={{ color: 'rgba(255,255,255,0.7)' }}>info@mandtech.com.ng</a></div>
+              </div>
+              <div>
+                <strong style={{ color: '#fff' }}>Lagos Branch</strong>
+                <div>16 Oshuketan Street, Return, Lagos</div>
+                <div><a href="tel:08027779298" style={{ color: 'var(--primary-container)' }}>08027779298</a> • <a href="mailto:info@mandtech.com.ng" style={{ color: 'rgba(255,255,255,0.7)' }}>info@mandtech.com.ng</a></div>
+              </div>
+              <div>
+                <strong style={{ color: '#fff' }}>Abuja Branch</strong>
+                <div>Camp David Garden Estate, Karsana District, Abuja</div>
+                <div><a href="tel:08067980479" style={{ color: 'var(--primary-container)' }}>08067980479</a> • <a href="mailto:sales@mandtech.com.ng" style={{ color: 'rgba(255,255,255,0.7)' }}>sales@mandtech.com.ng</a></div>
+              </div>
             </div>
-            <p className="footer-contact-text" style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px', lineHeight: '1.6' }}>
-              HQ: Victoria Island Industrial Zone,<br />Lagos, Nigeria<br />
-              Yard: Trans-Amadi, Port Harcourt
-            </p>
           </div>
         </div>
 

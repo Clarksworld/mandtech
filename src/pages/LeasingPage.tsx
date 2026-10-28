@@ -72,7 +72,7 @@ export const LeasingPage: React.FC<LeasingPageProps> = ({ onNavigateToContact })
   // Estimator State
   const [calcCategory, setCalcCategory] = useState('Air Compressors');
   const [calcDuration, setCalcDuration] = useState('1-3 Months');
-  const [calcHub, setCalcHub] = useState('Lagos VI Yard');
+  const [calcHub, setCalcHub] = useState('Port Harcourt HQ Yard');
   const [calcUnits, setCalcUnits] = useState(1);
   const [addedItemMsg, setAddedItemMsg] = useState<string | null>(null);
 
@@ -231,9 +231,9 @@ export const LeasingPage: React.FC<LeasingPageProps> = ({ onNavigateToContact })
                 onChange={(e) => setCalcHub(e.target.value)}
                 className="calc-select"
               >
-                <option value="Lagos VI Yard">Lagos VI Engineering Annex</option>
-                <option value="Port Harcourt Yard">Port Harcourt Trans-Amadi Yard</option>
-                <option value="Offshore / Escravos Barge">Offshore Escravos / Bonny Island</option>
+                <option value="Port Harcourt HQ Yard">Port Harcourt HQ (Elelenwo Ops Yard)</option>
+                <option value="Lagos Hub">Lagos Hub (16 Oshuketan Street)</option>
+                <option value="Abuja Hub">Abuja Hub (Camp David Garden Estate, Karsana)</option>
               </select>
             </div>
 
