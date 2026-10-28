@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   X, ArrowLeft, ArrowRight,
   Phone, Mail, Building, CheckCircle2, RotateCcw,
-  AlertCircle, Sparkles, Shield, Cpu, Gauge,
+  AlertCircle, Shield, Cpu, Gauge,
   Wrench, Filter, Droplet, Wind, GitCommit,
   Thermometer, Radio, Activity,
   Sliders, Fuel, Disc, Layers
@@ -21,57 +21,32 @@ export interface SparePartItem {
 }
 
 export const SPARE_PARTS_LIST: SparePartItem[] = [
-  { numeral: 'I', id: 'AIR FILTER', name: 'AIR FILTER', desc: 'Heavy-duty air intake filtration elements', icon: <Wind size={20} /> },
-  { numeral: 'II', id: 'OIL FILTER', name: 'OIL FILTER', desc: 'High-pressure spin-on & cartridge oil filters', icon: <Droplet size={20} /> },
-  { numeral: 'III', id: 'OIL SEPARATOR', name: 'OIL SEPARATOR', desc: 'Precision air/oil separator elements (<3 ppm carryover)', icon: <Layers size={20} /> },
-  { numeral: 'IV', id: 'UNLOADER/INLET VALVE KIT', name: 'UNLOADER/INLET VALVE KIT', desc: 'Intake regulation valve kits & rebuild sets', icon: <Sliders size={20} /> },
-  { numeral: 'V', id: 'MINIMUM PRESSURE VALVE', name: 'MINIMUM PRESSURE VALVE', desc: 'Discharge MPV assemblies & seal kits', icon: <Disc size={20} /> },
-  { numeral: 'VI', id: 'OIL STOP/CHECK VALVE', name: 'OIL STOP/CHECK VALVE', desc: 'Non-return check valves & housing seals', icon: <GitCommit size={20} /> },
-  { numeral: 'VII', id: 'THERMOSTAT', name: 'THERMOSTAT', desc: 'Thermal bypass valve elements & temperature regulators', icon: <Thermometer size={20} /> },
-  { numeral: 'VIII', id: 'AIREND', name: 'AIREND', desc: 'Complete OEM rotary screw air-end exchange units', icon: <Wrench size={20} /> },
-  { numeral: 'IX', id: 'FAN MOTOR', name: 'FAN MOTOR', desc: 'Cooling fan motor assemblies & dynamic impeller blades', icon: <Radio size={20} /> },
-  { numeral: 'X', id: 'OIL/AIR COOLER', name: 'OIL/AIR COOLER', desc: 'Aluminum bar-plate heat exchangers & radiators', icon: <Filter size={20} /> },
-  { numeral: 'XI', id: 'AIR DRYER', name: 'AIR DRYER', desc: 'Integrated & standalone refrigerated or desiccant dryers', icon: <Wind size={20} /> },
-  { numeral: 'XII', id: 'SENSORS', name: 'SENSORS', desc: 'Pressure transducers, PT100 temperature sensors', icon: <Activity size={20} /> },
-  { numeral: 'XIII', id: 'CONTROLLER', name: 'CONTROLLER', desc: 'Digital PLC controllers (Elektronikon, AirSmart, etc.)', icon: <Cpu size={20} /> },
-  { numeral: 'XIV', id: 'LUBRICANT', name: 'LUBRICANT', desc: 'OEM synthetic compressor lubricants (8,000+ hr life)', icon: <Fuel size={20} /> },
+  { numeral: 'I', id: 'AIR FILTER', name: 'AIR FILTER', desc: 'Heavy-duty air intake filtration elements', icon: <Wind size={18} /> },
+  { numeral: 'II', id: 'OIL FILTER', name: 'OIL FILTER', desc: 'High-pressure spin-on & cartridge oil filters', icon: <Droplet size={18} /> },
+  { numeral: 'III', id: 'OIL SEPARATOR', name: 'OIL SEPARATOR', desc: 'Air/oil separator elements with <3 ppm carryover', icon: <Layers size={18} /> },
+  { numeral: 'IV', id: 'UNLOADER/INLET VALVE KIT', name: 'UNLOADER/INLET VALVE KIT', desc: 'Intake regulation valve kits & rebuild sets', icon: <Sliders size={18} /> },
+  { numeral: 'V', id: 'MINIMUM PRESSURE VALVE', name: 'MINIMUM PRESSURE VALVE', desc: 'Discharge MPV assemblies & internal seal kits', icon: <Disc size={18} /> },
+  { numeral: 'VI', id: 'OIL STOP/CHECK VALVE', name: 'OIL STOP/CHECK VALVE', desc: 'Non-return check valves & housing seals', icon: <GitCommit size={18} /> },
+  { numeral: 'VII', id: 'THERMOSTAT', name: 'THERMOSTAT', desc: 'Thermal bypass valve elements & temperature regulators', icon: <Thermometer size={18} /> },
+  { numeral: 'VIII', id: 'AIREND', name: 'AIREND', desc: 'Complete OEM rotary screw air-end exchange units', icon: <Wrench size={18} /> },
+  { numeral: 'IX', id: 'FAN MOTOR', name: 'FAN MOTOR', desc: 'Cooling fan motor assemblies & impeller blades', icon: <Radio size={18} /> },
+  { numeral: 'X', id: 'OIL/AIR COOLER', name: 'OIL/AIR COOLER', desc: 'Aluminum bar-plate heat exchangers & radiators', icon: <Filter size={18} /> },
+  { numeral: 'XI', id: 'AIR DRYER', name: 'AIR DRYER', desc: 'Integrated & standalone refrigerated dryers', icon: <Wind size={18} /> },
+  { numeral: 'XII', id: 'SENSORS', name: 'SENSORS', desc: 'Pressure transducers & PT100 temperature sensors', icon: <Activity size={18} /> },
+  { numeral: 'XIII', id: 'CONTROLLER', name: 'CONTROLLER', desc: 'Digital PLC controllers (Elektronikon, AirSmart)', icon: <Cpu size={18} /> },
+  { numeral: 'XIV', id: 'LUBRICANT', name: 'LUBRICANT', desc: 'OEM synthetic compressor lubricants (8,000+ hrs)', icon: <Fuel size={18} /> },
 ];
 
-export const BRANDS_DATA: {
+export const BRANDS_INFO: {
   id: SparePartsBrand;
   name: string;
-  badge: string;
-  origin: string;
+  tag: string;
   icon: React.ReactNode;
 }[] = [
-  {
-    id: 'ATLAS COPCO',
-    name: 'Atlas Copco',
-    badge: 'GA / GX / VSD OEM Parts',
-    origin: 'Sweden',
-    icon: <Gauge size={22} />,
-  },
-  {
-    id: 'SULLAIR',
-    name: 'Sullair',
-    badge: 'Genuine Sullube & Spares',
-    origin: 'USA',
-    icon: <Shield size={22} />,
-  },
-  {
-    id: 'INGERSOLL RAND',
-    name: 'Ingersoll Rand',
-    badge: 'Ultra Coolant & OEM Kits',
-    origin: 'USA',
-    icon: <Cpu size={22} />,
-  },
-  {
-    id: 'DENAIR',
-    name: 'Denair',
-    badge: 'Dual-Stage Spares & Elements',
-    origin: 'Germany',
-    icon: <Sparkles size={22} />,
-  },
+  { id: 'ATLAS COPCO', name: 'Atlas Copco', tag: 'GA • GX • VSD+', icon: <Gauge size={20} /> },
+  { id: 'SULLAIR', name: 'Sullair', tag: 'Heavy-Duty Screw', icon: <Shield size={20} /> },
+  { id: 'INGERSOLL RAND', name: 'Ingersoll Rand', tag: 'SSR • Nirvana', icon: <Cpu size={20} /> },
+  { id: 'DENAIR', name: 'Denair', tag: 'Dual-Stage Units', icon: <Wrench size={20} /> },
 ];
 
 interface SparePartsQuoteModalProps {
@@ -151,15 +126,15 @@ export default function SparePartsQuoteModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedBrand || !selectedPart) {
-      setSubmitError('Please ensure a brand and spare part are selected.');
+      setSubmitError('Please select both a brand and spare part component.');
       return;
     }
     if (!companyName.trim()) {
-      setSubmitError('Please enter your company or business name.');
+      setSubmitError('Please enter your company name.');
       return;
     }
     if (!email.trim() || !email.includes('@')) {
-      setSubmitError('Please provide a valid business email.');
+      setSubmitError('Please enter a valid business email.');
       return;
     }
     if (!phone.trim() || phone.length < 5) {
@@ -209,145 +184,141 @@ export default function SparePartsQuoteModal({
   const selectedPartItem = SPARE_PARTS_LIST.find((p) => p.id === selectedPart);
 
   return (
-    <div className="sp-modal-overlay" onClick={onClose}>
-      <div className="sp-modal-container" onClick={(e) => e.stopPropagation()}>
+    <div className="sp-modal-backdrop" onClick={onClose}>
+      <div className="sp-modal-sheet" onClick={(e) => e.stopPropagation()}>
         
-        {/* Header */}
-        <div className="sp-modal-header">
-          <div className="sp-modal-header-left">
-            <div className="sp-modal-badge">
-              <Sparkles size={13} />
-              <span>SPARE PARTS PROCUREMENT</span>
-            </div>
-            <h2 className="sp-modal-title">
-              {step === 1 && 'Select Equipment Brand'}
-              {step === 2 && `Select Spare Part — ${selectedBrand}`}
+        {/* Modal Header */}
+        <div className="sp-modal-top-bar">
+          <div>
+            <span className="sp-modal-brand-badge">OEM PARTS PROCUREMENT</span>
+            <h2 className="sp-modal-main-title">
+              {step === 1 && 'Select Equipment Manufacturer'}
+              {step === 2 && `${selectedBrand} — Select Component`}
               {step === 3 && 'Request Quotation Details'}
-              {step === 4 && 'Quotation Request Received'}
+              {step === 4 && 'Quotation Request Registered'}
             </h2>
           </div>
-          <button className="sp-modal-close-btn" onClick={onClose} aria-label="Close modal">
+          <button className="sp-modal-exit-btn" onClick={onClose} aria-label="Close modal">
             <X size={20} />
           </button>
         </div>
 
-        {/* Step Indicator (Steps 1 to 3) */}
+        {/* Step Progress Dots */}
         {step < 4 && (
-          <div className="sp-progress-bar-wrap">
-            <div className="sp-steps-indicator">
-              <div className={`sp-step-pill ${step >= 1 ? 'active' : ''} ${step > 1 ? 'completed' : ''}`}>
-                <span className="sp-step-number">1</span>
-                <span className="sp-step-label">Brand</span>
-              </div>
-              <div className="sp-step-connector" />
-              <div className={`sp-step-pill ${step >= 2 ? 'active' : ''} ${step > 2 ? 'completed' : ''}`}>
-                <span className="sp-step-number">2</span>
-                <span className="sp-step-label">Part Selection</span>
-              </div>
-              <div className="sp-step-connector" />
-              <div className={`sp-step-pill ${step >= 3 ? 'active' : ''}`}>
-                <span className="sp-step-number">3</span>
-                <span className="sp-step-label">Contact & Details</span>
-              </div>
+          <div className="sp-modal-stepper">
+            <div className={`sp-stepper-step ${step >= 1 ? 'is-active' : ''} ${step > 1 ? 'is-done' : ''}`}>
+              <span className="sp-stepper-num">1</span>
+              <span className="sp-stepper-text">Manufacturer</span>
+            </div>
+            <div className="sp-stepper-line" />
+            <div className={`sp-stepper-step ${step >= 2 ? 'is-active' : ''} ${step > 2 ? 'is-done' : ''}`}>
+              <span className="sp-stepper-num">2</span>
+              <span className="sp-stepper-text">Select Component</span>
+            </div>
+            <div className="sp-stepper-line" />
+            <div className={`sp-stepper-step ${step >= 3 ? 'is-active' : ''}`}>
+              <span className="sp-stepper-num">3</span>
+              <span className="sp-stepper-text">Quotation Details</span>
             </div>
           </div>
         )}
 
         {/* Modal Body */}
-        <div className="sp-modal-body">
+        <div className="sp-modal-scroll-area">
 
           {/* STEP 1: Brand Selection */}
           {step === 1 && (
-            <div className="sp-step-content sp-animate-fade">
-              <p className="sp-step-instructions">
-                Select your compressor brand manufacturer to view certified OEM replacement parts:
+            <div className="sp-step-panel">
+              <p className="sp-step-prompt">
+                Select your compressor manufacturer to view factory replacement components:
               </p>
-              <div className="sp-brands-grid">
-                {BRANDS_DATA.map((brand) => (
+              <div className="sp-brands-select-grid">
+                {BRANDS_INFO.map((b) => (
                   <div
-                    key={brand.id}
-                    className={`sp-brand-card ${selectedBrand === brand.id ? 'selected' : ''}`}
-                    onClick={() => handleBrandSelect(brand.id)}
+                    key={b.id}
+                    className="sp-brand-choice-card"
+                    onClick={() => handleBrandSelect(b.id)}
                     role="button"
                     tabIndex={0}
                   >
-                    <div className="sp-brand-card-top">
-                      <div className="sp-brand-icon-box">{brand.icon}</div>
-                      <span className="sp-brand-origin">{brand.origin}</span>
+                    <div className="sp-bcc-icon-box">{b.icon}</div>
+                    <div className="sp-bcc-info">
+                      <h4 className="sp-bcc-name">{b.name}</h4>
+                      <span className="sp-bcc-tag">{b.tag}</span>
                     </div>
-                    <div className="sp-brand-name">{brand.name}</div>
-                    <div className="sp-brand-badge">{brand.badge}</div>
-                    <div className="sp-brand-select-action">
-                      <span>View Parts List</span>
-                      <ArrowRight size={14} />
-                    </div>
+                    <ArrowRight size={16} className="sp-bcc-arrow" />
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          {/* STEP 2: 14 Parts Selection */}
+          {/* STEP 2: The 14 Parts Selection */}
           {step === 2 && (
-            <div className="sp-step-content sp-animate-fade">
-              <div className="sp-sub-header">
-                <p className="sp-step-instructions">
-                  Choose the required spare part or service component from the certified catalog for <strong>{selectedBrand}</strong>:
-                </p>
+            <div className="sp-step-panel">
+              <div className="sp-brand-lock-bar">
+                <span>Selected Brand: <strong>{selectedBrand}</strong></span>
+                <button
+                  type="button"
+                  className="sp-btn-link-action"
+                  onClick={() => setStep(1)}
+                >
+                  Change Brand
+                </button>
               </div>
 
-              <div className="sp-parts-grid">
-                {SPARE_PARTS_LIST.map((part) => {
-                  const isSelected = selectedPart === part.id;
-                  return (
-                    <div
-                      key={part.id}
-                      className={`sp-part-card ${isSelected ? 'selected' : ''}`}
-                      onClick={() => handlePartSelect(part.id)}
-                      role="button"
-                      tabIndex={0}
-                    >
-                      <div className="sp-part-card-numeral">{part.numeral}</div>
-                      <div className="sp-part-card-icon">{part.icon}</div>
-                      <div className="sp-part-card-content">
-                        <div className="sp-part-card-name">{part.name}</div>
-                        <div className="sp-part-card-desc">{part.desc}</div>
-                      </div>
-                      <div className="sp-part-card-select-arrow">
-                        <ArrowRight size={16} />
-                      </div>
+              <p className="sp-step-prompt">
+                Select the required replacement part from the certified 14-component catalog:
+              </p>
+
+              <div className="sp-parts-select-grid">
+                {SPARE_PARTS_LIST.map((part) => (
+                  <div
+                    key={part.id}
+                    className="sp-part-choice-item"
+                    onClick={() => handlePartSelect(part.id)}
+                    role="button"
+                    tabIndex={0}
+                  >
+                    <span className="sp-pci-numeral">{part.numeral}</span>
+                    <div className="sp-pci-icon">{part.icon}</div>
+                    <div className="sp-pci-details">
+                      <h4 className="sp-pci-name">{part.name}</h4>
+                      <p className="sp-pci-desc">{part.desc}</p>
                     </div>
-                  );
-                })}
+                    <ArrowRight size={16} className="sp-pci-arrow" />
+                  </div>
+                ))}
               </div>
 
-              <div className="sp-actions-bar">
-                <button type="button" className="sp-back-btn" onClick={handleBack}>
+              <div className="sp-modal-nav-bar">
+                <button type="button" className="sp-modal-back-btn" onClick={handleBack}>
                   <ArrowLeft size={16} />
-                  <span>Change Brand</span>
+                  <span>Back to Brands</span>
                 </button>
               </div>
             </div>
           )}
 
-          {/* STEP 3: Contact & Request Form */}
+          {/* STEP 3: Quotation Contact Details */}
           {step === 3 && (
-            <form onSubmit={handleSubmit} className="sp-step-content sp-animate-fade">
-              <div className="sp-summary-card">
-                <div className="sp-summary-item">
-                  <span className="sp-summary-lbl">Selected Brand</span>
-                  <span className="sp-summary-val font-semibold">{selectedBrand}</span>
+            <form onSubmit={handleSubmit} className="sp-step-panel">
+              {/* Selected Part Badge */}
+              <div className="sp-locked-selection-banner">
+                <div className="sp-locked-col">
+                  <span className="sp-locked-label">Manufacturer</span>
+                  <span className="sp-locked-val">{selectedBrand}</span>
                 </div>
-                <div className="sp-summary-divider" />
-                <div className="sp-summary-item">
-                  <span className="sp-summary-lbl">Spare Part</span>
-                  <span className="sp-summary-val font-semibold">
+                <div className="sp-locked-sep" />
+                <div className="sp-locked-col">
+                  <span className="sp-locked-label">Component</span>
+                  <span className="sp-locked-val">
                     {selectedPartItem?.numeral}. {selectedPartItem?.name}
                   </span>
                 </div>
                 <button
                   type="button"
-                  className="sp-change-link"
+                  className="sp-btn-link-action sp-locked-change"
                   onClick={() => setStep(2)}
                 >
                   Change Part
@@ -355,38 +326,38 @@ export default function SparePartsQuoteModal({
               </div>
 
               {submitError && (
-                <div className="sp-error-banner">
+                <div className="sp-alert-error">
                   <AlertCircle size={18} />
                   <span>{submitError}</span>
                 </div>
               )}
 
-              <div className="sp-form-grid">
-                <div className="sp-field-group">
-                  <label className="sp-label" htmlFor="companyName">
+              <div className="sp-fields-layout">
+                <div className="sp-input-box">
+                  <label className="sp-input-label" htmlFor="spCompanyName">
                     <Building size={14} />
                     <span>Company Name *</span>
                   </label>
                   <input
-                    id="companyName"
+                    id="spCompanyName"
                     type="text"
-                    className="sp-input"
-                    placeholder="e.g. Dangote Cement Plc"
+                    className="sp-text-field"
+                    placeholder="e.g. Dangote Cement, BUA Group, etc."
                     value={companyName}
                     onChange={(e) => setCompanyName(e.target.value)}
                     required
                   />
                 </div>
 
-                <div className="sp-field-group">
-                  <label className="sp-label" htmlFor="email">
+                <div className="sp-input-box">
+                  <label className="sp-input-label" htmlFor="spEmail">
                     <Mail size={14} />
                     <span>Business Email *</span>
                   </label>
                   <input
-                    id="email"
+                    id="spEmail"
                     type="email"
-                    className="sp-input"
+                    className="sp-text-field"
                     placeholder="procurement@company.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -394,15 +365,15 @@ export default function SparePartsQuoteModal({
                   />
                 </div>
 
-                <div className="sp-field-group full-width">
-                  <label className="sp-label" htmlFor="phone">
+                <div className="sp-input-box sp-col-span-2">
+                  <label className="sp-input-label" htmlFor="spPhone">
                     <Phone size={14} />
                     <span>Phone / WhatsApp Number *</span>
                   </label>
                   <input
-                    id="phone"
+                    id="spPhone"
                     type="tel"
-                    className="sp-input"
+                    className="sp-text-field"
                     placeholder="+234 800 000 0000"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
@@ -410,32 +381,41 @@ export default function SparePartsQuoteModal({
                   />
                 </div>
 
-                <div className="sp-field-group full-width">
-                  <label className="sp-label" htmlFor="notes">
+                <div className="sp-input-box sp-col-span-2">
+                  <label className="sp-input-label" htmlFor="spNotes">
                     <Wrench size={14} />
-                    <span>Part Specifications / Machine Serial Number / Quantity</span>
+                    <span>Compressor Model / Serial Number / Quantity (Optional)</span>
                   </label>
                   <textarea
-                    id="notes"
-                    className="sp-textarea"
+                    id="spNotes"
+                    className="sp-text-area"
                     rows={3}
-                    placeholder="Include compressor model (e.g. GA37, Sullair 185), serial number, part number if known, or quantity required..."
+                    placeholder="Specify model (e.g. GA-37, Sullair 185), serial ID, part number if available, or delivery plant location..."
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                   />
                 </div>
               </div>
 
-              <div className="sp-actions-bar">
-                <button type="button" className="sp-back-btn" onClick={handleBack} disabled={isSubmitting}>
+              <div className="sp-modal-nav-bar">
+                <button
+                  type="button"
+                  className="sp-modal-back-btn"
+                  onClick={handleBack}
+                  disabled={isSubmitting}
+                >
                   <ArrowLeft size={16} />
                   <span>Back</span>
                 </button>
 
-                <button type="submit" className="sp-submit-btn" disabled={isSubmitting}>
+                <button
+                  type="submit"
+                  className="sp-modal-confirm-btn"
+                  disabled={isSubmitting}
+                >
                   {isSubmitting ? (
                     <>
-                      <div className="sp-spinner" />
+                      <div className="sp-button-loader" />
                       <span>Submitting Request...</span>
                     </>
                   ) : (
@@ -449,40 +429,48 @@ export default function SparePartsQuoteModal({
             </form>
           )}
 
-          {/* STEP 4: Success View */}
+          {/* STEP 4: Success Screen */}
           {step === 4 && successData && (
-            <div className="sp-step-content sp-success-view sp-animate-fade">
-              <div className="sp-success-icon-wrap">
-                <CheckCircle2 size={56} className="sp-success-icon" />
+            <div className="sp-step-panel sp-success-container">
+              <div className="sp-success-icon-badge">
+                <CheckCircle2 size={54} />
               </div>
-              <h3 className="sp-success-title">Quotation Request Dispatched!</h3>
-              <p className="sp-success-subtitle">
-                Your request has been registered under reference <strong>{successData.id}</strong>.
-                Our parts engineering desk will review technical compatibility and prepare your official quotation.
+              <h3 className="sp-success-main-title">Quotation Request Received</h3>
+              <p className="sp-success-sub-text">
+                Your request has been logged under reference <strong>{successData.id}</strong>.
+                Our parts engineering desk will review technical compatibility and prepare your formal commercial quotation.
               </p>
 
-              <div className="sp-success-details-card">
-                <div className="sp-detail-row">
-                  <span className="sp-detail-lbl">Brand:</span>
-                  <span className="sp-detail-val">{successData.brand}</span>
+              <div className="sp-success-receipt-card">
+                <div className="sp-receipt-row">
+                  <span className="sp-receipt-label">Brand:</span>
+                  <span className="sp-receipt-val">{successData.brand}</span>
                 </div>
-                <div className="sp-detail-row">
-                  <span className="sp-detail-lbl">Requested Part:</span>
-                  <span className="sp-detail-val font-semibold">{successData.part_name}</span>
+                <div className="sp-receipt-row">
+                  <span className="sp-receipt-label">Part Requested:</span>
+                  <span className="sp-receipt-val font-bold">{successData.part_name}</span>
                 </div>
-                <div className="sp-detail-row">
-                  <span className="sp-detail-lbl">Company:</span>
-                  <span className="sp-detail-val">{successData.company_name}</span>
+                <div className="sp-receipt-row">
+                  <span className="sp-receipt-label">Company:</span>
+                  <span className="sp-receipt-val">{successData.company_name}</span>
                 </div>
               </div>
 
-              <div className="sp-success-actions">
-                <button type="button" className="sp-btn-secondary" onClick={handleReset}>
+              <div className="sp-success-cta-row">
+                <button
+                  type="button"
+                  className="sp-btn-outline-action"
+                  onClick={handleReset}
+                >
                   <RotateCcw size={16} />
                   <span>Request Another Part</span>
                 </button>
-                <button type="button" className="sp-btn-primary" onClick={onClose}>
-                  <span>Return to Site</span>
+                <button
+                  type="button"
+                  className="sp-btn-solid-action"
+                  onClick={onClose}
+                >
+                  <span>Close Window</span>
                 </button>
               </div>
             </div>
