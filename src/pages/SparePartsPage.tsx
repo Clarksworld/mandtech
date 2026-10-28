@@ -155,7 +155,7 @@ export default function SparePartsPage({ initialBrand }: SparePartsPageProps) {
       </section>
 
       {/* Industrial Assurance Bar */}
-      <section className="container sp-assurance-section">
+      {/* <section className="container sp-assurance-section">
         <div className="sp-assurance-bar">
           <div className="sp-assurance-col">
             <div className="sp-assurance-icon-box">
@@ -187,7 +187,7 @@ export default function SparePartsPage({ initialBrand }: SparePartsPageProps) {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 }
