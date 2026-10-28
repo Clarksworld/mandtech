@@ -13,28 +13,26 @@ import './SparePartsQuoteModal.css';
 export type SparePartsBrand = 'ATLAS COPCO' | 'SULLAIR' | 'INGERSOLL RAND' | 'DENAIR';
 
 export interface SparePartItem {
-  numeral: string;
   id: string;
   name: string;
-  desc: string;
   icon: React.ReactNode;
 }
 
 export const SPARE_PARTS_LIST: SparePartItem[] = [
-  { numeral: 'I', id: 'AIR FILTER', name: 'AIR FILTER', desc: 'Heavy-duty air intake filtration elements', icon: <Wind size={18} /> },
-  { numeral: 'II', id: 'OIL FILTER', name: 'OIL FILTER', desc: 'High-pressure spin-on & cartridge oil filters', icon: <Droplet size={18} /> },
-  { numeral: 'III', id: 'OIL SEPARATOR', name: 'OIL SEPARATOR', desc: 'Air/oil separator elements with <3 ppm carryover', icon: <Layers size={18} /> },
-  { numeral: 'IV', id: 'UNLOADER/INLET VALVE KIT', name: 'UNLOADER/INLET VALVE KIT', desc: 'Intake regulation valve kits & rebuild sets', icon: <Sliders size={18} /> },
-  { numeral: 'V', id: 'MINIMUM PRESSURE VALVE', name: 'MINIMUM PRESSURE VALVE', desc: 'Discharge MPV assemblies & internal seal kits', icon: <Disc size={18} /> },
-  { numeral: 'VI', id: 'OIL STOP/CHECK VALVE', name: 'OIL STOP/CHECK VALVE', desc: 'Non-return check valves & housing seals', icon: <GitCommit size={18} /> },
-  { numeral: 'VII', id: 'THERMOSTAT', name: 'THERMOSTAT', desc: 'Thermal bypass valve elements & temperature regulators', icon: <Thermometer size={18} /> },
-  { numeral: 'VIII', id: 'AIREND', name: 'AIREND', desc: 'Complete OEM rotary screw air-end exchange units', icon: <Wrench size={18} /> },
-  { numeral: 'IX', id: 'FAN MOTOR', name: 'FAN MOTOR', desc: 'Cooling fan motor assemblies & impeller blades', icon: <Radio size={18} /> },
-  { numeral: 'X', id: 'OIL/AIR COOLER', name: 'OIL/AIR COOLER', desc: 'Aluminum bar-plate heat exchangers & radiators', icon: <Filter size={18} /> },
-  { numeral: 'XI', id: 'AIR DRYER', name: 'AIR DRYER', desc: 'Integrated & standalone refrigerated dryers', icon: <Wind size={18} /> },
-  { numeral: 'XII', id: 'SENSORS', name: 'SENSORS', desc: 'Pressure transducers & PT100 temperature sensors', icon: <Activity size={18} /> },
-  { numeral: 'XIII', id: 'CONTROLLER', name: 'CONTROLLER', desc: 'Digital PLC controllers (Elektronikon, AirSmart)', icon: <Cpu size={18} /> },
-  { numeral: 'XIV', id: 'LUBRICANT', name: 'LUBRICANT', desc: 'OEM synthetic compressor lubricants (8,000+ hrs)', icon: <Fuel size={18} /> },
+  { id: 'AIR FILTER', name: 'I. AIR FILTER', icon: <Wind size={18} /> },
+  { id: 'OIL FILTER', name: 'II. OIL FILTER', icon: <Droplet size={18} /> },
+  { id: 'OIL SEPARATOR', name: 'III. OIL SEPARATOR', icon: <Layers size={18} /> },
+  { id: 'UNLOADER/INLET VALVE KIT', name: 'IV. UNLOADER/INLET VALVE KIT', icon: <Sliders size={18} /> },
+  { id: 'MINIMUM PRESSURE VALVE', name: 'V. MINIMUM PRESSURE VALVE', icon: <Disc size={18} /> },
+  { id: 'OIL STOP/CHECK VALVE', name: 'VI. OIL STOP/CHECK VALVE', icon: <GitCommit size={18} /> },
+  { id: 'THERMOSTAT', name: 'VII. THERMOSTAT', icon: <Thermometer size={18} /> },
+  { id: 'AIREND', name: 'VIII. AIREND', icon: <Wrench size={18} /> },
+  { id: 'FAN MOTOR', name: 'IX. FAN MOTOR', icon: <Radio size={18} /> },
+  { id: 'OIL/AIR COOLER', name: 'X. OIL/AIR COOLER', icon: <Filter size={18} /> },
+  { id: 'AIR DRYER', name: 'XI. AIR DRYER', icon: <Wind size={18} /> },
+  { id: 'SENSORS', name: 'XII. SENSORS', icon: <Activity size={18} /> },
+  { id: 'CONTROLLER', name: 'XIII. CONTROLLER', icon: <Cpu size={18} /> },
+  { id: 'LUBRICANT', name: 'XIV. LUBRICANT', icon: <Fuel size={18} /> },
 ];
 
 export const BRANDS_INFO: {
@@ -146,9 +144,10 @@ export default function SparePartsQuoteModal({
     setSubmitError(null);
 
     try {
+      const basePartName = selectedPart.replace(/^[I|V|X]+\.\s*/, '');
       const response = await submitSparePartsRequest({
         brand: selectedBrand,
-        part_name: selectedPart,
+        part_name: basePartName,
         company_name: companyName.trim(),
         email: email.trim(),
         phone: phone.trim(),
@@ -181,7 +180,7 @@ export default function SparePartsQuoteModal({
     setStep(1);
   };
 
-  const selectedPartItem = SPARE_PARTS_LIST.find((p) => p.id === selectedPart);
+  const selectedPartItem = SPARE_PARTS_LIST.find((p) => p.name === selectedPart || p.id === selectedPart);
 
   return (
     <div className="sp-modal-backdrop" onClick={onClose}>
@@ -274,19 +273,14 @@ export default function SparePartsQuoteModal({
               <div className="sp-parts-select-grid">
                 {SPARE_PARTS_LIST.map((part) => (
                   <div
-                    key={part.id}
+                    key={part.name}
                     className="sp-part-choice-item"
-                    onClick={() => handlePartSelect(part.id)}
+                    onClick={() => handlePartSelect(part.name)}
                     role="button"
                     tabIndex={0}
                   >
-                    <span className="sp-pci-numeral">{part.numeral}</span>
                     <div className="sp-pci-icon">{part.icon}</div>
-                    <div className="sp-pci-details">
-                      <h4 className="sp-pci-name">{part.name}</h4>
-                      <p className="sp-pci-desc">{part.desc}</p>
-                    </div>
-                    <ArrowRight size={16} className="sp-pci-arrow" />
+                    <span className="sp-pci-name">{part.name}</span>
                   </div>
                 ))}
               </div>
@@ -313,7 +307,7 @@ export default function SparePartsQuoteModal({
                 <div className="sp-locked-col">
                   <span className="sp-locked-label">Component</span>
                   <span className="sp-locked-val">
-                    {selectedPartItem?.numeral}. {selectedPartItem?.name}
+                    {selectedPartItem?.name || selectedPart}
                   </span>
                 </div>
                 <button

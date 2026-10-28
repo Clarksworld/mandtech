@@ -1,8 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { 
   ShieldCheck, Search, Share2, Mail, ChevronDown, ArrowRight, 
-  Zap, Activity, Package, Cog, Wrench, Truck, 
-  FileText, Menu, X, Phone, CheckCircle, Flame
+  Zap, Activity, Wrench, Truck, 
+  FileText, Menu, X, Phone, CheckCircle, Flame,
+  Gauge, Shield, Cpu
 } from 'lucide-react';
 import { MandtechLogo } from './components/Logo';
 import { useInquiry } from './context/InquiryContext';
@@ -250,67 +251,49 @@ export default function App() {
 
               {activeDropdown === 'parts' && (
                 <div className="mega-menu-panel spareparts-dropdown-panel" onMouseEnter={() => handleMouseEnter('parts')} onMouseLeave={handleMouseLeave}>
-                  <div className="spareparts-dropdown-content">
-                    <div className="spareparts-dropdown-header">
-                      <span>SELECT OEM COMPONENT BRAND</span>
-                      <span className="compressor-dropdown-badge">4 BRANDS</span>
+                  <div className="spareparts-minimal-grid">
+                    {/* Option 1: ATLAS COPCO */}
+                    <div 
+                      className="spareparts-minimal-item"
+                      onClick={() => navigateToSpareParts('ATLAS COPCO')}
+                    >
+                      <div className="spareparts-minimal-icon">
+                        <Gauge size={24} />
+                      </div>
+                      <span className="spareparts-minimal-name">ATLAS COPCO</span>
                     </div>
-                    <div className="spareparts-dropdown-grid">
-                      {/* Option 1: ATLAS COPCO */}
-                      <div 
-                        className="spareparts-dropdown-item"
-                        onClick={() => navigateToSpareParts('ATLAS COPCO')}
-                      >
-                        <div className="spareparts-item-icon-box">
-                          <Package size={20} />
-                        </div>
-                        <div className="spareparts-item-info">
-                          <div className="spareparts-item-title">ATLAS COPCO</div>
-                          <div className="spareparts-item-desc">GA, GX &amp; VSD+ Series filters, separators, valves &amp; service kits</div>
-                        </div>
-                      </div>
 
-                      {/* Option 2: SULLAIR */}
-                      <div 
-                        className="spareparts-dropdown-item"
-                        onClick={() => navigateToSpareParts('SULLAIR')}
-                      >
-                        <div className="spareparts-item-icon-box">
-                          <ShieldCheck size={20} />
-                        </div>
-                        <div className="spareparts-item-info">
-                          <div className="spareparts-item-title">SULLAIR</div>
-                          <div className="spareparts-item-desc">Rotary screw elements, Sullube fluid &amp; intake valve sets</div>
-                        </div>
+                    {/* Option 2: SULLAIR */}
+                    <div 
+                      className="spareparts-minimal-item"
+                      onClick={() => navigateToSpareParts('SULLAIR')}
+                    >
+                      <div className="spareparts-minimal-icon">
+                        <Shield size={24} />
                       </div>
+                      <span className="spareparts-minimal-name">SULLAIR</span>
+                    </div>
 
-                      {/* Option 3: INGERSOLL RAND */}
-                      <div 
-                        className="spareparts-dropdown-item"
-                        onClick={() => navigateToSpareParts('INGERSOLL RAND')}
-                      >
-                        <div className="spareparts-item-icon-box">
-                          <Cog size={20} />
-                        </div>
-                        <div className="spareparts-item-info">
-                          <div className="spareparts-item-title">INGERSOLL RAND</div>
-                          <div className="spareparts-item-desc">Ultra Coolant, SSR/M series spares &amp; precision sensor boards</div>
-                        </div>
+                    {/* Option 3: INGERSOLL RAND */}
+                    <div 
+                      className="spareparts-minimal-item"
+                      onClick={() => navigateToSpareParts('INGERSOLL RAND')}
+                    >
+                      <div className="spareparts-minimal-icon">
+                        <Cpu size={24} />
                       </div>
+                      <span className="spareparts-minimal-name">INGERSOLL RAND</span>
+                    </div>
 
-                      {/* Option 4: DENAIR */}
-                      <div 
-                        className="spareparts-dropdown-item"
-                        onClick={() => navigateToSpareParts('DENAIR')}
-                      >
-                        <div className="spareparts-item-icon-box">
-                          <Zap size={20} />
-                        </div>
-                        <div className="spareparts-item-info">
-                          <div className="spareparts-item-title">DENAIR</div>
-                          <div className="spareparts-item-desc">Dual-stage compressor elements, air-ends &amp; coolers</div>
-                        </div>
+                    {/* Option 4: DENAIR */}
+                    <div 
+                      className="spareparts-minimal-item"
+                      onClick={() => navigateToSpareParts('DENAIR')}
+                    >
+                      <div className="spareparts-minimal-icon">
+                        <Wrench size={24} />
                       </div>
+                      <span className="spareparts-minimal-name">DENAIR</span>
                     </div>
                   </div>
                 </div>

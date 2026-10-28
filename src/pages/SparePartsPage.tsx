@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  ArrowRight, ShieldCheck,
-  CheckCircle2, Clock, Wrench, Shield, Cpu, Gauge
+  ArrowRight, Wrench, Shield, Cpu, Gauge
 } from 'lucide-react';
 import SparePartsQuoteModal, {
   type SparePartsBrand,
@@ -153,41 +152,6 @@ export default function SparePartsPage({ initialBrand }: SparePartsPageProps) {
           ))}
         </div>
       </section>
-
-      {/* Industrial Assurance Bar */}
-      {/* <section className="container sp-assurance-section">
-        <div className="sp-assurance-bar">
-          <div className="sp-assurance-col">
-            <div className="sp-assurance-icon-box">
-              <ShieldCheck size={24} />
-            </div>
-            <div>
-              <h4 className="sp-assurance-title">100% Genuine OEM Sourced</h4>
-              <p className="sp-assurance-text">Direct manufacturer warranties and exact engineering tolerances.</p>
-            </div>
-          </div>
-
-          <div className="sp-assurance-col">
-            <div className="sp-assurance-icon-box">
-              <Clock size={24} />
-            </div>
-            <div>
-              <h4 className="sp-assurance-title">Rapid Nigerian Dispatch</h4>
-              <p className="sp-assurance-text">Immediate ex-stock dispatch to Lagos, Port Harcourt, and client plants.</p>
-            </div>
-          </div>
-
-          <div className="sp-assurance-col">
-            <div className="sp-assurance-icon-box">
-              <CheckCircle2 size={24} />
-            </div>
-            <div>
-              <h4 className="sp-assurance-title">Technical Serial Clearance</h4>
-              <p className="sp-assurance-text">Engineering support verifying exact part numbers against equipment data.</p>
-            </div>
-          </div>
-        </div>
-      </section> */}
     </div>
   );
 }
