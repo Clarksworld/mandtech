@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { 
   ShieldCheck, Search, ChevronDown, ArrowRight, 
-  Zap, Activity, Wrench, Truck, 
-  FileText, Menu, X, Phone, CheckCircle, Flame,
+  Zap, Activity, Wrench,
+  Menu, X, Phone, Flame,
   Gauge, Shield, Cpu
 } from 'lucide-react';
 import { MandtechLogo } from './components/Logo';
@@ -14,6 +14,7 @@ import ContactPage from './pages/ContactPage';
 import EquipmentSalesPage from './pages/EquipmentSalesPage';
 import CompressorQuoteModal from './components/CompressorQuoteModal';
 import { type SparePartsBrand } from './components/SparePartsQuoteModal';
+import LeasingQuoteModal, { type LeasingCompressorType, type LeasingBrand } from './components/LeasingQuoteModal';
 import LeasingPage from './pages/LeasingPage';
 import './App.css';
 
@@ -35,6 +36,19 @@ export default function App() {
   const [compressorModalOpen, setCompressorModalOpen] = useState(false);
   const [modalInitialType, setModalInitialType] = useState<'ELECTRIC AIR COMPRESSOR' | 'DIESEL AIR COMPRESSOR' | null>(null);
   const [selectedSparePartsBrand, setSelectedSparePartsBrand] = useState<SparePartsBrand | null>(null);
+
+  // Leasing and Rentals Modal State
+  const [leasingModalOpen, setLeasingModalOpen] = useState(false);
+  const [leasingModalType, setLeasingModalType] = useState<LeasingCompressorType | null>(null);
+  const [leasingModalBrand, setLeasingModalBrand] = useState<LeasingBrand | null>(null);
+
+  const openLeasingModal = (type?: LeasingCompressorType, brand?: LeasingBrand) => {
+    setLeasingModalType(type || null);
+    setLeasingModalBrand(brand || null);
+    setLeasingModalOpen(true);
+    setActiveDropdown(null);
+    setMobileMenuOpen(false);
+  };
 
   const openCompressorModal = (type?: 'ELECTRIC AIR COMPRESSOR' | 'DIESEL AIR COMPRESSOR') => {
     setModalInitialType(type || null);
@@ -94,7 +108,12 @@ export default function App() {
       case 'catalog':
         return <SparePartsPage initialBrand={selectedSparePartsBrand} />;
       case 'leasing':
-        return <LeasingPage onNavigateToContact={() => navigateTo('contact')} />;
+        return (
+          <LeasingPage 
+            onNavigateToContact={() => navigateTo('contact')}
+            onOpenLeasingModal={openLeasingModal}
+          />
+        );
       case 'aftersales':
         return <AfterSalesPage />;
       case 'contact':
@@ -310,68 +329,48 @@ export default function App() {
                 className={`desktop-nav-link ${activePage === 'leasing' ? 'nav-active' : ''} ${activeDropdown === 'leasing' ? 'dropdown-active' : ''}`}
                 onClick={() => navigateTo('leasing')}
               >
-                <span>Leasing &amp; Fleet</span>
+                <span>Leasing and Rentals</span>
                 <ChevronDown size={14} className="dropdown-chevron" />
               </button>
 
               {activeDropdown === 'leasing' && (
-                <div className="mega-menu-panel" onMouseEnter={() => handleMouseEnter('leasing')} onMouseLeave={handleMouseLeave}>
-                  <div className="mega-menu-content">
-                    <div className="mega-menu-main-col">
-                      <div className="mega-menu-col-header">EQUIPMENT RENTAL SOLUTIONS</div>
-                      <div className="mega-menu-links-grid">
-                        <div className="mega-menu-item" onClick={() => navigateTo('leasing')}>
-                          <div className="mega-item-icon-box">
-                            <Truck size={18} />
-                          </div>
-                          <div className="mega-item-text">
-                            <div className="mega-item-title">Flexible Rental Agreements</div>
-                            <div className="mega-item-desc">Daily, monthly, and multi-year project lease packages with full support</div>
-                          </div>
-                        </div>
-
-                        <div className="mega-menu-item" onClick={() => navigateTo('leasing')}>
-                          <div className="mega-item-icon-box">
-                            <FileText size={18} />
-                          </div>
-                          <div className="mega-item-text">
-                            <div className="mega-item-title">Online Lease Rate Estimator</div>
-                            <div className="mega-item-desc">Instant pricing calculators based on machine capacity and operating duty</div>
-                          </div>
-                        </div>
-
-                        <div className="mega-menu-item" onClick={() => navigateTo('leasing')}>
-                          <div className="mega-item-icon-box">
-                            <ShieldCheck size={18} />
-                          </div>
-                          <div className="mega-item-text">
-                            <div className="mega-item-title">99.8% Uptime SLA Guarantee</div>
-                            <div className="mega-item-desc">Standby replacement machinery staged on site for critical operations</div>
-                          </div>
-                        </div>
-
-                        <div className="mega-menu-item" onClick={() => navigateTo('leasing')}>
-                          <div className="mega-item-icon-box">
-                            <CheckCircle size={18} />
-                          </div>
-                          <div className="mega-item-text">
-                            <div className="mega-item-title">Rapid Site Mobilization</div>
-                            <div className="mega-item-desc">24h transport and connection across Lagos, Rivers, and Delta hubs</div>
-                          </div>
-                        </div>
-                      </div>
+                <div className="mega-menu-panel compressor-dropdown-panel" onMouseEnter={() => handleMouseEnter('leasing')} onMouseLeave={handleMouseLeave}>
+                  <div className="compressor-dropdown-content">
+                    <div className="compressor-dropdown-header">
+                      <span className="compressor-dropdown-title">SELECT RENTAL FLEET TYPE</span>
+                      <span className="compressor-dropdown-tag">SHORT &amp; LONG TERM LEASE</span>
                     </div>
 
-                    <div className="mega-menu-side-col">
-                      <div className="mega-side-badge">NO CAPEX REQUIRED</div>
-                      <h4 className="mega-side-heading">Fleet Rental Services</h4>
-                      <p className="mega-side-desc">
-                        Deploy heavy compressors and generators without heavy capital outlay. Maintenance included.
-                      </p>
-                      <button className="mega-side-action-btn" onClick={() => navigateTo('leasing')}>
-                        <span>Explore Leasing</span>
-                        <ArrowRight size={14} />
-                      </button>
+                    <div className="compressor-dropdown-grid">
+                      {/* Option 1: ELECTRIC AIR COMPRESSOR */}
+                      <div 
+                        className="compressor-dropdown-item"
+                        onClick={() => openLeasingModal('ELECTRIC AIR COMPRESSOR')}
+                      >
+                        <div className="compressor-item-icon-box electric">
+                          <Zap size={22} />
+                        </div>
+                        <div className="compressor-item-info">
+                          <div className="compressor-item-title">ELECTRIC AIR COMPRESSOR</div>
+                          <div className="compressor-item-desc">High-efficiency stationary rotary screw units for industrial plants (400V 3-Phase).</div>
+                          <span className="compressor-item-tag">ATLAS COPCO • SULLAIR • INGERSOLL RAND • DENAIR</span>
+                        </div>
+                      </div>
+
+                      {/* Option 2: DIESEL AIR COMPRESSOR */}
+                      <div 
+                        className="compressor-dropdown-item"
+                        onClick={() => openLeasingModal('DIESEL AIR COMPRESSOR')}
+                      >
+                        <div className="compressor-item-icon-box diesel">
+                          <Flame size={22} />
+                        </div>
+                        <div className="compressor-item-info">
+                          <div className="compressor-item-title">DIESEL AIR COMPRESSOR</div>
+                          <div className="compressor-item-desc">Heavy-duty mobile trailer-mounted portable units for remote field operations.</div>
+                          <span className="compressor-item-tag">ATLAS COPCO • SULLAIR • INGERSOLL RAND • DENAIR</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -555,7 +554,7 @@ export default function App() {
                   className={`mobile-link-item ${activePage === 'leasing' ? 'mobile-active' : ''}`}
                   onClick={() => navigateTo('leasing')}
                 >
-                  <span>Leasing &amp; Fleet</span>
+                  <span>Leasing and Rentals</span>
                   <span className="mobile-link-tag">Rentals</span>
                 </button>
 
@@ -740,6 +739,14 @@ export default function App() {
         isOpen={compressorModalOpen}
         onClose={() => setCompressorModalOpen(false)}
         initialType={modalInitialType}
+      />
+
+      {/* Global Leasing and Rental Modal */}
+      <LeasingQuoteModal
+        isOpen={leasingModalOpen}
+        onClose={() => setLeasingModalOpen(false)}
+        initialType={leasingModalType}
+        initialBrand={leasingModalBrand}
       />
     </div>
   );

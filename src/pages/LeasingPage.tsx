@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import {
-  Calendar, Zap, Shield, Check, Clock, Truck,
+  Calendar, Zap, Flame, Shield, Check, Clock, Truck,
   FileCheck, ArrowRight, Activity, Wrench
 } from 'lucide-react';
 import { useInquiry } from '../context/InquiryContext';
+import type { LeasingCompressorType, LeasingBrand } from '../components/LeasingQuoteModal';
 import './LeasingPage.css';
 
 // Assets
@@ -64,9 +65,10 @@ const FLEET_ITEMS: FleetItem[] = [
 
 interface LeasingPageProps {
   onNavigateToContact: () => void;
+  onOpenLeasingModal?: (type?: LeasingCompressorType, brand?: LeasingBrand) => void;
 }
 
-export const LeasingPage: React.FC<LeasingPageProps> = ({ onNavigateToContact }) => {
+export const LeasingPage: React.FC<LeasingPageProps> = ({ onNavigateToContact, onOpenLeasingModal }) => {
   const { addToInquiry } = useInquiry();
 
   // Estimator State
@@ -127,24 +129,179 @@ export const LeasingPage: React.FC<LeasingPageProps> = ({ onNavigateToContact })
         <div className="leasing-hero-overlay" />
         <div className="container leasing-hero-content">
           <div className="leasing-badge">
-            <Clock size={14} /> FLEET LEASING &amp; DISPATCH
+            <Clock size={14} /> LEASING &amp; RENTALS DISPATCH
           </div>
           <h1 className="leasing-hero-title">
-            Industrial Equipment Leasing.<br />
+            Industrial Equipment Leasing and Rentals.<br />
             Zero CapEx. 100% Operational Readiness.
           </h1>
           <p className="leasing-hero-desc">
-            Deploy tier-1 air compressors, emergency power gensets, and high-volume fluid pumps on flexible project terms. Backed by guaranteed 4-hour swap SLA and certified on-site maintenance.
+            Deploy tier-1 electric and diesel rotary screw air compressors on flexible spot or project terms. Backed by guaranteed 4-hour hot-swap SLA, OEM parts, and certified on-site technicians across Nigeria.
           </p>
           <div className="leasing-hero-highlights">
             <div className="hero-highlight-pill">
               <Shield size={16} /> 24/7 Field Techs Included
             </div>
             <div className="hero-highlight-pill">
-              <Truck size={16} /> Rapid Mobilization in Lagos &amp; PH
+              <Truck size={16} /> Rapid Mobilization in PHC, Lagos &amp; Abuja
             </div>
             <div className="hero-highlight-pill">
-              <Zap size={16} /> Load Bank Tested Before Dispatch
+              <Zap size={16} /> Full Load Bank Tested Before Dispatch
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Compressor Rental Types Quick Launch Section */}
+      <section className="container leasing-power-selector-section" style={{ marginTop: '-40px', position: 'relative', zIndex: 4, marginBottom: '36px' }}>
+        <div style={{ background: '#ffffff', borderRadius: '14px', border: '1.5px solid #e2e8f0', boxShadow: '0 12px 30px rgba(0,0,0,0.06)', padding: '24px 28px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', flexWrap: 'wrap', gap: '10px' }}>
+            <div>
+              <span style={{ fontSize: '11px', fontWeight: 800, color: 'var(--primary-container)', letterSpacing: '0.6px', textTransform: 'uppercase' }}>
+                COMPRESSOR RENTAL &amp; LEASING FLEET
+              </span>
+              <h2 style={{ fontSize: '20px', fontWeight: 800, color: '#121412', margin: '3px 0 0' }}>
+                Select Compressor Power Specification
+              </h2>
+            </div>
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+              <span style={{ fontSize: '11.5px', color: '#64748b', fontWeight: 600 }}>OEM Fleets:</span>
+              {(['ATLAS COPCO', 'SULLAIR', 'INGERSOLL RAND', 'DENAIR'] as LeasingBrand[]).map((b) => (
+                <button
+                  key={b}
+                  type="button"
+                  onClick={() => onOpenLeasingModal && onOpenLeasingModal(undefined, b)}
+                  style={{
+                    background: '#f8fafc',
+                    border: '1px solid #cbd5e1',
+                    borderRadius: '6px',
+                    padding: '5px 12px',
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    color: '#121412',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--primary-container)';
+                    e.currentTarget.style.color = 'var(--primary-container)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = '#cbd5e1';
+                    e.currentTarget.style.color = '#121412';
+                  }}
+                >
+                  {b}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '18px' }}>
+            {/* Electric Air Compressor Card */}
+            <div 
+              style={{
+                border: '1.5px solid #e2e8f0',
+                borderRadius: '12px',
+                padding: '20px',
+                background: '#fafbfa',
+                cursor: 'pointer',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                transition: 'all 0.2s ease'
+              }}
+              onClick={() => onOpenLeasingModal && onOpenLeasingModal('ELECTRIC AIR COMPRESSOR')}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'var(--primary-container)';
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(84, 180, 53, 0.12)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = '#e2e8f0';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                  <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: '#eff6ff', color: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Zap size={24} />
+                  </div>
+                  <div>
+                    <span style={{ fontSize: '10px', fontWeight: 800, color: '#2563eb', background: '#dbeafe', padding: '2px 6px', borderRadius: '4px', textTransform: 'uppercase' }}>
+                      STATIONARY PLANT
+                    </span>
+                    <h3 style={{ fontSize: '17px', fontWeight: 800, color: '#121412', margin: '2px 0 0' }}>
+                      ELECTRIC AIR COMPRESSOR
+                    </h3>
+                  </div>
+                </div>
+                <p style={{ fontSize: '13px', color: '#555d55', lineHeight: '1.5', margin: '0 0 12px' }}>
+                  High-efficiency electric rotary screw rental units for manufacturing, food &amp; beverage, and industrial plants (400V 3-Phase).
+                </p>
+                <div style={{ fontSize: '11px', fontWeight: 700, color: '#64748b', marginBottom: '16px' }}>
+                  Available Brands: ATLAS COPCO • SULLAIR • INGERSOLL RAND • DENAIR
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '12px', borderTop: '1px solid #edf2f7' }}>
+                <span style={{ fontSize: '12px', color: '#64748b' }}>4-Hour Hot Swap SLA</span>
+                <span style={{ fontSize: '13px', fontWeight: 800, color: 'var(--primary-container)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                  Start Rental Request <ArrowRight size={14} />
+                </span>
+              </div>
+            </div>
+
+            {/* Diesel Air Compressor Card */}
+            <div 
+              style={{
+                border: '1.5px solid #e2e8f0',
+                borderRadius: '12px',
+                padding: '20px',
+                background: '#fafbfa',
+                cursor: 'pointer',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                transition: 'all 0.2s ease'
+              }}
+              onClick={() => onOpenLeasingModal && onOpenLeasingModal('DIESEL AIR COMPRESSOR')}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'var(--primary-container)';
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(84, 180, 53, 0.12)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = '#e2e8f0';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                  <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: '#fff7ed', color: '#ea580c', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Flame size={24} />
+                  </div>
+                  <div>
+                    <span style={{ fontSize: '10px', fontWeight: 800, color: '#c2410c', background: '#ffedd5', padding: '2px 6px', borderRadius: '4px', textTransform: 'uppercase' }}>
+                      PORTABLE FIELD FLEET
+                    </span>
+                    <h3 style={{ fontSize: '17px', fontWeight: 800, color: '#121412', margin: '2px 0 0' }}>
+                      DIESEL AIR COMPRESSOR
+                    </h3>
+                  </div>
+                </div>
+                <p style={{ fontSize: '13px', color: '#555d55', lineHeight: '1.5', margin: '0 0 12px' }}>
+                  Heavy-duty towable diesel compressors (185 – 1600 CFM) engineered for offshore barges, pipelines, mining, and remote sites.
+                </p>
+                <div style={{ fontSize: '11px', fontWeight: 700, color: '#64748b', marginBottom: '16px' }}>
+                  Available Brands: ATLAS COPCO • SULLAIR • INGERSOLL RAND • DENAIR
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '12px', borderTop: '1px solid #edf2f7' }}>
+                <span style={{ fontSize: '12px', color: '#64748b' }}>Immediate Yard Dispatch</span>
+                <span style={{ fontSize: '13px', fontWeight: 800, color: 'var(--primary-container)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                  Start Rental Request <ArrowRight size={14} />
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -347,7 +504,7 @@ export const LeasingPage: React.FC<LeasingPageProps> = ({ onNavigateToContact })
                   <Check size={16} className="feat-check" /> <span>On-site technician for commissioning</span>
                 </div>
               </div>
-              <button className="model-action-btn" onClick={onNavigateToContact}>
+              <button className="model-action-btn" onClick={() => onOpenLeasingModal ? onOpenLeasingModal() : onNavigateToContact()}>
                 Book Spot Rental
               </button>
             </div>
@@ -374,7 +531,7 @@ export const LeasingPage: React.FC<LeasingPageProps> = ({ onNavigateToContact })
                   <Check size={16} className="feat-check" /> <span>100% OPEX tax deductible</span>
                 </div>
               </div>
-              <button className="model-action-btn" onClick={onNavigateToContact}>
+              <button className="model-action-btn" onClick={() => onOpenLeasingModal ? onOpenLeasingModal() : onNavigateToContact()}>
                 Configure Managed Lease
               </button>
             </div>
@@ -397,7 +554,7 @@ export const LeasingPage: React.FC<LeasingPageProps> = ({ onNavigateToContact })
                   <Check size={16} className="feat-check" /> <span>Full warranty protection during entire term</span>
                 </div>
               </div>
-              <button className="model-action-btn" onClick={onNavigateToContact}>
+              <button className="model-action-btn" onClick={() => onOpenLeasingModal ? onOpenLeasingModal() : onNavigateToContact()}>
                 Inquire on Lease-to-Own
               </button>
             </div>
