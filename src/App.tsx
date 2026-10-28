@@ -14,6 +14,7 @@ import { AfterSalesPage } from './pages/AfterSalesPage';
 import ContactPage from './pages/ContactPage';
 import EquipmentSalesPage from './pages/EquipmentSalesPage';
 import TechnicalSupportPage, { type TechnicalServiceType } from './pages/TechnicalSupportPage';
+import SupportPage from './pages/SupportPage';
 import CompressorQuoteModal from './components/CompressorQuoteModal';
 import ContactSupportModal from './components/ContactSupportModal';
 import { type SparePartsBrand } from './components/SparePartsQuoteModal';
@@ -22,7 +23,7 @@ import LubricantsQuoteModal, { type LubricantBrand } from './components/Lubrican
 import LeasingPage from './pages/LeasingPage';
 import './App.css';
 
-export type ActivePage = 'home' | 'catalog' | 'equipmentSales' | 'leasing' | 'aftersales' | 'contact' | 'techsupport';
+export type ActivePage = 'home' | 'catalog' | 'equipmentSales' | 'leasing' | 'aftersales' | 'contact' | 'techsupport' | 'support';
 
 interface InfoModalState {
   title: string;
@@ -157,6 +158,13 @@ export default function App() {
         );
       case 'contact':
         return <ContactPage />;
+      case 'support':
+        return (
+          <SupportPage
+            onNavigateToTechSupport={(service) => navigateToTechSupport(service as TechnicalServiceType)}
+            onOpenContactSupport={() => setContactSupportModalOpen(true)}
+          />
+        );
       case 'techsupport':
         return (
           <TechnicalSupportPage
@@ -506,8 +514,8 @@ export default function App() {
               onMouseLeave={handleMouseLeave}
             >
               <button
-                className={`desktop-nav-link ${(activePage === 'contact' || activePage === 'techsupport') ? 'nav-active' : ''} ${activeDropdown === 'support-main' ? 'dropdown-active' : ''}`}
-                onClick={() => navigateTo('contact')}
+                className={`desktop-nav-link ${(activePage === 'support' || activePage === 'techsupport') ? 'nav-active' : ''} ${activeDropdown === 'support-main' ? 'dropdown-active' : ''}`}
+                onClick={() => navigateTo('support')}
               >
                 <span>Support</span>
                 <ChevronDown size={14} className="dropdown-chevron" />
@@ -524,6 +532,23 @@ export default function App() {
                       <span>HOW CAN WE HELP YOU?</span>
                     </div>
                     <div className="support-dropdown-options">
+                      {/* Contact Support */}
+                      <div
+                        className="support-option-row contact-support-row"
+                        onClick={() => {
+                          setContactSupportModalOpen(true);
+                          setActiveDropdown(null);
+                        }}
+                      >
+                        <div className="support-option-icon contact-icon">
+                          <Phone size={20} />
+                        </div>
+                        <div className="support-option-info">
+                          <span className="support-option-title">Contact Support</span>
+                          <span className="support-option-desc">Call, WhatsApp or Email us</span>
+                        </div>
+                      </div>
+
                       {/* Technical Support */}
                       <div
                         className="support-dropdown-item"
@@ -577,23 +602,6 @@ export default function App() {
                             ))}
                           </div>
                         )}
-                      </div>
-
-                      {/* Contact Support */}
-                      <div
-                        className="support-option-row contact-support-row"
-                        onClick={() => {
-                          setContactSupportModalOpen(true);
-                          setActiveDropdown(null);
-                        }}
-                      >
-                        <div className="support-option-icon contact-icon">
-                          <Phone size={20} />
-                        </div>
-                        <div className="support-option-info">
-                          <span className="support-option-title">Contact Support</span>
-                          <span className="support-option-desc">Call, WhatsApp or Email us</span>
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -705,19 +713,11 @@ export default function App() {
                 </button>
 
                 <button
-                  className={`mobile-link-item ${(activePage === 'contact' || activePage === 'techsupport') ? 'mobile-active' : ''}`}
-                  onClick={() => navigateTo('contact')}
+                  className={`mobile-link-item ${(activePage === 'support' || activePage === 'techsupport') ? 'mobile-active' : ''}`}
+                  onClick={() => navigateTo('support')}
                 >
                   <span>Support</span>
-                  <span className="mobile-link-tag">Contact &amp; Yards</span>
-                </button>
-
-                <button
-                  className="mobile-link-item"
-                  onClick={() => { navigateToTechSupport(); }}
-                >
-                  <span>Technical Support</span>
-                  <span className="mobile-link-tag">Maintenance &amp; Services</span>
+                  <span className="mobile-link-tag">Help Center</span>
                 </button>
 
                 <button
@@ -726,6 +726,14 @@ export default function App() {
                 >
                   <span>Contact Support</span>
                   <span className="mobile-link-tag">Call / WhatsApp / Email</span>
+                </button>
+
+                <button
+                  className="mobile-link-item"
+                  onClick={() => { navigateToTechSupport(); }}
+                >
+                  <span>Technical Support</span>
+                  <span className="mobile-link-tag">Maintenance &amp; Services</span>
                 </button>
               </div>
 
