@@ -4,7 +4,8 @@ import {
   Zap, Wrench, Droplet,
   Menu, X, Flame,
   Gauge, Shield, Cpu,
-  HeadphonesIcon, Phone
+  HeadphonesIcon, Phone,
+  ShoppingCart
 } from 'lucide-react';
 import { MandtechLogo } from './components/Logo';
 import { useInquiry } from './context/InquiryContext';
@@ -630,16 +631,16 @@ export default function App() {
 
           {/* Right Header Actions */}
           <div className="nav-actions-group">
-            {/* Live Yard Status Pill / Cart & Tracking Access */}
+            {/* Cart & Tracking Access */}
             <button
               className={`nav-yard-status-pill ${activePage === 'yard-cart' ? 'pill-active' : ''}`}
               onClick={() => navigateTo('yard-cart')}
-              title="Click to view Yard Cart, Checkout & Order Tracking"
+              title="Click to view Cart & Order Tracking"
             >
-              <span className="pulse-green-dot" />
-              <span>Yards: <strong>ONLINE</strong></span>
+              <ShoppingCart size={15} className="cart-pill-icon" />
+              <span>Cart</span>
               {inquiryItems.length > 0 && (
-                <span className="nav-inquiry-badge" style={{ marginLeft: '6px' }}>{inquiryItems.length}</span>
+                <span className="nav-inquiry-badge" style={{ marginLeft: '4px' }}>{inquiryItems.length}</span>
               )}
             </button>
 
@@ -763,10 +764,10 @@ export default function App() {
                   className="mobile-yard-status-btn"
                   onClick={() => { navigateTo('yard-cart'); }}
                 >
-                  <span className="pulse-green-dot" />
-                  <span>Yard Operations: <strong>ONLINE</strong></span>
+                  <ShoppingCart size={16} />
+                  <span>Cart</span>
                   {inquiryItems.length > 0 && (
-                    <span className="nav-inquiry-badge" style={{ marginLeft: '6px' }}>{inquiryItems.length}</span>
+                    <span className="nav-inquiry-badge" style={{ marginLeft: '4px' }}>{inquiryItems.length}</span>
                   )}
                 </button>
 
