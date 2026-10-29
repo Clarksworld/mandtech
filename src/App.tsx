@@ -21,9 +21,11 @@ import { type SparePartsBrand } from './components/SparePartsQuoteModal';
 import LeasingQuoteModal, { type LeasingCompressorType, type LeasingBrand } from './components/LeasingQuoteModal';
 import LubricantsQuoteModal, { type LubricantBrand } from './components/LubricantsQuoteModal';
 import LeasingPage from './pages/LeasingPage';
+import { YardCartPage } from './pages/YardCartPage';
+import { AuthModal } from './components/AuthModal';
 import './App.css';
 
-export type ActivePage = 'home' | 'catalog' | 'equipmentSales' | 'leasing' | 'aftersales' | 'contact' | 'techsupport' | 'support';
+export type ActivePage = 'home' | 'catalog' | 'equipmentSales' | 'leasing' | 'aftersales' | 'contact' | 'techsupport' | 'support' | 'yard-cart';
 
 interface InfoModalState {
   title: string;
@@ -53,6 +55,15 @@ export default function App() {
 
   // Contact Support Modal State
   const [contactSupportModalOpen, setContactSupportModalOpen] = useState(false);
+
+  // Customer Auth Modal State
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
+
+  const openAuth = (mode: 'login' | 'register' = 'login') => {
+    setAuthModalMode(mode);
+    setAuthModalOpen(true);
+  };
 
   // Technical Support selected service
   const [techSupportService, setTechSupportService] = useState<TechnicalServiceType | null>(null);
@@ -163,6 +174,13 @@ export default function App() {
           <SupportPage
             onNavigateToTechSupport={(service) => navigateToTechSupport(service as TechnicalServiceType)}
             onOpenContactSupport={() => setContactSupportModalOpen(true)}
+          />
+        );
+      case 'yard-cart':
+        return (
+          <YardCartPage
+            onOpenAuthModal={(mode) => openAuth(mode || 'login')}
+            onNavigateToCatalog={() => navigateTo('catalog')}
           />
         );
       case 'techsupport':
@@ -612,14 +630,17 @@ export default function App() {
 
           {/* Right Header Actions */}
           <div className="nav-actions-group">
-            {/* Live Yard Status Pill */}
+            {/* Live Yard Status Pill / Cart & Tracking Access */}
             <button
-              className="nav-yard-status-pill"
-              onClick={() => setShowStatusModal(true)}
-              title="Click to inspect real-time yard operations and technician readiness"
+              className={`nav-yard-status-pill ${activePage === 'yard-cart' ? 'pill-active' : ''}`}
+              onClick={() => navigateTo('yard-cart')}
+              title="Click to view Yard Cart, Checkout & Order Tracking"
             >
               <span className="pulse-green-dot" />
               <span>Yards: <strong>ONLINE</strong></span>
+              {inquiryItems.length > 0 && (
+                <span className="nav-inquiry-badge" style={{ marginLeft: '6px' }}>{inquiryItems.length}</span>
+              )}
             </button>
 
             {/* Search Box */}
@@ -740,10 +761,13 @@ export default function App() {
               <div className="mobile-drawer-footer">
                 <button
                   className="mobile-yard-status-btn"
-                  onClick={() => { setShowStatusModal(true); setMobileMenuOpen(false); }}
+                  onClick={() => { navigateTo('yard-cart'); }}
                 >
                   <span className="pulse-green-dot" />
                   <span>Yard Operations: <strong>ONLINE</strong></span>
+                  {inquiryItems.length > 0 && (
+                    <span className="nav-inquiry-badge" style={{ marginLeft: '6px' }}>{inquiryItems.length}</span>
+                  )}
                 </button>
 
                 <button
@@ -923,6 +947,13 @@ export default function App() {
       <ContactSupportModal
         isOpen={contactSupportModalOpen}
         onClose={() => setContactSupportModalOpen(false)}
+      />
+
+      {/* Customer Authentication Modal */}
+      <AuthModal
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        initialMode={authModalMode}
       />
     </div>
   );

@@ -261,3 +261,140 @@ export async function submitLubricantRequest(payload: LubricantRequestPayload): 
   }
   return res.json();
 }
+
+
+// ── Customer Auth & Order Management ──────────────────────
+export interface CustomerUser {
+  id: string;
+  email: string;
+  name?: string;
+  company?: string;
+  phone?: string;
+  role: string;
+}
+
+export interface AuthSuccessResponse {
+  message: string;
+  token: string;
+  user: CustomerUser;
+}
+
+export interface RegisterPayload {
+  email: string;
+  password: string;
+  name: string;
+  company: string;
+  phone: string;
+}
+
+export interface LoginPayload {
+  email: string;
+  password: string;
+}
+
+export interface TrackingStep {
+  status: string;
+  label: string;
+  time: string;
+  location?: string;
+  note?: string;
+}
+
+export interface OrderItem {
+  id: string | number;
+  title: string;
+  category: string;
+  type: string;
+  quantity?: number;
+  sku?: string;
+  brand?: string;
+  specSummary?: string;
+}
+
+export interface OrderRecord {
+  id: string;
+  user_id?: string | null;
+  customer_name: string;
+  company: string;
+  email: string;
+  phone: string;
+  delivery_address: string;
+  fulfillment_hub: string;
+  items: OrderItem[];
+  subtotal: number;
+  status: 'order_placed' | 'confirmed' | 'processing' | 'in_transit' | 'delivered' | 'cancelled';
+  tracking_history: TrackingStep[];
+  notes?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateOrderPayload {
+  user_id?: string | null;
+  customer_name: string;
+  company: string;
+  email: string;
+  phone: string;
+  delivery_address: string;
+  fulfillment_hub?: string;
+  items: OrderItem[];
+  subtotal?: number;
+  notes?: string;
+}
+
+export async function registerCustomer(payload: RegisterPayload): Promise<AuthSuccessResponse> {
+  const res = await fetch(`${API_BASE_URL}/api/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || err.message || 'Registration failed');
+  }
+  return res.json();
+}
+
+export async function loginCustomer(payload: LoginPayload): Promise<AuthSuccessResponse> {
+  const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || err.message || 'Invalid email or password');
+  }
+  return res.json();
+}
+
+export async function createOrder(payload: CreateOrderPayload): Promise<{ message: string; order: OrderRecord }> {
+  const res = await fetch(`${API_BASE_URL}/api/orders`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || err.message || 'Failed to place order');
+  }
+  return res.json();
+}
+
+export async function trackOrder(orderId: string): Promise<{ order: OrderRecord }> {
+  const res = await fetch(`${API_BASE_URL}/api/orders/${encodeURIComponent(orderId.trim().toUpperCase())}`);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || `Order ${orderId} not found`);
+  }
+  return res.json();
+}
+
+export async function fetchUserOrders(email?: string, userId?: string): Promise<{ orders: OrderRecord[] }> {
+  const query = new URLSearchParams();
+  if (email) query.append('email', email);
+  if (userId) query.append('user_id', userId);
+  const res = await fetch(`${API_BASE_URL}/api/orders/user/history?${query.toString()}`);
+  if (!res.ok) throw new Error('Failed to fetch orders');
+  return res.json();
+}
