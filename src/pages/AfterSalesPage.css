@@ -152,8 +152,7 @@
 }
 
 .lub-brand-icon-wrap {
-  min-width: 80px;
-  width: auto;
+  width: 120px;
   height: 52px;
   padding: 6px 12px;
   border-radius: 10px;
@@ -162,7 +161,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+  box-sizing: border-box;
   transition: all 0.2s ease;
+}
+
+.lub-brand-icon-wrap img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 
 .lub-brand-card:hover .lub-brand-icon-wrap {

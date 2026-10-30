@@ -4,6 +4,7 @@ import sullairLogo from '../assets/sullair.svg';
 import ingersollRandLogo from '../assets/ingersoll_rand.svg';
 import denairLogo from '../assets/denair.png';
 import { HelpCircle } from 'lucide-react';
+import './BrandLogo.css';
 
 export type BrandId = 'ATLAS COPCO' | 'SULLAIR' | 'INGERSOLL RAND' | 'DENAIR' | 'OTHERS';
 
@@ -14,6 +15,12 @@ interface BrandLogoProps {
   showFallbackText?: boolean;
 }
 
+const SIZES = {
+  sm: { height: '20px', maxHeight: '20px', maxWidth: '80px', iconSize: 15 },
+  md: { height: '28px', maxHeight: '28px', maxWidth: '110px', iconSize: 18 },
+  lg: { height: '38px', maxHeight: '38px', maxWidth: '135px', iconSize: 22 },
+};
+
 export const BrandLogo: React.FC<BrandLogoProps> = ({
   brand,
   className = '',
@@ -21,19 +28,24 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
   showFallbackText = false,
 }) => {
   const normBrand = (brand || '').toUpperCase().trim();
+  const currentSize = SIZES[size] || SIZES.md;
 
-  const sizeClasses = {
-    sm: 'h-5 max-w-[90px]',
-    md: 'h-7 max-w-[120px]',
-    lg: 'h-10 max-w-[160px]',
-  }[size];
+  const imgStyle: React.CSSProperties = {
+    height: currentSize.height,
+    maxHeight: currentSize.maxHeight,
+    maxWidth: currentSize.maxWidth,
+    width: 'auto',
+    objectFit: 'contain',
+    display: 'block',
+  };
 
   if (normBrand === 'ATLAS COPCO' || normBrand === 'ATLAS-COPCO') {
     return (
       <img
         src={atlasCopcoLogo}
         alt="Atlas Copco"
-        className={`object-contain ${sizeClasses} ${className}`}
+        className={`brand-logo-img brand-logo-img--${size} ${className}`}
+        style={imgStyle}
         loading="lazy"
       />
     );
@@ -44,7 +56,8 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
       <img
         src={sullairLogo}
         alt="Sullair"
-        className={`object-contain ${sizeClasses} ${className}`}
+        className={`brand-logo-img brand-logo-img--${size} ${className}`}
+        style={imgStyle}
         loading="lazy"
       />
     );
@@ -55,7 +68,8 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
       <img
         src={ingersollRandLogo}
         alt="Ingersoll Rand"
-        className={`object-contain ${sizeClasses} ${className}`}
+        className={`brand-logo-img brand-logo-img--${size} ${className}`}
+        style={imgStyle}
         loading="lazy"
       />
     );
@@ -66,7 +80,8 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
       <img
         src={denairLogo}
         alt="DENAIR"
-        className={`object-contain ${sizeClasses} ${className}`}
+        className={`brand-logo-img brand-logo-img--${size} ${className}`}
+        style={imgStyle}
         loading="lazy"
       />
     );
@@ -74,14 +89,13 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
 
   // OTHERS / Custom Brand
   return (
-    <div className={`inline-flex items-center gap-1.5 font-bold tracking-wide text-white/90 ${className}`}>
-      <div className="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center border border-white/20">
-        <HelpCircle size={16} className="text-orange" />
+    <div className={`brand-logo-others brand-logo-others--${size} ${className}`}>
+      <div className="brand-logo-others-icon">
+        <HelpCircle size={currentSize.iconSize} />
       </div>
       {(showFallbackText || normBrand === 'OTHERS') && (
-        <span className="text-xs font-semibold uppercase">{normBrand === 'OTHERS' ? 'OTHERS' : normBrand}</span>
+        <span className="brand-logo-others-text">{normBrand === 'OTHERS' ? 'OTHERS' : normBrand}</span>
       )}
     </div>
   );
 };
-

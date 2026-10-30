@@ -1,0 +1,68 @@
+/* BrandLogo Component Styles */
+.brand-logo-img {
+  display: block;
+  object-fit: contain;
+  width: auto;
+  max-width: 100%;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.brand-logo-img--sm {
+  height: 20px;
+  max-height: 20px;
+  max-width: 80px;
+}
+
+.brand-logo-img--md {
+  height: 28px;
+  max-height: 28px;
+  max-width: 110px;
+}
+
+.brand-logo-img--lg {
+  height: 38px;
+  max-height: 38px;
+  max-width: 135px;
+}
+
+.brand-logo-others {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #64748b;
+}
+
+.brand-logo-others-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #d9531e;
+}
+
+.brand-logo-others--sm .brand-logo-others-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.brand-logo-others--md .brand-logo-others-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.brand-logo-others--lg .brand-logo-others-icon {
+  width: 36px;
+  height: 36px;
+}
+
+.brand-logo-others-text {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #475569;
+}
+

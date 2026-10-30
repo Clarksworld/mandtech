@@ -382,6 +382,8 @@
   align-items: center;
   justify-content: flex-start;
   margin-bottom: 10px;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .cq-brand-logo-box img {
