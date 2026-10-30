@@ -5,6 +5,7 @@ import {
   AlertCircle, Package, MapPin, HelpCircle
 } from 'lucide-react';
 import { BrandLogo } from './BrandLogo';
+import { MandtechLogo } from './Logo';
 import { submitLubricantRequest } from '../services/api';
 import './LubricantsQuoteModal.css';
 
@@ -417,6 +418,9 @@ export default function LubricantsQuoteModal({
           {/* STEP 3: Success Screen */}
           {step === 3 && successTicket && (
             <div className="lub-success-view">
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '14px' }}>
+                <MandtechLogo height={32} />
+              </div>
               <div className="lub-success-icon-wrap">
                 <CheckCircle2 size={52} className="lub-check-icon" />
               </div>

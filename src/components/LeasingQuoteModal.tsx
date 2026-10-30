@@ -6,6 +6,7 @@ import {
   Truck, Calendar, MapPin, HelpCircle
 } from 'lucide-react';
 import { BrandLogo } from './BrandLogo';
+import { MandtechLogo } from './Logo';
 import { submitLeasingRequest } from '../services/api';
 import './LeasingQuoteModal.css';
 import electricImg from '../assets/electric_compressor.jpg';
@@ -595,6 +596,9 @@ export default function LeasingQuoteModal({
           {/* STEP 4: Success Screen */}
           {step === 4 && successTicket && (
             <div className="lse-success-view">
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '14px' }}>
+                <MandtechLogo height={32} />
+              </div>
               <div className="lse-success-icon-wrap">
                 <CheckCircle2 size={54} className="lse-check-icon" />
               </div>

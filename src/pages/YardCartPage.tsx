@@ -8,6 +8,7 @@ import {
 import { useInquiry } from '../context/InquiryContext';
 import { useAuth } from '../context/AuthContext';
 import { createOrder, trackOrder, type OrderRecord } from '../services/api';
+import { MandtechLogo } from '../components/Logo';
 import './YardCartPage.css';
 
 interface YardCartPageProps {
@@ -207,6 +208,9 @@ export const YardCartPage: React.FC<YardCartPageProps> = ({
           <div>
             {orderSuccess ? (
               <div className="yard-order-success-card">
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
+                  <MandtechLogo height={32} />
+                </div>
                 <div className="success-icon-wrap">
                   <PackageCheck size={48} />
                 </div>

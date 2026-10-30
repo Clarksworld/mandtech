@@ -1,5 +1,6 @@
 import React from 'react';
 import { X, Phone, Mail } from 'lucide-react';
+import { MandtechLogo } from './Logo';
 import './ContactSupportModal.css';
 
 interface ContactSupportModalProps {
@@ -53,6 +54,9 @@ const ContactSupportModal: React.FC<ContactSupportModalProps> = ({ isOpen, onClo
         {/* Header */}
         <div className="cs-modal-header">
           <div className="cs-modal-title-group">
+            <div style={{ marginBottom: '10px' }}>
+              <MandtechLogo height={28} />
+            </div>
             <div className="cs-modal-badge">CONTACT SUPPORT</div>
             <h3 className="cs-modal-title">How would you like to reach us?</h3>
             <p className="cs-modal-subtitle">

@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { submitCompressorRequest } from '../services/api';
 import { BrandLogo } from './BrandLogo';
+import { MandtechLogo } from './Logo';
 import electricImg from '../assets/electric_compressor.jpg';
 import dieselImg from '../assets/diesel_compressor.jpg';
 import './CompressorQuoteModal.css';
@@ -423,6 +424,9 @@ export default function CompressorQuoteModal({
           {/* ── STEP 5: SUCCESS ── */}
           {step === 5 && successData && (
             <div className="cq-step-content cq-fade-in cq-success-wrap">
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '14px' }}>
+                <MandtechLogo height={32} />
+              </div>
               <div className="cq-success-icon"><CheckCircle2 size={48} /></div>
               <h3 className="cq-success-title">Quotation Request Logged</h3>
               <p className="cq-success-sub">

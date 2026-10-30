@@ -263,9 +263,8 @@ export default function App() {
         <div className="container nav-container">
           {/* Brand Logo & Name */}
           <div className="nav-brand-group" onClick={() => navigateTo('home')} style={{ cursor: 'pointer' }}>
-            <MandtechLogo size={34} color="var(--black)" accentColor="var(--primary-container)" />
+            <MandtechLogo height={32} />
             <div className="brand-text-block">
-              <span className="brand-primary-name">MANDTECH</span>
               <span className="brand-secondary-name">SERVICES</span>
             </div>
           </div>
@@ -695,6 +694,19 @@ export default function App() {
         {mobileMenuOpen && (
           <div className="mobile-drawer-overlay" onClick={() => setMobileMenuOpen(false)}>
             <div className="mobile-drawer-panel" onClick={(e) => e.stopPropagation()}>
+              <div className="mobile-drawer-top" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid #f1f5f9' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }} onClick={() => { navigateTo('home'); setMobileMenuOpen(false); }}>
+                  <MandtechLogo height={26} />
+                  <span className="brand-secondary-name" style={{ fontSize: '15px' }}>SERVICES</span>
+                </div>
+                <button 
+                  onClick={() => setMobileMenuOpen(false)} 
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center' }}
+                  aria-label="Close menu"
+                >
+                  <X size={20} color="#64748b" />
+                </button>
+              </div>
               <div className="mobile-drawer-search">
                 <form onSubmit={handleNavSearch} style={{ display: 'flex', width: '100%' }}>
                   <input
@@ -809,11 +821,10 @@ export default function App() {
         <div className="container footer-grid">
           {/* Column 1: Brand description and social */}
           <div className="footer-brand-column">
-            <div className="footer-brand-logo" onClick={() => setActivePage('home')} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <MandtechLogo size={32} color="#ffffff" accentColor="var(--primary-container)" />
+            <div className="footer-brand-logo" onClick={() => setActivePage('home')} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <MandtechLogo height={30} variant="dark" />
               <div className="brand-text-block" style={{ marginLeft: 0 }}>
-                <span className="brand-primary-name text-white">Mandtech</span>
-                <span className="brand-secondary-name text-white" style={{ display: 'block', marginTop: '2px' }}>Services</span>
+                <span className="brand-secondary-name text-white">SERVICES</span>
               </div>
             </div>
             <p className="footer-brand-desc" style={{ marginTop: '16px', color: 'rgba(255,255,255,0.7)', fontSize: '13px', lineHeight: '1.6' }}>

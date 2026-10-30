@@ -14,7 +14,6 @@ interface SparePartsPageProps {
 interface BrandCardInfo {
   id: SparePartsBrand;
   name: string;
-  series: string;
   desc: string;
 }
 
@@ -22,31 +21,26 @@ const BRANDS_LIST: BrandCardInfo[] = [
   {
     id: 'ATLAS COPCO',
     name: 'ATLAS COPCO',
-    series: 'GA • GX • VSD+ SERIES',
     desc: 'OEM air & oil filters, separator elements, minimum pressure valves, and Elektronikon controllers.',
   },
   {
     id: 'SULLAIR',
     name: 'SULLAIR',
-    series: 'PORTABLE & STATIONARY SCREW',
     desc: 'Genuine Sullube synthetic fluids, intake unloader assemblies, check valves, and air-end kits.',
   },
   {
     id: 'INGERSOLL RAND',
     name: 'INGERSOLL RAND',
-    series: 'SSR • NIRVANA • SIERRA',
     desc: 'Ultra Coolant lubricants, thermo-control bypass valves, sensor transducers, and overhaul kits.',
   },
   {
     id: 'DENAIR',
     name: 'DENAIR',
-    series: 'DUAL-STAGE ROTARY UNITS',
     desc: 'High-pressure filter elements, cooling fans, aluminum radiators, and microprocessor boards.',
   },
   {
     id: 'OTHERS',
     name: 'OTHERS',
-    series: 'SPECIFY YOUR BRAND',
     desc: 'Other compressor manufacturers — specify brand for OEM-compatible parts and consumables.',
   },
 ];
@@ -138,10 +132,9 @@ export default function SparePartsPage({ initialBrand }: SparePartsPageProps) {
                   {brand.id === 'OTHERS' ? (
                     <HelpCircle size={28} color="#64748b" />
                   ) : (
-                    <BrandLogo brand={brand.id} size="lg" />
+                    <BrandLogo brand={brand.id} size="md" />
                   )}
                 </div>
-                <span className="sp-boc-series">{brand.series}</span>
               </div>
 
               <h3 className="sp-boc-name">{brand.name}</h3>

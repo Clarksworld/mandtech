@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { submitSparePartsRequest } from '../services/api';
 import { BrandLogo } from './BrandLogo';
+import { MandtechLogo } from './Logo';
 import './SparePartsQuoteModal.css';
 
 export type SparePartsBrand = 'ATLAS COPCO' | 'SULLAIR' | 'INGERSOLL RAND' | 'DENAIR' | 'OTHERS';
@@ -461,6 +462,9 @@ export default function SparePartsQuoteModal({
           {/* STEP 4: Success Screen */}
           {step === 4 && successData && (
             <div className="sp-step-panel sp-success-container">
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '14px' }}>
+                <MandtechLogo height={32} />
+              </div>
               <div className="sp-success-icon-badge">
                 <CheckCircle2 size={54} />
               </div>

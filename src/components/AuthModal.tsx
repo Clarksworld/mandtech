@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Lock, Mail, User, Building, Phone, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { MandtechLogo } from './Logo';
 import './AuthModal.css';
 
 interface AuthModalProps {
@@ -62,12 +63,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     <div className="auth-modal-overlay" onClick={onClose}>
       <div className="auth-modal-card" onClick={(e) => e.stopPropagation()}>
         <div className="auth-modal-header">
-          <div className="auth-modal-badge">
-            {mode === 'login' ? 'CUSTOMER ACCESS' : 'NEW CLIENT PORTAL'}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <MandtechLogo height={28} />
+            <span style={{ fontSize: '14px', fontWeight: 800, letterSpacing: '0.5px', color: '#121412' }}>SERVICES</span>
           </div>
           <button className="auth-modal-close" onClick={onClose}>
             <X size={20} />
           </button>
+        </div>
+
+        <div style={{ marginBottom: '16px' }}>
+          <div className="auth-modal-badge" style={{ display: 'inline-block' }}>
+            {mode === 'login' ? 'CUSTOMER ACCESS' : 'NEW CLIENT PORTAL'}
+          </div>
         </div>
 
         <div className="auth-modal-title-wrap">
