@@ -1023,7 +1023,10 @@
 .clean-brand-icon img {
   max-width: 100%;
   max-height: 100%;
+  width: auto;
+  height: auto;
   object-fit: contain;
+  display: block;
 }
 
 .clean-brand-card:hover .clean-brand-icon {

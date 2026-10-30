@@ -15,10 +15,10 @@ interface BrandLogoProps {
   showFallbackText?: boolean;
 }
 
-const SIZES = {
-  sm: { height: '20px', maxHeight: '20px', maxWidth: '80px', iconSize: 15 },
-  md: { height: '28px', maxHeight: '28px', maxWidth: '110px', iconSize: 18 },
-  lg: { height: '38px', maxHeight: '38px', maxWidth: '135px', iconSize: 22 },
+const ICON_SIZES = {
+  sm: 15,
+  md: 18,
+  lg: 22,
 };
 
 export const BrandLogo: React.FC<BrandLogoProps> = ({
@@ -28,16 +28,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
   showFallbackText = false,
 }) => {
   const normBrand = (brand || '').toUpperCase().trim();
-  const currentSize = SIZES[size] || SIZES.md;
-
-  const imgStyle: React.CSSProperties = {
-    height: currentSize.height,
-    maxHeight: currentSize.maxHeight,
-    maxWidth: currentSize.maxWidth,
-    width: 'auto',
-    objectFit: 'contain',
-    display: 'block',
-  };
+  const iconSize = ICON_SIZES[size] || ICON_SIZES.md;
 
   if (normBrand === 'ATLAS COPCO' || normBrand === 'ATLAS-COPCO') {
     return (
@@ -45,7 +36,6 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
         src={atlasCopcoLogo}
         alt="Atlas Copco"
         className={`brand-logo-img brand-logo-img--${size} ${className}`}
-        style={imgStyle}
         loading="lazy"
       />
     );
@@ -57,7 +47,6 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
         src={sullairLogo}
         alt="Sullair"
         className={`brand-logo-img brand-logo-img--${size} ${className}`}
-        style={imgStyle}
         loading="lazy"
       />
     );
@@ -69,7 +58,6 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
         src={ingersollRandLogo}
         alt="Ingersoll Rand"
         className={`brand-logo-img brand-logo-img--${size} ${className}`}
-        style={imgStyle}
         loading="lazy"
       />
     );
@@ -81,7 +69,6 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
         src={denairLogo}
         alt="DENAIR"
         className={`brand-logo-img brand-logo-img--${size} ${className}`}
-        style={imgStyle}
         loading="lazy"
       />
     );
@@ -91,7 +78,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
   return (
     <div className={`brand-logo-others brand-logo-others--${size} ${className}`}>
       <div className="brand-logo-others-icon">
-        <HelpCircle size={currentSize.iconSize} />
+        <HelpCircle size={iconSize} />
       </div>
       {(showFallbackText || normBrand === 'OTHERS') && (
         <span className="brand-logo-others-text">{normBrand === 'OTHERS' ? 'OTHERS' : normBrand}</span>
