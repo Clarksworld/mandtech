@@ -2,14 +2,17 @@ import React, { useState, useEffect } from 'react';
 import {
   Zap, Flame, X, ArrowLeft, ArrowRight,
   Phone, Mail, Building, CheckCircle2, RotateCcw,
-  AlertCircle, Sparkles, Shield, Cpu, Gauge,
+  AlertCircle, HelpCircle,
   PackageCheck, Wrench
 } from 'lucide-react';
 import { submitCompressorRequest } from '../services/api';
+import { BrandLogo } from './BrandLogo';
+import electricImg from '../assets/electric_compressor.jpg';
+import dieselImg from '../assets/diesel_compressor.jpg';
 import './CompressorQuoteModal.css';
 
 export type CompressorType = 'ELECTRIC AIR COMPRESSOR' | 'DIESEL AIR COMPRESSOR';
-export type CompressorBrand = 'ATLAS COPCO' | 'SULLAIR' | 'INGERSOLL RAND' | 'DENAIR';
+export type CompressorBrand = 'ATLAS COPCO' | 'SULLAIR' | 'INGERSOLL RAND' | 'DENAIR' | 'OTHERS';
 export type CompressorCondition = 'NEW' | 'USED';
 
 interface CompressorQuoteModalProps {
@@ -24,36 +27,12 @@ const BRANDS_DATA: {
   name: string;
   badge: string;
   origin: string;
-  icon: React.ReactNode;
 }[] = [
-    {
-      id: 'ATLAS COPCO',
-      name: 'Atlas Copco',
-      badge: 'GA / VSD+ Series',
-      origin: 'Sweden',
-      icon: <Gauge size={20} />,
-    },
-    {
-      id: 'SULLAIR',
-      name: 'Sullair',
-      badge: 'Heavy-Duty Air-End',
-      origin: 'USA',
-      icon: <Shield size={20} />,
-    },
-    {
-      id: 'INGERSOLL RAND',
-      name: 'Ingersoll Rand',
-      badge: 'Nirvana Series',
-      origin: 'USA',
-      icon: <Cpu size={20} />,
-    },
-    {
-      id: 'DENAIR',
-      name: 'Denair',
-      badge: 'Dual-Stage Efficiency',
-      origin: 'Germany',
-      icon: <Sparkles size={20} />,
-    },
+    { id: 'ATLAS COPCO', name: 'Atlas Copco', badge: 'GA / VSD+ Series', origin: 'Sweden' },
+    { id: 'SULLAIR', name: 'Sullair', badge: 'Heavy-Duty Air-End', origin: 'USA' },
+    { id: 'INGERSOLL RAND', name: 'Ingersoll Rand', badge: 'Nirvana Series', origin: 'USA' },
+    { id: 'DENAIR', name: 'Denair', badge: 'Dual-Stage Efficiency', origin: 'Germany' },
+    { id: 'OTHERS', name: 'Others', badge: 'Specify Your Brand', origin: '—' },
   ];
 
 // Steps: 1=Type, 2=Condition (New/Used), 3=Brand, 4=Contact Form, 5=Success
@@ -70,6 +49,7 @@ export default function CompressorQuoteModal({
   const [selectedType, setSelectedType] = useState<CompressorType | null>(initialType || null);
   const [selectedCondition, setSelectedCondition] = useState<CompressorCondition | null>(null);
   const [selectedBrand, setSelectedBrand] = useState<CompressorBrand | null>(initialBrand || null);
+  const [customBrand, setCustomBrand] = useState('');
 
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -129,6 +109,11 @@ export default function CompressorQuoteModal({
 
   const handleSelectBrand = (brand: CompressorBrand) => {
     setSelectedBrand(brand);
+    if (brand === 'OTHERS') {
+      // stay on step 2 so user can enter custom brand name
+      setCustomBrand('');
+      return;
+    }
     setStep(3);
   };
 
@@ -149,16 +134,18 @@ export default function CompressorQuoteModal({
 
     if (!selectedType) { setSubmitError('Please select a compressor type.'); setStep(1); return; }
     if (!selectedBrand) { setSubmitError('Please select a brand.'); setStep(2); return; }
+    if (selectedBrand === 'OTHERS' && !customBrand.trim()) { setSubmitError('Please specify the brand name.'); setStep(2); return; }
     if (!selectedCondition) { setSubmitError('Please select a compressor condition.'); setStep(3); return; }
     if (!companyName.trim()) { setSubmitError('Please provide your company name.'); return; }
     if (!email.trim() || !email.includes('@')) { setSubmitError('Please provide a valid corporate email.'); return; }
     if (!phone.trim() || phone.trim().length < 6) { setSubmitError('Please provide a valid phone number.'); return; }
 
     setIsSubmitting(true);
+    const brandToSend = selectedBrand === 'OTHERS' ? customBrand.trim() : selectedBrand;
     try {
       const res = await submitCompressorRequest({
         compressor_type: selectedType,
-        brand: selectedBrand,
+        brand: brandToSend,
         condition: selectedCondition,
         company_name: companyName.trim(),
         email: email.trim(),
@@ -237,19 +224,25 @@ export default function CompressorQuoteModal({
                 <p className="cq-subtitle">Select power configuration for your facility or site.</p>
               </div>
               <div className="cq-cards-two-grid">
-                <div className="cq-type-card electric-hover" onClick={() => handleSelectType('ELECTRIC AIR COMPRESSOR')} role="button" tabIndex={0}>
-                  <div className="cq-card-icon-box electric"><Zap size={24} /></div>
+                <div className="cq-type-card cq-type-card--img electric-hover" onClick={() => handleSelectType('ELECTRIC AIR COMPRESSOR')} role="button" tabIndex={0}>
+                  <div className="cq-type-img-wrap">
+                    <img src={electricImg} alt="Electric Air Compressor" className="cq-type-img" />
+                    <div className="cq-type-img-overlay" />
+                    <div className="cq-type-img-badge"><Zap size={14} /> Plant &amp; Stationary</div>
+                  </div>
                   <div className="cq-card-info">
-                    <span className="cq-card-badge">Plant &amp; Stationary</span>
                     <h4 className="cq-card-title">ELECTRIC AIR COMPRESSOR</h4>
                     <span className="cq-card-meta">400V 3-Phase • Rotary Screw VSD</span>
                   </div>
                   <div className="cq-card-arrow"><ArrowRight size={16} /></div>
                 </div>
-                <div className="cq-type-card diesel-hover" onClick={() => handleSelectType('DIESEL AIR COMPRESSOR')} role="button" tabIndex={0}>
-                  <div className="cq-card-icon-box diesel"><Flame size={24} /></div>
+                <div className="cq-type-card cq-type-card--img diesel-hover" onClick={() => handleSelectType('DIESEL AIR COMPRESSOR')} role="button" tabIndex={0}>
+                  <div className="cq-type-img-wrap">
+                    <img src={dieselImg} alt="Diesel Air Compressor" className="cq-type-img" />
+                    <div className="cq-type-img-overlay" />
+                    <div className="cq-type-img-badge diesel"><Flame size={14} /> Mobile &amp; Field</div>
+                  </div>
                   <div className="cq-card-info">
-                    <span className="cq-card-badge diesel">Mobile &amp; Field</span>
                     <h4 className="cq-card-title">DIESEL AIR COMPRESSOR</h4>
                     <span className="cq-card-meta">Highway Trailer • CAT/Cummins Engine</span>
                   </div>
@@ -272,8 +265,22 @@ export default function CompressorQuoteModal({
               </div>
               <div className="cq-brands-grid">
                 {BRANDS_DATA.map((brand) => (
-                  <div key={brand.id} className="cq-brand-card" onClick={() => handleSelectBrand(brand.id)} role="button" tabIndex={0}>
-                    <div className="cq-brand-icon-box">{brand.icon}</div>
+                  <div
+                    key={brand.id}
+                    className={`cq-brand-card ${selectedBrand === brand.id ? 'cq-brand-card--selected' : ''}`}
+                    onClick={() => handleSelectBrand(brand.id)}
+                    role="button"
+                    tabIndex={0}
+                  >
+                    <div className="cq-brand-logo-box">
+                      {brand.id === 'OTHERS' ? (
+                        <div className="cq-brand-others-icon">
+                          <HelpCircle size={28} />
+                        </div>
+                      ) : (
+                        <BrandLogo brand={brand.id} size="md" />
+                      )}
+                    </div>
                     <div className="cq-brand-text">
                       <div className="cq-brand-name">{brand.name.toUpperCase()}</div>
                       <div className="cq-brand-badge">{brand.badge}</div>
@@ -282,6 +289,30 @@ export default function CompressorQuoteModal({
                   </div>
                 ))}
               </div>
+              {/* Custom brand input if OTHERS selected */}
+              {selectedBrand === 'OTHERS' && (
+                <div className="cq-others-input-wrap">
+                  <label className="cq-label">Specify Brand Name <span className="req">*</span></label>
+                  <input
+                    type="text"
+                    className="cq-input"
+                    placeholder="e.g. Kaeser, CompAir, Gardner Denver, Hitachi..."
+                    value={customBrand}
+                    onChange={(e) => setCustomBrand(e.target.value)}
+                    autoFocus
+                  />
+                  <button
+                    type="button"
+                    className="cq-submit-btn"
+                    style={{ marginTop: '12px' }}
+                    disabled={!customBrand.trim()}
+                    onClick={() => { if (customBrand.trim()) setStep(3); }}
+                  >
+                    <span>Continue</span>
+                    <ArrowRight size={16} />
+                  </button>
+                </div>
+              )}
             </div>
           )}
 
@@ -292,7 +323,7 @@ export default function CompressorQuoteModal({
                 <div className="cq-context-pill">
                   <span>{selectedType === 'ELECTRIC AIR COMPRESSOR' ? 'Electric' : 'Diesel'}</span>
                   <span className="dot">•</span>
-                  <strong className="text-orange">{selectedBrand}</strong>
+                  <strong className="text-orange">{selectedBrand === 'OTHERS' ? customBrand : selectedBrand}</strong>
                 </div>
                 <h3 className="cq-title">Select Compressor Condition</h3>
                 <p className="cq-subtitle">Are you requesting a quote for a new or used unit?</p>

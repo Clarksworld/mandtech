@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import {
   X, ArrowLeft, ArrowRight,
   Phone, Mail, Building, CheckCircle2, RotateCcw,
-  AlertCircle, Shield, Cpu, Gauge, Wrench, Droplet,
-  Package, MapPin
+  AlertCircle, Package, MapPin, HelpCircle
 } from 'lucide-react';
+import { BrandLogo } from './BrandLogo';
 import { submitLubricantRequest } from '../services/api';
 import './LubricantsQuoteModal.css';
 
@@ -19,13 +19,12 @@ export interface LubricantsQuoteModalProps {
 export const LUBRICANT_BRANDS: {
   id: LubricantBrand;
   name: string;
-  icon: React.ReactNode;
 }[] = [
-  { id: 'ATLAS COPCO', name: 'ATLAS COPCO', icon: <Gauge size={24} /> },
-  { id: 'SULLAIR', name: 'SULLAIR', icon: <Shield size={24} /> },
-  { id: 'INGERSOLL RAND', name: 'INGERSOLL RAND', icon: <Cpu size={24} /> },
-  { id: 'DENAIR', name: 'DENAIR', icon: <Wrench size={24} /> },
-  { id: 'OTHERS', name: 'OTHERS', icon: <Droplet size={24} /> },
+  { id: 'ATLAS COPCO', name: 'ATLAS COPCO' },
+  { id: 'SULLAIR', name: 'SULLAIR' },
+  { id: 'INGERSOLL RAND', name: 'INGERSOLL RAND' },
+  { id: 'DENAIR', name: 'DENAIR' },
+  { id: 'OTHERS', name: 'OTHERS' },
 ];
 
 export default function LubricantsQuoteModal({
@@ -35,9 +34,10 @@ export default function LubricantsQuoteModal({
 }: LubricantsQuoteModalProps) {
   const [selectedBrand, setSelectedBrand] = useState<LubricantBrand | null>(initialBrand || null);
   const [step, setStep] = useState<1 | 2 | 3>(initialBrand ? 2 : 1);
+  const [customBrand, setCustomBrand] = useState('');
 
   // Form Fields
-  const [fluidType, setFluidType] = useState('Synthetic Compressor Oil (8,000h Rating)');
+  const [fluidType, setFluidType] = useState('Synthetic Rotary Screw Fluid (8,000h Rating)');
   const [volume, setVolume] = useState('20 Litre Pail');
   const [companyName, setCompanyName] = useState('');
   const [contactName, setContactName] = useState('');
@@ -60,11 +60,12 @@ export default function LubricantsQuoteModal({
     if (isOpen) {
       if (initialBrand) {
         setSelectedBrand(initialBrand);
-        setStep(2);
+        setStep(initialBrand === 'OTHERS' ? 1 : 2);
       } else {
         setSelectedBrand(null);
         setStep(1);
       }
+      setCustomBrand('');
       setSubmitError(null);
     }
   }, [isOpen, initialBrand]);
@@ -73,13 +74,24 @@ export default function LubricantsQuoteModal({
 
   const handleSelectBrand = (brand: LubricantBrand) => {
     setSelectedBrand(brand);
-    setStep(2);
+    if (brand === 'OTHERS') {
+      setCustomBrand('');
+      // Stay on step 1 to show the custom brand input
+    } else {
+      setStep(2);
+    }
   };
+
+  const effectiveBrand = selectedBrand === 'OTHERS' ? customBrand.trim() : (selectedBrand ?? '');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedBrand) return;
 
+    if (selectedBrand === 'OTHERS' && !customBrand.trim()) {
+      setSubmitError('Please specify the lubricant brand you need.');
+      return;
+    }
     if (!contactName.trim()) {
       setSubmitError('Contact person name is required.');
       return;
@@ -102,7 +114,7 @@ export default function LubricantsQuoteModal({
 
     try {
       const res = await submitLubricantRequest({
-        brand: selectedBrand,
+        brand: effectiveBrand || selectedBrand,
         fluid_type: fluidType,
         volume,
         hub,
@@ -118,7 +130,7 @@ export default function LubricantsQuoteModal({
 
       setSuccessTicket({
         id: ticketRef,
-        brand: selectedBrand,
+        brand: effectiveBrand || selectedBrand,
         fluidType,
         volume,
         hub,
@@ -135,6 +147,7 @@ export default function LubricantsQuoteModal({
   const resetForm = () => {
     setStep(1);
     setSelectedBrand(null);
+    setCustomBrand('');
     setCompanyName('');
     setContactName('');
     setEmail('');
@@ -166,19 +179,53 @@ export default function LubricantsQuoteModal({
         <div className="lub-modal-body">
           {/* STEP 1: Select Brand */}
           {step === 1 && (
-            <div className="lub-brands-grid">
-              {LUBRICANT_BRANDS.map((b) => (
-                <div
-                  key={b.id}
-                  className="lub-brand-card"
-                  onClick={() => handleSelectBrand(b.id)}
-                >
-                  <div className="lub-brand-icon">
-                    {b.icon}
+            <div>
+              <div className="lub-brands-grid">
+                {LUBRICANT_BRANDS.map((b) => (
+                  <div
+                    key={b.id}
+                    className={`lub-brand-card ${selectedBrand === b.id ? 'lub-brand-card--selected' : ''}`}
+                    onClick={() => handleSelectBrand(b.id)}
+                  >
+                    <div className="lub-brand-logo-box">
+                      {b.id === 'OTHERS' ? (
+                        <div className="lub-brand-others-icon">
+                          <HelpCircle size={26} />
+                          <span>OTHERS</span>
+                        </div>
+                      ) : (
+                        <BrandLogo brand={b.id} size="md" />
+                      )}
+                    </div>
+                    <span className="lub-brand-name">{b.name}</span>
                   </div>
-                  <span className="lub-brand-name">{b.name}</span>
+                ))}
+              </div>
+
+              {/* Custom brand input when OTHERS selected */}
+              {selectedBrand === 'OTHERS' && (
+                <div className="lub-others-input-wrap">
+                  <label className="lub-others-label">
+                    Please specify the compressor brand / lubricant type you need:
+                  </label>
+                  <input
+                    type="text"
+                    className="lub-others-input"
+                    placeholder="e.g. Kaeser, CompAir, Hitachi, Kaishan, or generic mineral oil..."
+                    value={customBrand}
+                    onChange={(e) => setCustomBrand(e.target.value)}
+                    autoFocus
+                  />
+                  <button
+                    type="button"
+                    className="lub-others-continue-btn"
+                    disabled={!customBrand.trim()}
+                    onClick={() => { if (customBrand.trim()) setStep(2); }}
+                  >
+                    Continue <ArrowRight size={15} />
+                  </button>
                 </div>
-              ))}
+              )}
             </div>
           )}
 
@@ -190,8 +237,12 @@ export default function LubricantsQuoteModal({
                 <div className="lub-selected-info">
                   <span className="lub-sel-lbl">Selected Brand:</span>
                   <span className="lub-sel-badge">
-                    {LUBRICANT_BRANDS.find((b) => b.id === selectedBrand)?.icon}
-                    <strong>{selectedBrand}</strong>
+                    {selectedBrand === 'OTHERS' ? (
+                      <HelpCircle size={16} />
+                    ) : (
+                      <BrandLogo brand={selectedBrand} size="sm" />
+                    )}
+                    <strong>{selectedBrand === 'OTHERS' ? customBrand : selectedBrand}</strong>
                   </span>
                 </div>
                 <button

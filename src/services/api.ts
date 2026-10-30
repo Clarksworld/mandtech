@@ -107,7 +107,7 @@ export async function fetchDocuments() {
 
 export interface CompressorRequestPayload {
   compressor_type: 'ELECTRIC AIR COMPRESSOR' | 'DIESEL AIR COMPRESSOR';
-  brand: 'ATLAS COPCO' | 'SULLAIR' | 'INGERSOLL RAND' | 'DENAIR';
+  brand: string;
   condition?: 'NEW' | 'USED';
   company_name: string;
   email: string;
@@ -143,7 +143,7 @@ export async function submitCompressorRequest(payload: CompressorRequestPayload)
 }
 
 export interface SparePartsRequestPayload {
-  brand: 'ATLAS COPCO' | 'SULLAIR' | 'INGERSOLL RAND' | 'DENAIR';
+  brand: string;
   part_name: string;
   company_name: string;
   email: string;

@@ -2,14 +2,17 @@ import React, { useState, useEffect } from 'react';
 import {
   Zap, Flame, X, ArrowLeft, ArrowRight,
   Phone, Mail, Building, CheckCircle2, RotateCcw,
-  AlertCircle, Shield, Cpu, Gauge, Wrench, Clock,
-  Truck, Calendar, MapPin
+  AlertCircle, Shield, Wrench, Clock,
+  Truck, Calendar, MapPin, HelpCircle
 } from 'lucide-react';
+import { BrandLogo } from './BrandLogo';
 import { submitLeasingRequest } from '../services/api';
 import './LeasingQuoteModal.css';
+import electricImg from '../assets/electric_compressor.jpg';
+import dieselImg from '../assets/diesel_compressor.jpg';
 
 export type LeasingCompressorType = 'ELECTRIC AIR COMPRESSOR' | 'DIESEL AIR COMPRESSOR';
-export type LeasingBrand = 'ATLAS COPCO' | 'SULLAIR' | 'INGERSOLL RAND' | 'DENAIR';
+export type LeasingBrand = 'ATLAS COPCO' | 'SULLAIR' | 'INGERSOLL RAND' | 'DENAIR' | 'OTHERS';
 
 interface LeasingQuoteModalProps {
   isOpen: boolean;
@@ -23,35 +26,36 @@ export const LEASING_BRANDS: {
   name: string;
   badge: string;
   series: string;
-  icon: React.ReactNode;
 }[] = [
   {
     id: 'ATLAS COPCO',
     name: 'Atlas Copco',
     badge: 'GA / VSD+ High Uptime',
     series: 'Industrial & Mobile Screw Units',
-    icon: <Gauge size={22} />,
   },
   {
     id: 'SULLAIR',
     name: 'Sullair',
     badge: 'Heavy-Duty Field Proven',
     series: '185 - 1600 CFM Fleet Available',
-    icon: <Shield size={22} />,
   },
   {
     id: 'INGERSOLL RAND',
     name: 'Ingersoll Rand',
     badge: 'Nirvana & SSR Series',
     series: 'High-Efficiency Rotary Compressors',
-    icon: <Cpu size={22} />,
   },
   {
     id: 'DENAIR',
     name: 'Denair',
     badge: 'Dual-Stage Efficiency',
     series: 'German Engineering Standards',
-    icon: <Wrench size={22} />,
+  },
+  {
+    id: 'OTHERS',
+    name: 'Others',
+    badge: 'Custom OEM Brand',
+    series: 'Specify your compressor manufacturer',
   },
 ];
 
@@ -67,6 +71,7 @@ export default function LeasingQuoteModal({
   const [step, setStep] = useState<Step>(1);
   const [selectedType, setSelectedType] = useState<LeasingCompressorType | null>(initialType || null);
   const [selectedBrand, setSelectedBrand] = useState<LeasingBrand | null>(initialBrand || null);
+  const [customBrand, setCustomBrand] = useState('');
 
   // Form Fields
   const [contactName, setContactName] = useState('');
@@ -103,6 +108,7 @@ export default function LeasingQuoteModal({
         setSelectedBrand(null);
         setStep(1);
       }
+      setCustomBrand('');
       setSubmitError(null);
     }
   }, [isOpen, initialType, initialBrand]);
@@ -116,13 +122,24 @@ export default function LeasingQuoteModal({
 
   const handleSelectBrand = (brand: LeasingBrand) => {
     setSelectedBrand(brand);
-    setStep(3);
+    if (brand === 'OTHERS') {
+      setCustomBrand('');
+      // Stay on step 2 — user must fill custom brand first
+    } else {
+      setStep(3);
+    }
   };
+
+  const effectiveBrand = selectedBrand === 'OTHERS' ? customBrand.trim() : (selectedBrand ?? '');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedType || !selectedBrand) return;
 
+    if (selectedBrand === 'OTHERS' && !customBrand.trim()) {
+      setSubmitError('Please specify the compressor brand you need.');
+      return;
+    }
     if (!contactName.trim()) {
       setSubmitError('Contact person name is required.');
       return;
@@ -146,7 +163,7 @@ export default function LeasingQuoteModal({
     try {
       const res = await submitLeasingRequest({
         compressor_type: selectedType,
-        brand: selectedBrand,
+        brand: effectiveBrand || selectedBrand,
         duration,
         hub,
         company_name: companyName.trim(),
@@ -162,7 +179,7 @@ export default function LeasingQuoteModal({
       setSuccessTicket({
         id: ticketRef,
         compressor_type: selectedType,
-        brand: selectedBrand,
+        brand: effectiveBrand || selectedBrand,
         duration,
         hub,
         company_name: companyName.trim(),
@@ -180,6 +197,7 @@ export default function LeasingQuoteModal({
     setStep(1);
     setSelectedType(null);
     setSelectedBrand(null);
+    setCustomBrand('');
     setContactName('');
     setCompanyName('');
     setEmail('');
@@ -221,9 +239,9 @@ export default function LeasingQuoteModal({
         {step < 4 && (
           <div className="lse-stepper-wrap">
             <div className="lse-stepper-bar">
-              <div 
-                className="lse-stepper-fill" 
-                style={{ width: `${(step / 3) * 100}%` }} 
+              <div
+                className="lse-stepper-fill"
+                style={{ width: `${(step / 3) * 100}%` }}
               />
             </div>
             <div className="lse-step-labels">
@@ -240,15 +258,16 @@ export default function LeasingQuoteModal({
           {step === 1 && (
             <div className="lse-types-grid">
               {/* Electric Air Compressor */}
-              <div 
-                className={`lse-type-card ${selectedType === 'ELECTRIC AIR COMPRESSOR' ? 'selected' : ''}`}
+              <div
+                className={`lse-type-card lse-type-card--img ${selectedType === 'ELECTRIC AIR COMPRESSOR' ? 'selected' : ''}`}
                 onClick={() => handleSelectType('ELECTRIC AIR COMPRESSOR')}
               >
-                <div className="lse-type-icon-box electric">
-                  <Zap size={32} />
+                <div className="lse-type-img-wrap">
+                  <img src={electricImg} alt="Electric Air Compressor" className="lse-type-img" />
+                  <div className="lse-type-img-overlay" />
+                  <div className="lse-type-img-badge electric-badge">STATIONARY INDUSTRIAL FLEET</div>
                 </div>
                 <div className="lse-type-content">
-                  <div className="lse-type-pill">STATIONARY INDUSTRIAL FLEET</div>
                   <h3 className="lse-type-title">ELECTRIC AIR COMPRESSOR</h3>
                   <p className="lse-type-desc">
                     High-efficiency stationary rotary screw compressor fleet for factories, processing plants, and manufacturing facilities (400V 3-Phase).
@@ -259,7 +278,7 @@ export default function LeasingQuoteModal({
                     <li>✓ Zero site emissions, ISO 8573.1 compliant air</li>
                   </ul>
                   <div className="lse-type-brands-row">
-                    <span>Available:</span> ATLAS COPCO • SULLAIR • INGERSOLL RAND • DENAIR
+                    <span>Available:</span> ATLAS COPCO • SULLAIR • INGERSOLL RAND • DENAIR • OTHERS
                   </div>
                 </div>
                 <div className="lse-select-action">
@@ -269,15 +288,16 @@ export default function LeasingQuoteModal({
               </div>
 
               {/* Diesel Air Compressor */}
-              <div 
-                className={`lse-type-card ${selectedType === 'DIESEL AIR COMPRESSOR' ? 'selected' : ''}`}
+              <div
+                className={`lse-type-card lse-type-card--img ${selectedType === 'DIESEL AIR COMPRESSOR' ? 'selected' : ''}`}
                 onClick={() => handleSelectType('DIESEL AIR COMPRESSOR')}
               >
-                <div className="lse-type-icon-box diesel">
-                  <Flame size={32} />
+                <div className="lse-type-img-wrap">
+                  <img src={dieselImg} alt="Diesel Air Compressor" className="lse-type-img" />
+                  <div className="lse-type-img-overlay" />
+                  <div className="lse-type-img-badge diesel-badge">PORTABLE MOBILE FLEET</div>
                 </div>
                 <div className="lse-type-content">
-                  <div className="lse-type-pill diesel-pill">PORTABLE MOBILE FLEET</div>
                   <h3 className="lse-type-title">DIESEL AIR COMPRESSOR</h3>
                   <p className="lse-type-desc">
                     Heavy-duty trailer-mounted portable compressors for remote construction, mining, sandblasting, and offshore pipeline operations.
@@ -288,7 +308,7 @@ export default function LeasingQuoteModal({
                     <li>✓ Highway and off-road towable chassis with spill containment</li>
                   </ul>
                   <div className="lse-type-brands-row">
-                    <span>Available:</span> ATLAS COPCO • SULLAIR • INGERSOLL RAND • DENAIR
+                    <span>Available:</span> ATLAS COPCO • SULLAIR • INGERSOLL RAND • DENAIR • OTHERS
                   </div>
                 </div>
                 <div className="lse-select-action">
@@ -308,7 +328,7 @@ export default function LeasingQuoteModal({
                   {selectedType === 'ELECTRIC AIR COMPRESSOR' ? <Zap size={14} /> : <Flame size={14} />}
                   {selectedType}
                 </span>
-                <button 
+                <button
                   className="lse-crumb-change-btn"
                   onClick={() => setStep(1)}
                 >
@@ -323,8 +343,14 @@ export default function LeasingQuoteModal({
                     className={`lse-brand-card ${selectedBrand === brand.id ? 'selected' : ''}`}
                     onClick={() => handleSelectBrand(brand.id)}
                   >
-                    <div className="lse-brand-icon-box">
-                      {brand.icon}
+                    <div className="lse-brand-logo-box">
+                      {brand.id === 'OTHERS' ? (
+                        <div className="lse-brand-others-icon">
+                          <HelpCircle size={26} />
+                        </div>
+                      ) : (
+                        <BrandLogo brand={brand.id} size="md" />
+                      )}
                     </div>
                     <div className="lse-brand-info">
                       <h4 className="lse-brand-name">{brand.name}</h4>
@@ -339,8 +365,33 @@ export default function LeasingQuoteModal({
                 ))}
               </div>
 
+              {/* Custom brand input shown when OTHERS selected */}
+              {selectedBrand === 'OTHERS' && (
+                <div className="lse-others-input-wrap">
+                  <label className="lse-others-label">
+                    Please specify the compressor brand you need:
+                  </label>
+                  <input
+                    type="text"
+                    className="lse-others-input"
+                    placeholder="e.g. Kaeser, CompAir, Airman, Kaishan..."
+                    value={customBrand}
+                    onChange={(e) => setCustomBrand(e.target.value)}
+                    autoFocus
+                  />
+                  <button
+                    type="button"
+                    className="lse-others-continue-btn"
+                    disabled={!customBrand.trim()}
+                    onClick={() => { if (customBrand.trim()) setStep(3); }}
+                  >
+                    Continue <ArrowRight size={15} />
+                  </button>
+                </div>
+              )}
+
               <div className="lse-step-footer">
-                <button 
+                <button
                   className="lse-btn-back"
                   onClick={() => setStep(1)}
                 >
@@ -366,7 +417,9 @@ export default function LeasingQuoteModal({
                   <div className="lse-summary-divider" />
                   <div className="lse-summary-item">
                     <span className="lse-sum-lbl">Brand:</span>
-                    <strong className="lse-sum-val">{selectedBrand}</strong>
+                    <strong className="lse-sum-val">
+                      {selectedBrand === 'OTHERS' ? customBrand : selectedBrand}
+                    </strong>
                   </div>
                   <div className="lse-summary-divider" />
                   <div className="lse-summary-item">
@@ -374,8 +427,8 @@ export default function LeasingQuoteModal({
                     <strong className="lse-sum-val">Industrial Lease &amp; Rental</strong>
                   </div>
                 </div>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="lse-sum-edit-btn"
                   onClick={() => setStep(2)}
                 >
@@ -414,7 +467,7 @@ export default function LeasingQuoteModal({
                   <input
                     type="text"
                     className="lse-input"
-                    placeholder="e.g. Apex Marine &amp; Energy Ltd"
+                    placeholder="e.g. Apex Marine & Energy Ltd"
                     value={companyName}
                     onChange={(e) => setCompanyName(e.target.value)}
                     required

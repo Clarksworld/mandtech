@@ -1092,6 +1092,26 @@
   box-shadow: 0 6px 20px rgba(217, 83, 30, 0.12);
 }
 
+.compressor-item-img-box {
+  width: 54px;
+  height: 54px;
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.compressor-item-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.25s ease;
+}
+
+.compressor-dropdown-item:hover .compressor-item-img-box img {
+  transform: scale(1.08);
+}
+
 .compressor-item-icon-box {
   width: 44px;
   height: 44px;
@@ -1156,7 +1176,7 @@
 /* Spare Parts Minimal Dropdown */
 .spareparts-dropdown-panel {
   width: auto !important;
-  min-width: 480px;
+  min-width: 580px;
   max-width: 95vw;
   padding: 12px !important;
   border-radius: 10px;
@@ -1168,7 +1188,7 @@
 
 .spareparts-minimal-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 8px;
 }
 
@@ -1195,20 +1215,22 @@
 }
 
 .spareparts-minimal-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 8px;
-  background: #f4f6f4;
+  width: 76px;
+  height: 40px;
+  border-radius: 6px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   color: var(--deep-charcoal, #121412);
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 4px 6px;
   transition: all 0.2s ease;
 }
 
 .spareparts-minimal-item:hover .spareparts-minimal-icon {
-  background: var(--primary-container, #54b435);
-  color: #ffffff;
+  background: #ffffff;
+  border-color: var(--primary-container, #54b435);
 }
 
 .spareparts-minimal-name {
@@ -1228,7 +1250,7 @@
 /* Lubricants Minimal Dropdown */
 .lubricants-dropdown-panel {
   width: auto !important;
-  min-width: 560px;
+  min-width: 580px;
   max-width: 95vw;
   padding: 12px !important;
   border-radius: 10px;
@@ -1267,20 +1289,22 @@
 }
 
 .lubricants-minimal-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 8px;
-  background: #f4f6f4;
+  width: 76px;
+  height: 40px;
+  border-radius: 6px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   color: var(--deep-charcoal, #121412);
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 4px 6px;
   transition: all 0.2s ease;
 }
 
 .lubricants-minimal-item:hover .lubricants-minimal-icon {
-  background: var(--primary-container, #54b435);
-  color: #ffffff;
+  background: #ffffff;
+  border-color: var(--primary-container, #54b435);
 }
 
 .lubricants-minimal-name {

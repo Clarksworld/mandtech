@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import {
-  Zap, Flame, ArrowRight, Sparkles, Shield,
-  Cpu, Gauge
+  ArrowRight, Sparkles, HelpCircle
 } from 'lucide-react';
 import CompressorQuoteModal, { type CompressorType, type CompressorBrand } from '../components/CompressorQuoteModal';
+import { BrandLogo } from '../components/BrandLogo';
 import './EquipmentSalesPage.css';
 
 // Assets
 import compressorHero from '../assets/compressor_hero.jpg';
+import electricImg from '../assets/electric_compressor.jpg';
+import dieselImg from '../assets/diesel_compressor.jpg';
 
 
 interface EquipmentSalesPageProps {
@@ -89,10 +91,11 @@ export default function EquipmentSalesPage({ initialType }: EquipmentSalesPagePr
             role="button"
             tabIndex={0}
           >
-            <div className="clean-card-icon-box electric">
-              <Zap size={28} />
+            <div className="clean-card-img-box">
+              <img src={electricImg} alt="Electric Air Compressor" className="clean-card-img" />
             </div>
             <div className="clean-card-body">
+              <span className="clean-card-tag electric">STATIONARY INDUSTRIAL FLEET</span>
               <h3 className="clean-card-title">ELECTRIC AIR COMPRESSOR</h3>
               <p className="clean-card-desc">
                 High-efficiency 400V 3-Phase rotary screw systems with variable speed drive (VSD).
@@ -111,10 +114,11 @@ export default function EquipmentSalesPage({ initialType }: EquipmentSalesPagePr
             role="button"
             tabIndex={0}
           >
-            <div className="clean-card-icon-box diesel">
-              <Flame size={28} />
+            <div className="clean-card-img-box">
+              <img src={dieselImg} alt="Diesel Air Compressor" className="clean-card-img" />
             </div>
             <div className="clean-card-body">
+              <span className="clean-card-tag diesel">PORTABLE FIELD FLEET</span>
               <h3 className="clean-card-title">DIESEL AIR COMPRESSOR</h3>
               <p className="clean-card-desc">
                 Heavy-duty portable units with CAT, Cummins, or Deutz diesel engines for remote jobsites.
@@ -128,7 +132,7 @@ export default function EquipmentSalesPage({ initialType }: EquipmentSalesPagePr
         </div>
       </section>
 
-      {/* Section 2: Four Clean Compact Brand Cards */}
+      {/* Section 2: Clean Compact Brand Cards */}
       <section className="container compact-section" style={{ marginTop: '40px' }}>
         <div className="compact-section-header">
           <h2 className="compact-section-title">OEM Manufacturer Partners</h2>
@@ -145,7 +149,7 @@ export default function EquipmentSalesPage({ initialType }: EquipmentSalesPagePr
           >
             <div className="clean-brand-top">
               <div className="clean-brand-icon">
-                <Gauge size={22} />
+                <BrandLogo brand="ATLAS COPCO" size="sm" />
               </div>
             </div>
             <h4 className="clean-brand-name">ATLAS COPCO</h4>
@@ -165,7 +169,7 @@ export default function EquipmentSalesPage({ initialType }: EquipmentSalesPagePr
           >
             <div className="clean-brand-top">
               <div className="clean-brand-icon">
-                <Shield size={22} />
+                <BrandLogo brand="SULLAIR" size="sm" />
               </div>
             </div>
             <h4 className="clean-brand-name">SULLAIR</h4>
@@ -185,7 +189,7 @@ export default function EquipmentSalesPage({ initialType }: EquipmentSalesPagePr
           >
             <div className="clean-brand-top">
               <div className="clean-brand-icon">
-                <Cpu size={22} />
+                <BrandLogo brand="INGERSOLL RAND" size="sm" />
               </div>
             </div>
             <h4 className="clean-brand-name">INGERSOLL RAND</h4>
@@ -205,13 +209,33 @@ export default function EquipmentSalesPage({ initialType }: EquipmentSalesPagePr
           >
             <div className="clean-brand-top">
               <div className="clean-brand-icon">
-                <Sparkles size={22} />
+                <BrandLogo brand="DENAIR" size="sm" />
               </div>
             </div>
             <h4 className="clean-brand-name">DENAIR</h4>
             <span className="clean-brand-sub">Dual-Stage German Tech</span>
             <div className="clean-brand-cta">
               <span>Get Quote</span>
+              <ArrowRight size={13} />
+            </div>
+          </div>
+
+          {/* Others */}
+          <div
+            className="clean-brand-card"
+            onClick={() => handleOpenModal(undefined, 'OTHERS')}
+            role="button"
+            tabIndex={0}
+          >
+            <div className="clean-brand-top">
+              <div className="clean-brand-icon">
+                <HelpCircle size={22} color="#64748b" />
+              </div>
+            </div>
+            <h4 className="clean-brand-name">OTHERS</h4>
+            <span className="clean-brand-sub">Specify OEM Manufacturer</span>
+            <div className="clean-brand-cta">
+              <span>Specify &amp; Quote</span>
               <ArrowRight size={13} />
             </div>
           </div>

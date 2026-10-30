@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Gauge, Shield, Cpu, Wrench, Droplet } from 'lucide-react';
+import { HelpCircle } from 'lucide-react';
 import LubricantsQuoteModal, { type LubricantBrand } from '../components/LubricantsQuoteModal';
+import { BrandLogo } from '../components/BrandLogo';
 import compressorHero from '../assets/compressor_hero.jpg';
 import './AfterSalesPage.css';
 
 interface BrandInfo {
   id: LubricantBrand;
   name: string;
-  icon: React.ReactNode;
 }
 
 const BRANDS_LIST: BrandInfo[] = [
-  { id: 'ATLAS COPCO',    name: 'ATLAS COPCO',    icon: <Gauge size={28} /> },
-  { id: 'SULLAIR',        name: 'SULLAIR',         icon: <Shield size={28} /> },
-  { id: 'INGERSOLL RAND', name: 'INGERSOLL RAND',  icon: <Cpu size={28} /> },
-  { id: 'DENAIR',         name: 'DENAIR',          icon: <Wrench size={28} /> },
-  { id: 'OTHERS',         name: 'OTHERS',          icon: <Droplet size={28} /> },
+  { id: 'ATLAS COPCO',    name: 'ATLAS COPCO' },
+  { id: 'SULLAIR',        name: 'SULLAIR' },
+  { id: 'INGERSOLL RAND', name: 'INGERSOLL RAND' },
+  { id: 'DENAIR',         name: 'DENAIR' },
+  { id: 'OTHERS',         name: 'OTHERS' },
 ];
 
 interface AfterSalesPageProps {
@@ -58,7 +58,7 @@ export const AfterSalesPage: React.FC<AfterSalesPageProps> = ({ initialBrand }) 
         <div className="container lub-hero-inner">
           <div className="lub-hero-badge">FACTORY-APPROVED INDUSTRIAL FLUIDS</div>
           <h1 className="lub-hero-heading">
-            Lubricants /<br />Special Fluids
+            Lubricants /<br /> Special Fluids
           </h1>
           <p className="lub-hero-lead">
             Factory-approved synthetic compressor fluids, cooling lubricants,
@@ -108,7 +108,13 @@ function BrandCard({
       tabIndex={0}
       onKeyDown={(e) => e.key === 'Enter' && onSelect(brand.id)}
     >
-      <div className="lub-brand-icon-wrap">{brand.icon}</div>
+      <div className="lub-brand-icon-wrap">
+        {brand.id === 'OTHERS' ? (
+          <HelpCircle size={28} color="#64748b" />
+        ) : (
+          <BrandLogo brand={brand.id} size="md" />
+        )}
+      </div>
       <span className="lub-brand-label">{brand.name}</span>
     </div>
   );

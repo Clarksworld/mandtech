@@ -2,15 +2,16 @@ import React, { useState, useEffect } from 'react';
 import {
   X, ArrowLeft, ArrowRight,
   Phone, Mail, Building, CheckCircle2, RotateCcw,
-  AlertCircle, Shield, Cpu, Gauge,
+  AlertCircle, HelpCircle, Cpu,
   Wrench, Filter, Droplet, Wind, GitCommit,
   Thermometer, Radio, Activity,
   Sliders, Fuel, Disc, Layers
 } from 'lucide-react';
 import { submitSparePartsRequest } from '../services/api';
+import { BrandLogo } from './BrandLogo';
 import './SparePartsQuoteModal.css';
 
-export type SparePartsBrand = 'ATLAS COPCO' | 'SULLAIR' | 'INGERSOLL RAND' | 'DENAIR';
+export type SparePartsBrand = 'ATLAS COPCO' | 'SULLAIR' | 'INGERSOLL RAND' | 'DENAIR' | 'OTHERS';
 
 export interface SparePartItem {
   id: string;
@@ -39,12 +40,12 @@ export const BRANDS_INFO: {
   id: SparePartsBrand;
   name: string;
   tag: string;
-  icon: React.ReactNode;
 }[] = [
-  { id: 'ATLAS COPCO', name: 'Atlas Copco', tag: 'GA • GX • VSD+', icon: <Gauge size={20} /> },
-  { id: 'SULLAIR', name: 'Sullair', tag: 'Heavy-Duty Screw', icon: <Shield size={20} /> },
-  { id: 'INGERSOLL RAND', name: 'Ingersoll Rand', tag: 'SSR • Nirvana', icon: <Cpu size={20} /> },
-  { id: 'DENAIR', name: 'Denair', tag: 'Dual-Stage Units', icon: <Wrench size={20} /> },
+  { id: 'ATLAS COPCO', name: 'Atlas Copco', tag: 'GA • GX • VSD+' },
+  { id: 'SULLAIR', name: 'Sullair', tag: 'Heavy-Duty Screw' },
+  { id: 'INGERSOLL RAND', name: 'Ingersoll Rand', tag: 'SSR • Nirvana' },
+  { id: 'DENAIR', name: 'Denair', tag: 'Dual-Stage Units' },
+  { id: 'OTHERS', name: 'Others', tag: 'Specify your brand' },
 ];
 
 interface SparePartsQuoteModalProps {
@@ -66,6 +67,7 @@ export default function SparePartsQuoteModal({
   const [step, setStep] = useState<Step>(1);
   const [selectedBrand, setSelectedBrand] = useState<SparePartsBrand | null>(initialBrand || null);
   const [selectedPart, setSelectedPart] = useState<string | null>(initialPart || null);
+  const [customBrand, setCustomBrand] = useState('');
 
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -104,6 +106,10 @@ export default function SparePartsQuoteModal({
 
   const handleBrandSelect = (brandId: SparePartsBrand) => {
     setSelectedBrand(brandId);
+    if (brandId === 'OTHERS') {
+      setCustomBrand('');
+      return; // stay on step 1 to show custom input
+    }
     setStep(2);
   };
 
@@ -145,8 +151,9 @@ export default function SparePartsQuoteModal({
 
     try {
       const basePartName = selectedPart.replace(/^[I|V|X]+\.\s*/, '');
+      const brandToSend = selectedBrand === 'OTHERS' ? customBrand.trim() : selectedBrand;
       const response = await submitSparePartsRequest({
-        brand: selectedBrand,
+        brand: brandToSend,
         part_name: basePartName,
         company_name: companyName.trim(),
         email: email.trim(),
@@ -235,12 +242,18 @@ export default function SparePartsQuoteModal({
                 {BRANDS_INFO.map((b) => (
                   <div
                     key={b.id}
-                    className="sp-brand-choice-card"
+                    className={`sp-brand-choice-card ${selectedBrand === b.id ? 'sp-brand-selected' : ''}`}
                     onClick={() => handleBrandSelect(b.id)}
                     role="button"
                     tabIndex={0}
                   >
-                    <div className="sp-bcc-icon-box">{b.icon}</div>
+                    <div className="sp-bcc-logo-box">
+                      {b.id === 'OTHERS' ? (
+                        <div className="sp-bcc-others-icon"><HelpCircle size={26} /></div>
+                      ) : (
+                        <BrandLogo brand={b.id} size="md" />
+                      )}
+                    </div>
                     <div className="sp-bcc-info">
                       <h4 className="sp-bcc-name">{b.name}</h4>
                       <span className="sp-bcc-tag">{b.tag}</span>
@@ -249,6 +262,28 @@ export default function SparePartsQuoteModal({
                   </div>
                 ))}
               </div>
+              {/* Custom brand input when OTHERS selected */}
+              {selectedBrand === 'OTHERS' && (
+                <div className="sp-others-input">
+                  <label className="cq-label">Specify your compressor brand <span className="req">*</span></label>
+                  <input
+                    type="text"
+                    className="cq-input"
+                    placeholder="e.g. Kaeser, CompAir, Gardner Denver..."
+                    value={customBrand}
+                    onChange={(e) => setCustomBrand(e.target.value)}
+                    autoFocus
+                  />
+                  <button
+                    type="button"
+                    className="sp-others-continue-btn"
+                    disabled={!customBrand.trim()}
+                    onClick={() => { if (customBrand.trim()) setStep(2); }}
+                  >
+                    Continue <ArrowRight size={14} />
+                  </button>
+                </div>
+              )}
             </div>
           )}
 
@@ -256,7 +291,7 @@ export default function SparePartsQuoteModal({
           {step === 2 && (
             <div className="sp-step-panel">
               <div className="sp-brand-lock-bar">
-                <span>Selected Brand: <strong>{selectedBrand}</strong></span>
+                <span>Selected Brand: <strong>{selectedBrand === 'OTHERS' ? customBrand : selectedBrand}</strong></span>
                 <button
                   type="button"
                   className="sp-btn-link-action"

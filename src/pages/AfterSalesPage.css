@@ -152,19 +152,22 @@
 }
 
 .lub-brand-icon-wrap {
-  width: 58px;
-  height: 58px;
-  border-radius: 12px;
-  background: #f0f5f0;
-  color: var(--primary-container, #54b435);
+  min-width: 80px;
+  width: auto;
+  height: 52px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .lub-brand-card:hover .lub-brand-icon-wrap {
-  background: rgba(84, 180, 53, 0.12);
+  background: #ffffff;
+  border-color: var(--primary-container, #54b435);
 }
 
 .lub-brand-label {

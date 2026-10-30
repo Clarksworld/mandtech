@@ -1,13 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { 
   ShieldCheck, Search, ChevronDown, 
-  Zap, Wrench, Droplet,
-  Menu, X, Flame,
-  Gauge, Shield, Cpu,
+  HelpCircle,
+  Menu, X,
   HeadphonesIcon, Phone,
   ShoppingCart
 } from 'lucide-react';
 import { MandtechLogo } from './components/Logo';
+import { BrandLogo } from './components/BrandLogo';
 import { useInquiry } from './context/InquiryContext';
 import HomePage from './pages/HomePage';
 import SparePartsPage from './pages/SparePartsPage';
@@ -24,6 +24,8 @@ import LubricantsQuoteModal, { type LubricantBrand } from './components/Lubrican
 import LeasingPage from './pages/LeasingPage';
 import { YardCartPage } from './pages/YardCartPage';
 import { AuthModal } from './components/AuthModal';
+import electricImg from './assets/electric_compressor.jpg';
+import dieselImg from './assets/diesel_compressor.jpg';
 import './App.css';
 
 export type ActivePage = 'home' | 'catalog' | 'equipmentSales' | 'leasing' | 'aftersales' | 'contact' | 'techsupport' | 'support' | 'yard-cart';
@@ -297,13 +299,13 @@ export default function App() {
                         className="compressor-dropdown-item"
                         onClick={() => openCompressorModal('ELECTRIC AIR COMPRESSOR')}
                       >
-                        <div className="compressor-item-icon-box electric">
-                          <Zap size={22} />
+                        <div className="compressor-item-img-box">
+                          <img src={electricImg} alt="Electric Air Compressor" />
                         </div>
                         <div className="compressor-item-info">
                           <div className="compressor-item-title">ELECTRIC AIR COMPRESSOR</div>
                           <div className="compressor-item-desc">High-efficiency stationary rotary screw units for industrial plants (400V 3-Phase).</div>
-                          <span className="compressor-item-tag">ATLAS COPCO • SULLAIR • INGERSOLL RAND • DENAIR</span>
+                          <span className="compressor-item-tag">ATLAS COPCO • SULLAIR • INGERSOLL RAND • DENAIR • OTHERS</span>
                         </div>
                       </div>
 
@@ -312,13 +314,13 @@ export default function App() {
                         className="compressor-dropdown-item"
                         onClick={() => openCompressorModal('DIESEL AIR COMPRESSOR')}
                       >
-                        <div className="compressor-item-icon-box diesel">
-                          <Flame size={22} />
+                        <div className="compressor-item-img-box">
+                          <img src={dieselImg} alt="Diesel Air Compressor" />
                         </div>
                         <div className="compressor-item-info">
                           <div className="compressor-item-title">DIESEL AIR COMPRESSOR</div>
                           <div className="compressor-item-desc">Heavy-duty mobile trailer-mounted portable units for remote field operations.</div>
-                          <span className="compressor-item-tag">ATLAS COPCO • SULLAIR • INGERSOLL RAND • DENAIR</span>
+                          <span className="compressor-item-tag">ATLAS COPCO • SULLAIR • INGERSOLL RAND • DENAIR • OTHERS</span>
                         </div>
                       </div>
                     </div>
@@ -350,7 +352,7 @@ export default function App() {
                       onClick={() => navigateToSpareParts('ATLAS COPCO')}
                     >
                       <div className="spareparts-minimal-icon">
-                        <Gauge size={24} />
+                        <BrandLogo brand="ATLAS COPCO" size="sm" />
                       </div>
                       <span className="spareparts-minimal-name">ATLAS COPCO</span>
                     </div>
@@ -361,7 +363,7 @@ export default function App() {
                       onClick={() => navigateToSpareParts('SULLAIR')}
                     >
                       <div className="spareparts-minimal-icon">
-                        <Shield size={24} />
+                        <BrandLogo brand="SULLAIR" size="sm" />
                       </div>
                       <span className="spareparts-minimal-name">SULLAIR</span>
                     </div>
@@ -372,7 +374,7 @@ export default function App() {
                       onClick={() => navigateToSpareParts('INGERSOLL RAND')}
                     >
                       <div className="spareparts-minimal-icon">
-                        <Cpu size={24} />
+                        <BrandLogo brand="INGERSOLL RAND" size="sm" />
                       </div>
                       <span className="spareparts-minimal-name">INGERSOLL RAND</span>
                     </div>
@@ -383,9 +385,20 @@ export default function App() {
                       onClick={() => navigateToSpareParts('DENAIR')}
                     >
                       <div className="spareparts-minimal-icon">
-                        <Wrench size={24} />
+                        <BrandLogo brand="DENAIR" size="sm" />
                       </div>
                       <span className="spareparts-minimal-name">DENAIR</span>
+                    </div>
+
+                    {/* Option 5: OTHERS */}
+                    <div 
+                      className="spareparts-minimal-item"
+                      onClick={() => navigateToSpareParts('OTHERS')}
+                    >
+                      <div className="spareparts-minimal-icon">
+                        <HelpCircle size={22} color="#64748b" />
+                      </div>
+                      <span className="spareparts-minimal-name">OTHERS</span>
                     </div>
                   </div>
                 </div>
@@ -420,13 +433,13 @@ export default function App() {
                         className="compressor-dropdown-item"
                         onClick={() => openLeasingModal('ELECTRIC AIR COMPRESSOR')}
                       >
-                        <div className="compressor-item-icon-box electric">
-                          <Zap size={22} />
+                        <div className="compressor-item-img-box">
+                          <img src={electricImg} alt="Electric Air Compressor" />
                         </div>
                         <div className="compressor-item-info">
                           <div className="compressor-item-title">ELECTRIC AIR COMPRESSOR</div>
                           <div className="compressor-item-desc">High-efficiency stationary rotary screw units for industrial plants (400V 3-Phase).</div>
-                          <span className="compressor-item-tag">ATLAS COPCO • SULLAIR • INGERSOLL RAND • DENAIR</span>
+                          <span className="compressor-item-tag">ATLAS COPCO • SULLAIR • INGERSOLL RAND • DENAIR • OTHERS</span>
                         </div>
                       </div>
 
@@ -435,13 +448,13 @@ export default function App() {
                         className="compressor-dropdown-item"
                         onClick={() => openLeasingModal('DIESEL AIR COMPRESSOR')}
                       >
-                        <div className="compressor-item-icon-box diesel">
-                          <Flame size={22} />
+                        <div className="compressor-item-img-box">
+                          <img src={dieselImg} alt="Diesel Air Compressor" />
                         </div>
                         <div className="compressor-item-info">
                           <div className="compressor-item-title">DIESEL AIR COMPRESSOR</div>
                           <div className="compressor-item-desc">Heavy-duty mobile trailer-mounted portable units for remote field operations.</div>
-                          <span className="compressor-item-tag">ATLAS COPCO • SULLAIR • INGERSOLL RAND • DENAIR</span>
+                          <span className="compressor-item-tag">ATLAS COPCO • SULLAIR • INGERSOLL RAND • DENAIR • OTHERS</span>
                         </div>
                       </div>
                     </div>
@@ -473,7 +486,7 @@ export default function App() {
                       onClick={() => openLubricantsModal('ATLAS COPCO')}
                     >
                       <div className="lubricants-minimal-icon">
-                        <Gauge size={24} />
+                        <BrandLogo brand="ATLAS COPCO" size="sm" />
                       </div>
                       <span className="lubricants-minimal-name">ATLAS COPCO</span>
                     </div>
@@ -484,7 +497,7 @@ export default function App() {
                       onClick={() => openLubricantsModal('SULLAIR')}
                     >
                       <div className="lubricants-minimal-icon">
-                        <Shield size={24} />
+                        <BrandLogo brand="SULLAIR" size="sm" />
                       </div>
                       <span className="lubricants-minimal-name">SULLAIR</span>
                     </div>
@@ -495,7 +508,7 @@ export default function App() {
                       onClick={() => openLubricantsModal('INGERSOLL RAND')}
                     >
                       <div className="lubricants-minimal-icon">
-                        <Cpu size={24} />
+                        <BrandLogo brand="INGERSOLL RAND" size="sm" />
                       </div>
                       <span className="lubricants-minimal-name">INGERSOLL RAND</span>
                     </div>
@@ -506,7 +519,7 @@ export default function App() {
                       onClick={() => openLubricantsModal('DENAIR')}
                     >
                       <div className="lubricants-minimal-icon">
-                        <Wrench size={24} />
+                        <BrandLogo brand="DENAIR" size="sm" />
                       </div>
                       <span className="lubricants-minimal-name">DENAIR</span>
                     </div>
@@ -517,7 +530,7 @@ export default function App() {
                       onClick={() => openLubricantsModal('OTHERS')}
                     >
                       <div className="lubricants-minimal-icon">
-                        <Droplet size={24} />
+                        <HelpCircle size={22} color="#64748b" />
                       </div>
                       <span className="lubricants-minimal-name">OTHERS</span>
                     </div>

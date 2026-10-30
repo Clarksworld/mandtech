@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import {
-  ArrowRight, Wrench, Shield, Cpu, Gauge
-} from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ArrowRight, HelpCircle } from 'lucide-react';
 import SparePartsQuoteModal, {
   type SparePartsBrand,
 } from '../components/SparePartsQuoteModal';
+import { BrandLogo } from '../components/BrandLogo';
 import './SparePartsPage.css';
 import compressorHero from '../assets/compressor_hero.jpg';
 
@@ -17,7 +16,6 @@ interface BrandCardInfo {
   name: string;
   series: string;
   desc: string;
-  icon: React.ReactNode;
 }
 
 const BRANDS_LIST: BrandCardInfo[] = [
@@ -26,28 +24,30 @@ const BRANDS_LIST: BrandCardInfo[] = [
     name: 'ATLAS COPCO',
     series: 'GA • GX • VSD+ SERIES',
     desc: 'OEM air & oil filters, separator elements, minimum pressure valves, and Elektronikon controllers.',
-    icon: <Gauge size={24} />,
   },
   {
     id: 'SULLAIR',
     name: 'SULLAIR',
     series: 'PORTABLE & STATIONARY SCREW',
     desc: 'Genuine Sullube synthetic fluids, intake unloader assemblies, check valves, and air-end kits.',
-    icon: <Shield size={24} />,
   },
   {
     id: 'INGERSOLL RAND',
     name: 'INGERSOLL RAND',
     series: 'SSR • NIRVANA • SIERRA',
     desc: 'Ultra Coolant lubricants, thermo-control bypass valves, sensor transducers, and overhaul kits.',
-    icon: <Cpu size={24} />,
   },
   {
     id: 'DENAIR',
     name: 'DENAIR',
     series: 'DUAL-STAGE ROTARY UNITS',
     desc: 'High-pressure filter elements, cooling fans, aluminum radiators, and microprocessor boards.',
-    icon: <Wrench size={24} />,
+  },
+  {
+    id: 'OTHERS',
+    name: 'OTHERS',
+    series: 'SPECIFY YOUR BRAND',
+    desc: 'Other compressor manufacturers — specify brand for OEM-compatible parts and consumables.',
   },
 ];
 
@@ -99,7 +99,7 @@ export default function SparePartsPage({ initialBrand }: SparePartsPageProps) {
           </h1>
           <p className="sp-hero-lead">
             Certified factory-grade replacement components, filtration elements, precision valve kits,
-            and scheduled service consumables for Nigeria’s leading industrial operations.
+            and scheduled service consumables for Nigeria's leading industrial operations.
           </p>
           <div className="sp-hero-cta-row">
             <button
@@ -114,7 +114,7 @@ export default function SparePartsPage({ initialBrand }: SparePartsPageProps) {
         </div>
       </section>
 
-      {/* Main Section: Only The 4 Brand Options */}
+      {/* Main Section: Brand Options */}
       <section className="container sp-brands-section">
         <div className="sp-section-heading-box">
           <span className="sp-sub-tag">SELECT EQUIPMENT MANUFACTURER</span>
@@ -124,7 +124,6 @@ export default function SparePartsPage({ initialBrand }: SparePartsPageProps) {
           </p>
         </div>
 
-        {/* Exactly 4 Brand Options */}
         <div className="sp-four-brands-grid">
           {BRANDS_LIST.map((brand) => (
             <div
@@ -136,7 +135,11 @@ export default function SparePartsPage({ initialBrand }: SparePartsPageProps) {
             >
               <div className="sp-boc-header">
                 <div className="sp-boc-icon">
-                  {brand.icon}
+                  {brand.id === 'OTHERS' ? (
+                    <HelpCircle size={28} color="#64748b" />
+                  ) : (
+                    <BrandLogo brand={brand.id} size="lg" />
+                  )}
                 </div>
                 <span className="sp-boc-series">{brand.series}</span>
               </div>

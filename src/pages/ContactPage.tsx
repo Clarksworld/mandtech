@@ -46,7 +46,7 @@ export const ContactPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
-  
+
   // Selected product lines of interest
   const [interestCompressors, setInterestCompressors] = useState(false);
   const [interestAirDryer, setInterestAirDryer] = useState(false);
@@ -61,7 +61,7 @@ export const ContactPage: React.FC = () => {
   const [interestTechSupport, setInterestTechSupport] = useState(false);
   const [interestInstallation, setInterestInstallation] = useState(false);
   const [interestTroubleshooting, setInterestTroubleshooting] = useState(false);
-  
+
   const [newsletter, setNewsletter] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -210,7 +210,7 @@ export const ContactPage: React.FC = () => {
                   </div>
                   <p className="branch-card-addr"><MapPin size={14} /> {b.addr}</p>
                   <span className="branch-gps-coord">GPS: {b.gps}</span>
-                  
+
                   <div className="branch-card-footer">
                     <a href={`tel:${b.phone}`} className="branch-footer-link">
                       <Phone size={14} /> {b.phone}
@@ -324,7 +324,7 @@ export const ContactPage: React.FC = () => {
                   </div>
                 </div>
               )}
-              
+
               <form onSubmit={handleSubmit}>
                 <InputField
                   label="Contact Person Name"
