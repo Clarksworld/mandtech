@@ -181,13 +181,19 @@ export async function submitSparePartsRequest(payload: SparePartsRequestPayload)
 
 
 export interface LeasingRequestPayload {
-  compressor_type: string;
-  brand: string;
-  duration: string;
-  hub: string;
-  company_name: string;
-  email: string;
+  name?: string;
+  contact_name?: string;
   phone: string;
+  email: string;
+  company_name: string;
+  delivery_address?: string;
+  equipment_needed?: string;
+  flow_rate_cfm?: string;
+  desired_pressure?: string;
+  compressor_type?: string;
+  brand?: string;
+  duration?: string;
+  hub?: string;
   notes?: string;
 }
 

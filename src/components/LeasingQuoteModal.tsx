@@ -79,6 +79,9 @@ export default function LeasingQuoteModal({
   const [companyName, setCompanyName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [deliveryAddress, setDeliveryAddress] = useState('');
+  const [cfmFlowRate, setCfmFlowRate] = useState('400 cfm');
+  const [desiredPressure, setDesiredPressure] = useState('10 bar');
   const [duration, setDuration] = useState('1 - 3 Months (Standard Project Lease)');
   const [hub, setHub] = useState('Port Harcourt HQ (Elelenwo Ops Yard)');
   const [notes, setNotes] = useState('');
@@ -163,13 +166,19 @@ export default function LeasingQuoteModal({
 
     try {
       const res = await submitLeasingRequest({
-        compressor_type: selectedType,
+        name: contactName.trim(),
+        contact_name: contactName.trim(),
+        phone: phone.trim(),
+        email: email.trim(),
+        company_name: companyName.trim(),
+        delivery_address: deliveryAddress.trim() || hub,
+        equipment_needed: selectedType,
+        flow_rate_cfm: cfmFlowRate,
+        desired_pressure: desiredPressure,
+        compressor_type: `${selectedType} (${cfmFlowRate} @ ${desiredPressure})`,
         brand: effectiveBrand || selectedBrand,
         duration,
-        hub,
-        company_name: companyName.trim(),
-        email: email.trim(),
-        phone: phone.trim(),
+        hub: deliveryAddress.trim() || hub,
         notes: notes.trim() ? `Contact: ${contactName.trim()} | ${notes.trim()}` : `Contact: ${contactName.trim()}`,
       });
 
@@ -503,6 +512,53 @@ export default function LeasingQuoteModal({
                     onChange={(e) => setPhone(e.target.value)}
                     required
                   />
+                </div>
+
+                {/* Delivery Address */}
+                <div className="lse-field" style={{ gridColumn: 'span 2' }}>
+                  <label className="lse-field-label">
+                    <MapPin size={14} /> Delivery Address / Site Location <span className="req">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    className="lse-input"
+                    placeholder="e.g. Trans-Amadi Industrial Layout, Port Harcourt, Rivers State"
+                    value={deliveryAddress}
+                    onChange={(e) => setDeliveryAddress(e.target.value)}
+                    required
+                  />
+                </div>
+
+                {/* CFM / Flow rate */}
+                <div className="lse-field">
+                  <label className="lse-field-label">
+                    CFM / Flow Rate <span className="req">*</span>
+                  </label>
+                  <select
+                    className="lse-select"
+                    value={cfmFlowRate}
+                    onChange={(e) => setCfmFlowRate(e.target.value)}
+                  >
+                    {['100 cfm', '250 cfm', '350 cfm', '400 cfm', '450 cfm', '600 cfm', '750 cfm', '900 cfm', '1000 cfm', '1200 cfm', '1600 cfm', '1800 cfm'].map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Desired Pressure */}
+                <div className="lse-field">
+                  <label className="lse-field-label">
+                    Desired Pressure <span className="req">*</span>
+                  </label>
+                  <select
+                    className="lse-select"
+                    value={desiredPressure}
+                    onChange={(e) => setDesiredPressure(e.target.value)}
+                  >
+                    {['8 bar', '10 bar', '12 bar', '14 bar', '20 bar', '25 bar', '30 bar', '40 bar'].map((p) => (
+                      <option key={p} value={p}>{p}</option>
+                    ))}
+                  </select>
                 </div>
 
                 {/* Rental Duration Term */}
