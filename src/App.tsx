@@ -405,62 +405,12 @@ export default function App() {
             </div>
 
             {/* Nav Item: Leasing & Rentals */}
-            <div 
-              className="nav-dropdown-wrapper"
-              onMouseEnter={() => handleMouseEnter('leasing')}
-              onMouseLeave={handleMouseLeave}
+            <button
+              className={`desktop-nav-link ${activePage === 'leasing' ? 'nav-active' : ''}`}
+              onClick={() => navigateTo('leasing')}
             >
-              <button
-                className={`desktop-nav-link ${activePage === 'leasing' ? 'nav-active' : ''} ${activeDropdown === 'leasing' ? 'dropdown-active' : ''}`}
-                onClick={() => navigateTo('leasing')}
-              >
-                <span>Leasing and Rentals</span>
-                <ChevronDown size={14} className="dropdown-chevron" />
-              </button>
-
-              {activeDropdown === 'leasing' && (
-                <div className="mega-menu-panel compressor-dropdown-panel" onMouseEnter={() => handleMouseEnter('leasing')} onMouseLeave={handleMouseLeave}>
-                  <div className="compressor-dropdown-content">
-                    <div className="compressor-dropdown-header">
-                      <span className="compressor-dropdown-title">SELECT RENTAL FLEET TYPE</span>
-                      <span className="compressor-dropdown-tag">SHORT &amp; LONG TERM LEASE</span>
-                    </div>
-
-                    <div className="compressor-dropdown-grid">
-                      {/* Option 1: ELECTRIC AIR COMPRESSOR */}
-                      <div 
-                        className="compressor-dropdown-item"
-                        onClick={() => openLeasingModal('ELECTRIC AIR COMPRESSOR')}
-                      >
-                        <div className="compressor-item-img-box">
-                          <img src={electricImg} alt="Electric Air Compressor" />
-                        </div>
-                        <div className="compressor-item-info">
-                          <div className="compressor-item-title">ELECTRIC AIR COMPRESSOR</div>
-                          <div className="compressor-item-desc">High-efficiency stationary rotary screw units for industrial plants (400V 3-Phase).</div>
-                          <span className="compressor-item-tag">ATLAS COPCO • SULLAIR • INGERSOLL RAND • DENAIR • OTHERS</span>
-                        </div>
-                      </div>
-
-                      {/* Option 2: DIESEL AIR COMPRESSOR */}
-                      <div 
-                        className="compressor-dropdown-item"
-                        onClick={() => openLeasingModal('DIESEL AIR COMPRESSOR')}
-                      >
-                        <div className="compressor-item-img-box">
-                          <img src={dieselImg} alt="Diesel Air Compressor" />
-                        </div>
-                        <div className="compressor-item-info">
-                          <div className="compressor-item-title">DIESEL AIR COMPRESSOR</div>
-                          <div className="compressor-item-desc">Heavy-duty mobile trailer-mounted portable units for remote field operations.</div>
-                          <span className="compressor-item-tag">ATLAS COPCO • SULLAIR • INGERSOLL RAND • DENAIR • OTHERS</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+              <span>Leasing and Rentals</span>
+            </button>
 
             {/* Nav Item: Lubricants / Special Fluids */}
             <div 
