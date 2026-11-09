@@ -1137,3 +1137,89 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ── Equipment Sales – Cart Buttons ─────────────────────────── */
+.clean-card-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  border-top: 1px solid rgba(255,255,255,0.15);
+  padding-top: 12px;
+}
+
+.clean-card-actions-row .clean-card-action {
+  flex: 1;
+  margin-top: 0;
+  border-top: none;
+  padding-top: 0;
+}
+
+.equip-cart-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255,255,255,0.15);
+  border: 1.5px solid rgba(255,255,255,0.3);
+  color: #fff;
+  border-radius: 7px;
+  padding: 7px 11px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s;
+  flex-shrink: 0;
+}
+
+.equip-cart-btn:hover {
+  background: rgba(255,255,255,0.3);
+  border-color: rgba(255,255,255,0.6);
+}
+
+.equip-cart-btn.in-cart {
+  background: #dcfce7;
+  border-color: #16a34a;
+  color: #15803d;
+}
+
+/* Brand card – actions row + mini cart btn */
+.clean-brand-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.clean-brand-actions .clean-brand-cta {
+  flex: 1;
+  margin-top: 0;
+}
+
+.equip-brand-cart-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  border: 1.5px solid #cbd5e1;
+  background: #f8fafc;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  flex-shrink: 0;
+}
+
+.equip-brand-cart-btn:hover {
+  background: var(--primary-container, #1a56a0);
+  color: #fff;
+  border-color: var(--primary-container, #1a56a0);
+}
+
+.equip-brand-cart-btn.in-cart {
+  background: #dcfce7;
+  border-color: #16a34a;
+  color: #15803d;
+}

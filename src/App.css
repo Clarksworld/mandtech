@@ -1494,3 +1494,89 @@
   line-height: 1;
   flex-shrink: 0;
 }
+
+/* Floating Cart Notification Toast */
+.cart-toast-notification {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #111827;
+  color: #ffffff;
+  padding: 14px 20px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 9999;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  animation: slideUpFade 0.25s ease-out;
+  max-width: 440px;
+}
+
+@keyframes slideUpFade {
+  from {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.cart-toast-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cart-toast-check {
+  color: #10b981;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.cart-toast-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cart-toast-text strong {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.cart-toast-text span {
+  font-size: 12px;
+  color: #9ca3af;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.cart-toast-view-btn {
+  background: var(--primary-container, #00A859);
+  color: #ffffff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.cart-toast-view-btn:hover {
+  background: #008f4c;
+  transform: translateY(-1px);
+}
+

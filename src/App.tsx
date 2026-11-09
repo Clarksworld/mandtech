@@ -4,7 +4,7 @@ import {
   HelpCircle,
   Menu, X,
   HeadphonesIcon, Phone,
-  ShoppingCart
+  ShoppingCart, ArrowRight
 } from 'lucide-react';
 import { MandtechLogo } from './components/Logo';
 import { BrandLogo } from './components/BrandLogo';
@@ -119,7 +119,7 @@ export default function App() {
 
   const dropdownTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const { inquiryItems, setGlobalSearch } = useInquiry();
+  const { inquiryItems, setGlobalSearch, cartToast } = useInquiry();
 
   const handleMouseEnter = (key: string) => {
     if (dropdownTimeoutRef.current) {
@@ -930,6 +930,26 @@ export default function App() {
         onClose={() => setAuthModalOpen(false)}
         initialMode={authModalMode}
       />
+
+      {/* Floating Cart Notification Toast */}
+      {cartToast && (
+        <div className="cart-toast-notification">
+          <div className="cart-toast-content">
+            <span className="material-symbols-outlined cart-toast-check">check_circle</span>
+            <div className="cart-toast-text">
+              <strong>Added to Yard Cart!</strong>
+              <span>{cartToast}</span>
+            </div>
+          </div>
+          <button
+            onClick={() => navigateTo('yard-cart')}
+            className="cart-toast-view-btn"
+          >
+            <span>View Cart ({inquiryItems.length})</span>
+            <ArrowRight size={14} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

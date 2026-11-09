@@ -9,16 +9,22 @@ export interface InquiryItem {
   specSummary?: string;
   image?: string;
   brand?: string;
+  quantity?: number;
+  price?: number;
 }
 
 interface InquiryContextType {
   inquiryItems: InquiryItem[];
   addToInquiry: (item: InquiryItem) => void;
+  updateQuantity: (id: string | number, qty: number) => void;
   removeFromInquiry: (id: string | number) => void;
   clearInquiry: () => void;
   isInInquiry: (id: string | number) => boolean;
+  getItemQuantity: (id: string | number) => number;
   globalSearch: string;
   setGlobalSearch: (query: string) => void;
+  cartToast: string | null;
+  clearCartToast: () => void;
 }
 
 const InquiryContext = createContext<InquiryContextType | undefined>(undefined);
@@ -36,6 +42,7 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
   });
 
   const [globalSearch, setGlobalSearch] = useState<string>('');
+  const [cartToast, setCartToast] = useState<string | null>(null);
 
   useEffect(() => {
     try {
@@ -46,11 +53,34 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, [inquiryItems]);
 
   const addToInquiry = (item: InquiryItem) => {
+    const qtyToAdd = item.quantity && item.quantity > 0 ? item.quantity : 1;
     setInquiryItems((prev) => {
-      const exists = prev.some((i) => String(i.id) === String(item.id) && i.type === item.type);
-      if (exists) return prev;
-      return [...prev, item];
+      const idx = prev.findIndex((i) => String(i.id) === String(item.id) && i.type === item.type);
+      if (idx >= 0) {
+        const copy = [...prev];
+        copy[idx] = {
+          ...copy[idx],
+          quantity: (copy[idx].quantity || 1) + qtyToAdd,
+        };
+        return copy;
+      }
+      return [...prev, { ...item, quantity: qtyToAdd }];
     });
+
+    setCartToast(item.title);
+    setTimeout(() => {
+      setCartToast(null);
+    }, 3500);
+  };
+
+  const updateQuantity = (id: string | number, qty: number) => {
+    if (qty <= 0) {
+      removeFromInquiry(id);
+      return;
+    }
+    setInquiryItems((prev) =>
+      prev.map((item) => (String(item.id) === String(id) ? { ...item, quantity: qty } : item))
+    );
   };
 
   const removeFromInquiry = (id: string | number) => {
@@ -65,16 +95,29 @@ export const InquiryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return inquiryItems.some((i) => String(i.id) === String(id));
   };
 
+  const getItemQuantity = (id: string | number) => {
+    const item = inquiryItems.find((i) => String(i.id) === String(id));
+    return item?.quantity || 0;
+  };
+
+  const clearCartToast = () => {
+    setCartToast(null);
+  };
+
   return (
     <InquiryContext.Provider
       value={{
         inquiryItems,
         addToInquiry,
+        updateQuantity,
         removeFromInquiry,
         clearInquiry,
         isInInquiry,
+        getItemQuantity,
         globalSearch,
         setGlobalSearch,
+        cartToast,
+        clearCartToast,
       }}
     >
       {children}

@@ -217,3 +217,59 @@
     width: calc(50% - 8px);
   }
 }
+
+/* ── Lubricant Brand Card Actions ─────────────────────────── */
+.lub-brand-card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.lub-brand-quote-btn {
+  width: 100%;
+  background: transparent;
+  border: 1.5px solid var(--primary-container, #1a56a0);
+  color: var(--primary-container, #1a56a0);
+  border-radius: 7px;
+  padding: 7px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.lub-brand-quote-btn:hover {
+  background: var(--primary-container, #1a56a0);
+  color: #fff;
+}
+
+.lub-brand-cart-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  background: #f1f5f9;
+  border: 1.5px solid #cbd5e1;
+  color: #374151;
+  border-radius: 7px;
+  padding: 7px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.lub-brand-cart-btn:hover {
+  background: #334155;
+  color: #fff;
+  border-color: #334155;
+}
+
+.lub-brand-cart-btn.in-cart {
+  background: #dcfce7;
+  border-color: #16a34a;
+  color: #15803d;
+}

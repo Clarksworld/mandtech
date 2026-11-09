@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { ArrowRight, HelpCircle } from 'lucide-react';
+import { ArrowRight, HelpCircle, ShoppingCart } from 'lucide-react';
 import SparePartsQuoteModal, {
   type SparePartsBrand,
 } from '../components/SparePartsQuoteModal';
 import { BrandLogo } from '../components/BrandLogo';
+import { useInquiry } from '../context/InquiryContext';
 import './SparePartsPage.css';
 import compressorHero from '../assets/compressor_hero.jpg';
 
@@ -48,6 +49,7 @@ const BRANDS_LIST: BrandCardInfo[] = [
 export default function SparePartsPage({ initialBrand }: SparePartsPageProps) {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedBrand, setSelectedBrand] = useState<SparePartsBrand | null>(initialBrand || null);
+  const { addToInquiry, isInInquiry } = useInquiry();
 
   useEffect(() => {
     if (initialBrand) {
@@ -123,11 +125,10 @@ export default function SparePartsPage({ initialBrand }: SparePartsPageProps) {
             <div
               key={brand.id}
               className="sp-brand-option-card"
-              onClick={() => handleOpenBrandModal(brand.id)}
               role="button"
               tabIndex={0}
             >
-              <div className="sp-boc-header">
+              <div className="sp-boc-header" onClick={() => handleOpenBrandModal(brand.id)}>
                 <div className="sp-boc-icon">
                   {brand.id === 'OTHERS' ? (
                     <HelpCircle size={28} color="#64748b" />
@@ -137,12 +138,32 @@ export default function SparePartsPage({ initialBrand }: SparePartsPageProps) {
                 </div>
               </div>
 
-              <h3 className="sp-boc-name">{brand.name}</h3>
-              <p className="sp-boc-desc">{brand.desc}</p>
+              <h3 className="sp-boc-name" onClick={() => handleOpenBrandModal(brand.id)}>{brand.name}</h3>
+              <p className="sp-boc-desc" onClick={() => handleOpenBrandModal(brand.id)}>{brand.desc}</p>
 
-              <div className="sp-boc-action">
-                <span>Configure &amp; Request Quote</span>
-                <ArrowRight size={16} className="sp-boc-arrow" />
+              <div className="sp-boc-actions-row">
+                <div className="sp-boc-action" onClick={() => handleOpenBrandModal(brand.id)}>
+                  <span>Configure &amp; Request Quote</span>
+                  <ArrowRight size={16} className="sp-boc-arrow" />
+                </div>
+                <button
+                  className={`sp-boc-cart-btn${isInInquiry(`spare-${brand.id}`) ? ' in-cart' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    addToInquiry({
+                      id: `spare-${brand.id}`,
+                      title: `${brand.name} Spare Parts`,
+                      category: 'Spare Parts',
+                      type: 'part',
+                      brand: brand.id,
+                      specSummary: brand.desc,
+                    });
+                  }}
+                  title={isInInquiry(`spare-${brand.id}`) ? 'Already in Cart' : 'Add to Cart'}
+                >
+                  <ShoppingCart size={15} />
+                  <span>{isInInquiry(`spare-${brand.id}`) ? 'In Cart' : 'Add to Cart'}</span>
+                </button>
               </div>
             </div>
           ))}

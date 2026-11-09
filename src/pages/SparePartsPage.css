@@ -279,6 +279,51 @@
   font-weight: 800;
   color: var(--primary-container, #54b435);
   transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.sp-boc-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 14px;
+  border-top: 1px solid var(--outline-variant, #e2e6e2);
+}
+
+.sp-boc-actions-row .sp-boc-action {
+  flex: 1;
+  padding-top: 0;
+  border-top: none;
+  margin: 0;
+}
+
+.sp-boc-cart-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #f1f5f9;
+  border: 1.5px solid #cbd5e1;
+  color: #374151;
+  border-radius: 7px;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  flex-shrink: 0;
+}
+
+.sp-boc-cart-btn:hover {
+  background: var(--primary-container, #1a56a0);
+  color: #fff;
+  border-color: var(--primary-container, #1a56a0);
+}
+
+.sp-boc-cart-btn.in-cart {
+  background: #dcfce7;
+  border-color: #16a34a;
+  color: #15803d;
 }
 
 .sp-boc-arrow {

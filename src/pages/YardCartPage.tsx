@@ -20,7 +20,7 @@ export const YardCartPage: React.FC<YardCartPageProps> = ({
   onOpenAuthModal,
   onNavigateToCatalog,
 }) => {
-  const { inquiryItems, removeFromInquiry, clearInquiry } = useInquiry();
+  const { inquiryItems, removeFromInquiry, clearInquiry, updateQuantity, getItemQuantity } = useInquiry();
   const { user, isAuthenticated, logout } = useAuth();
 
   // Tab: 'cart' (Fulfillment & Checkout) vs 'track' (Order Tracking)
@@ -297,13 +297,28 @@ export const YardCartPage: React.FC<YardCartPageProps> = ({
                               {item.specSummary && <span>• {item.specSummary}</span>}
                             </div>
                           </div>
-                          <button
-                            onClick={() => removeFromInquiry(item.id)}
-                            className="item-remove-btn"
-                            title="Remove from requisition"
-                          >
-                            <X size={16} />
-                          </button>
+                          <div className="item-qty-remove-row">
+                            <div className="item-qty-controls">
+                              <button
+                                className="item-qty-btn"
+                                onClick={() => updateQuantity(item.id, (getItemQuantity(item.id) || 1) - 1)}
+                                aria-label="Decrease quantity"
+                              >−</button>
+                              <span className="item-qty-value">{getItemQuantity(item.id) || 1}</span>
+                              <button
+                                className="item-qty-btn"
+                                onClick={() => updateQuantity(item.id, (getItemQuantity(item.id) || 1) + 1)}
+                                aria-label="Increase quantity"
+                              >+</button>
+                            </div>
+                            <button
+                              onClick={() => removeFromInquiry(item.id)}
+                              className="item-remove-btn"
+                              title="Remove from requisition"
+                            >
+                              <X size={16} />
+                            </button>
+                          </div>
                         </div>
                       ))}
 

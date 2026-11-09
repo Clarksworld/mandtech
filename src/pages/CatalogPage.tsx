@@ -182,10 +182,12 @@ const getDisplayCategory = (category: string, title: string) => {
 interface PartCardProps {
   prod: PartProduct;
   inInquiry: boolean;
+  qty: number;
   onAdd: () => void;
+  onUpdateQty: (newQty: number) => void;
 }
 
-const PartCard: React.FC<PartCardProps> = ({ prod, inInquiry, onAdd }) => {
+const PartCard: React.FC<PartCardProps> = ({ prod, inInquiry, qty, onAdd, onUpdateQty }) => {
   const displayBrand = prod.brand === 'Universal' ? 'UNIVERSAL' : prod.brand.toUpperCase();
   const displayCategory = getDisplayCategory(prod.category, prod.title);
 
@@ -210,24 +212,37 @@ const PartCard: React.FC<PartCardProps> = ({ prod, inInquiry, onAdd }) => {
           <span className="compat-value">{prod.compatibility}</span>
         </div>
         
-        <button
-          className="part-card-inquiry-btn"
-          onClick={onAdd}
-          style={{
-            background: inInquiry ? 'var(--deep-charcoal)' : 'var(--primary-container)',
-            color: '#ffffff'
-          }}
-        >
-          <ShoppingCart size={15} />
-          <span>{inInquiry ? '✓ In Inquiry Ticket' : 'Add to Inquiry'}</span>
-        </button>
+        {inInquiry ? (
+          <div className="part-card-qty-controls">
+            <button
+              className="qty-btn"
+              onClick={() => onUpdateQty(qty - 1)}
+              aria-label="Decrease quantity"
+            >−</button>
+            <span className="qty-display">{qty}</span>
+            <button
+              className="qty-btn"
+              onClick={() => onUpdateQty(qty + 1)}
+              aria-label="Increase quantity"
+            >+</button>
+            <span className="qty-in-cart-label">In Cart</span>
+          </div>
+        ) : (
+          <button
+            className="part-card-inquiry-btn"
+            onClick={onAdd}
+          >
+            <ShoppingCart size={15} />
+            <span>Add to Cart</span>
+          </button>
+        )}
       </div>
     </div>
   );
 };
 
 export const CatalogPage: React.FC = () => {
-  const { addToInquiry, isInInquiry, globalSearch } = useInquiry();
+  const { addToInquiry, isInInquiry, globalSearch, getItemQuantity, updateQuantity } = useInquiry();
 
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('All Components');
@@ -602,7 +617,9 @@ export const CatalogPage: React.FC = () => {
                   key={prod.id}
                   prod={prod}
                   inInquiry={isInInquiry(prod.id)}
+                  qty={getItemQuantity(prod.id)}
                   onAdd={() => handleAddInquiry(prod)}
+                  onUpdateQty={(newQty) => updateQuantity(prod.id, newQty)}
                 />
               ))}
             </div>

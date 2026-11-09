@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import {
-  ArrowRight, Sparkles, HelpCircle
+  ArrowRight, Sparkles, HelpCircle, ShoppingCart
 } from 'lucide-react';
 import CompressorQuoteModal, { type CompressorType, type CompressorBrand } from '../components/CompressorQuoteModal';
 import { BrandLogo } from '../components/BrandLogo';
+import { useInquiry } from '../context/InquiryContext';
 import './EquipmentSalesPage.css';
 
 // Assets
@@ -21,8 +22,7 @@ export default function EquipmentSalesPage({ initialType }: EquipmentSalesPagePr
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<CompressorType | null>(initialType || null);
   const [modalBrand, setModalBrand] = useState<CompressorBrand | null>(null);
-
-
+  const { addToInquiry, isInInquiry } = useInquiry();
   // Sync initialType from props if passed
   useEffect(() => {
     if (initialType) {
@@ -87,22 +87,39 @@ export default function EquipmentSalesPage({ initialType }: EquipmentSalesPagePr
           {/* Electric Card */}
           <div
             className="clean-type-card electric-card"
-            onClick={() => handleOpenModal('ELECTRIC AIR COMPRESSOR')}
             role="button"
             tabIndex={0}
           >
-            <div className="clean-card-img-box">
+            <div className="clean-card-img-box" onClick={() => handleOpenModal('ELECTRIC AIR COMPRESSOR')}>
               <img src={electricImg} alt="Electric Air Compressor" className="clean-card-img" />
             </div>
             <div className="clean-card-body">
-              <span className="clean-card-tag electric">STATIONARY INDUSTRIAL FLEET</span>
-              <h3 className="clean-card-title">ELECTRIC AIR COMPRESSOR</h3>
-              <p className="clean-card-desc">
+              <span className="clean-card-tag electric" onClick={() => handleOpenModal('ELECTRIC AIR COMPRESSOR')}>STATIONARY INDUSTRIAL FLEET</span>
+              <h3 className="clean-card-title" onClick={() => handleOpenModal('ELECTRIC AIR COMPRESSOR')}>ELECTRIC AIR COMPRESSOR</h3>
+              <p className="clean-card-desc" onClick={() => handleOpenModal('ELECTRIC AIR COMPRESSOR')}>
                 High-efficiency 400V 3-Phase rotary screw systems with variable speed drive (VSD).
               </p>
-              <div className="clean-card-action">
-                <span>Configure Electric Quote</span>
-                <ArrowRight size={14} />
+              <div className="clean-card-actions-row">
+                <div className="clean-card-action" onClick={() => handleOpenModal('ELECTRIC AIR COMPRESSOR')}>
+                  <span>Configure Electric Quote</span>
+                  <ArrowRight size={14} />
+                </div>
+                <button
+                  className={`equip-cart-btn${isInInquiry('equip-electric') ? ' in-cart' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    addToInquiry({
+                      id: 'equip-electric',
+                      title: 'Electric Air Compressor',
+                      category: 'Equipment Sales',
+                      type: 'equipment',
+                      specSummary: '400V 3-Phase Rotary Screw, VSD',
+                    });
+                  }}
+                >
+                  <ShoppingCart size={14} />
+                  <span>{isInInquiry('equip-electric') ? 'In Cart' : 'Add to Cart'}</span>
+                </button>
               </div>
             </div>
           </div>
@@ -110,22 +127,39 @@ export default function EquipmentSalesPage({ initialType }: EquipmentSalesPagePr
           {/* Diesel Card */}
           <div
             className="clean-type-card diesel-card"
-            onClick={() => handleOpenModal('DIESEL AIR COMPRESSOR')}
             role="button"
             tabIndex={0}
           >
-            <div className="clean-card-img-box">
+            <div className="clean-card-img-box" onClick={() => handleOpenModal('DIESEL AIR COMPRESSOR')}>
               <img src={dieselImg} alt="Diesel Air Compressor" className="clean-card-img" />
             </div>
             <div className="clean-card-body">
-              <span className="clean-card-tag diesel">PORTABLE FIELD FLEET</span>
-              <h3 className="clean-card-title">DIESEL AIR COMPRESSOR</h3>
-              <p className="clean-card-desc">
+              <span className="clean-card-tag diesel" onClick={() => handleOpenModal('DIESEL AIR COMPRESSOR')}>PORTABLE FIELD FLEET</span>
+              <h3 className="clean-card-title" onClick={() => handleOpenModal('DIESEL AIR COMPRESSOR')}>DIESEL AIR COMPRESSOR</h3>
+              <p className="clean-card-desc" onClick={() => handleOpenModal('DIESEL AIR COMPRESSOR')}>
                 Heavy-duty portable units with CAT, Cummins, or Deutz diesel engines for remote jobsites.
               </p>
-              <div className="clean-card-action diesel">
-                <span>Configure Diesel Quote</span>
-                <ArrowRight size={14} />
+              <div className="clean-card-actions-row">
+                <div className="clean-card-action diesel" onClick={() => handleOpenModal('DIESEL AIR COMPRESSOR')}>
+                  <span>Configure Diesel Quote</span>
+                  <ArrowRight size={14} />
+                </div>
+                <button
+                  className={`equip-cart-btn${isInInquiry('equip-diesel') ? ' in-cart' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    addToInquiry({
+                      id: 'equip-diesel',
+                      title: 'Diesel Air Compressor',
+                      category: 'Equipment Sales',
+                      type: 'equipment',
+                      specSummary: 'Portable, CAT/Cummins/Deutz Engine',
+                    });
+                  }}
+                >
+                  <ShoppingCart size={14} />
+                  <span>{isInInquiry('equip-diesel') ? 'In Cart' : 'Add to Cart'}</span>
+                </button>
               </div>
             </div>
           </div>
@@ -140,92 +174,57 @@ export default function EquipmentSalesPage({ initialType }: EquipmentSalesPagePr
         </div>
 
         <div className="clean-brands-grid">
-          {/* Atlas Copco */}
-          <div
-            className="clean-brand-card"
-            onClick={() => handleOpenModal(undefined, 'ATLAS COPCO')}
-            role="button"
-            tabIndex={0}
-          >
-            <div className="clean-brand-top">
-              <div className="clean-brand-icon">
-                <BrandLogo brand="ATLAS COPCO" size="sm" />
+          {[
+            { brand: 'ATLAS COPCO' as CompressorBrand, sub: 'GA / VSD+ Energy Recovery' },
+            { brand: 'SULLAIR' as CompressorBrand, sub: 'Bulletproof Rotary Screw' },
+            { brand: 'INGERSOLL RAND' as CompressorBrand, sub: 'Nirvana Series High CFM' },
+            { brand: 'DENAIR' as CompressorBrand, sub: 'Dual-Stage German Tech' },
+          ].map(({ brand, sub }) => (
+            <div
+              key={brand}
+              className="clean-brand-card"
+              role="button"
+              tabIndex={0}
+            >
+              <div className="clean-brand-top" onClick={() => handleOpenModal(undefined, brand)}>
+                <div className="clean-brand-icon">
+                  <BrandLogo brand={brand} size="sm" />
+                </div>
+              </div>
+              <h4 className="clean-brand-name" onClick={() => handleOpenModal(undefined, brand)}>{brand}</h4>
+              <span className="clean-brand-sub" onClick={() => handleOpenModal(undefined, brand)}>{sub}</span>
+              <div className="clean-brand-actions">
+                <div className="clean-brand-cta" onClick={() => handleOpenModal(undefined, brand)}>
+                  <span>Get Quote</span>
+                  <ArrowRight size={13} />
+                </div>
+                <button
+                  className={`equip-brand-cart-btn${isInInquiry(`equip-brand-${brand}`) ? ' in-cart' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    addToInquiry({
+                      id: `equip-brand-${brand}`,
+                      title: `${brand} Air Compressor`,
+                      category: 'Equipment Sales',
+                      type: 'equipment',
+                      brand,
+                      specSummary: sub,
+                    });
+                  }}
+                  title="Add to Cart"
+                >
+                  <ShoppingCart size={13} />
+                </button>
               </div>
             </div>
-            <h4 className="clean-brand-name">ATLAS COPCO</h4>
-            <span className="clean-brand-sub">GA / VSD+ Energy Recovery</span>
-            <div className="clean-brand-cta">
-              <span>Get Quote</span>
-              <ArrowRight size={13} />
-            </div>
-          </div>
-
-          {/* Sullair */}
-          <div
-            className="clean-brand-card"
-            onClick={() => handleOpenModal(undefined, 'SULLAIR')}
-            role="button"
-            tabIndex={0}
-          >
-            <div className="clean-brand-top">
-              <div className="clean-brand-icon">
-                <BrandLogo brand="SULLAIR" size="sm" />
-              </div>
-            </div>
-            <h4 className="clean-brand-name">SULLAIR</h4>
-            <span className="clean-brand-sub">Bulletproof Rotary Screw</span>
-            <div className="clean-brand-cta">
-              <span>Get Quote</span>
-              <ArrowRight size={13} />
-            </div>
-          </div>
-
-          {/* Ingersoll Rand */}
-          <div
-            className="clean-brand-card"
-            onClick={() => handleOpenModal(undefined, 'INGERSOLL RAND')}
-            role="button"
-            tabIndex={0}
-          >
-            <div className="clean-brand-top">
-              <div className="clean-brand-icon">
-                <BrandLogo brand="INGERSOLL RAND" size="sm" />
-              </div>
-            </div>
-            <h4 className="clean-brand-name">INGERSOLL RAND</h4>
-            <span className="clean-brand-sub">Nirvana Series High CFM</span>
-            <div className="clean-brand-cta">
-              <span>Get Quote</span>
-              <ArrowRight size={13} />
-            </div>
-          </div>
-
-          {/* Denair */}
-          <div
-            className="clean-brand-card"
-            onClick={() => handleOpenModal(undefined, 'DENAIR')}
-            role="button"
-            tabIndex={0}
-          >
-            <div className="clean-brand-top">
-              <div className="clean-brand-icon">
-                <BrandLogo brand="DENAIR" size="sm" />
-              </div>
-            </div>
-            <h4 className="clean-brand-name">DENAIR</h4>
-            <span className="clean-brand-sub">Dual-Stage German Tech</span>
-            <div className="clean-brand-cta">
-              <span>Get Quote</span>
-              <ArrowRight size={13} />
-            </div>
-          </div>
+          ))}
 
           {/* Others */}
           <div
             className="clean-brand-card"
-            onClick={() => handleOpenModal(undefined, 'OTHERS')}
             role="button"
             tabIndex={0}
+            onClick={() => handleOpenModal(undefined, 'OTHERS')}
           >
             <div className="clean-brand-top">
               <div className="clean-brand-icon">

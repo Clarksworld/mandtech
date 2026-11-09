@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { HelpCircle } from 'lucide-react';
+import { HelpCircle, ShoppingCart } from 'lucide-react';
 import LubricantsQuoteModal, { type LubricantBrand } from '../components/LubricantsQuoteModal';
 import { BrandLogo } from '../components/BrandLogo';
+import { useInquiry } from '../context/InquiryContext';
 import compressorHero from '../assets/compressor_hero.jpg';
 import './AfterSalesPage.css';
 
@@ -25,6 +26,7 @@ interface AfterSalesPageProps {
 export const AfterSalesPage: React.FC<AfterSalesPageProps> = ({ initialBrand }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedBrand, setSelectedBrand] = useState<LubricantBrand | null>(initialBrand || null);
+  const { addToInquiry, isInInquiry } = useInquiry();
 
   useEffect(() => {
     if (initialBrand) {
@@ -80,12 +82,26 @@ export const AfterSalesPage: React.FC<AfterSalesPageProps> = ({ initialBrand }) 
         {/* Staggered 3-2 brand grid */}
         <div className="lub-brands-row top-row">
           {BRANDS_LIST.slice(0, 3).map((brand) => (
-            <BrandCard key={brand.id} brand={brand} onSelect={handleOpenBrandModal} />
+            <BrandCard key={brand.id} brand={brand} onSelect={handleOpenBrandModal} onAddCart={(id) => addToInquiry({
+              id: `lub-${id}`,
+              title: `${id === 'OTHERS' ? 'Other Brand' : id} Lubricant`,
+              category: 'Lubricants',
+              type: 'part',
+              brand: id,
+              specSummary: 'Factory-approved synthetic compressor fluid',
+            })} inCart={isInInquiry(`lub-${brand.id}`)} />
           ))}
         </div>
         <div className="lub-brands-row bottom-row">
           {BRANDS_LIST.slice(3).map((brand) => (
-            <BrandCard key={brand.id} brand={brand} onSelect={handleOpenBrandModal} />
+            <BrandCard key={brand.id} brand={brand} onSelect={handleOpenBrandModal} onAddCart={(id) => addToInquiry({
+              id: `lub-${id}`,
+              title: `${id === 'OTHERS' ? 'Other Brand' : id} Lubricant`,
+              category: 'Lubricants',
+              type: 'part',
+              brand: id,
+              specSummary: 'Factory-approved synthetic compressor fluid',
+            })} inCart={isInInquiry(`lub-${brand.id}`)} />
           ))}
         </div>
       </section>
@@ -96,26 +112,44 @@ export const AfterSalesPage: React.FC<AfterSalesPageProps> = ({ initialBrand }) 
 function BrandCard({
   brand,
   onSelect,
+  onAddCart,
+  inCart,
 }: {
   brand: BrandInfo;
   onSelect: (id: LubricantBrand) => void;
+  onAddCart: (id: LubricantBrand) => void;
+  inCart: boolean;
 }) {
   return (
     <div
       className="lub-brand-card"
-      onClick={() => onSelect(brand.id)}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => e.key === 'Enter' && onSelect(brand.id)}
     >
-      <div className="lub-brand-icon-wrap">
+      <div className="lub-brand-icon-wrap" onClick={() => onSelect(brand.id)}>
         {brand.id === 'OTHERS' ? (
           <HelpCircle size={28} color="#64748b" />
         ) : (
           <BrandLogo brand={brand.id} size="md" />
         )}
       </div>
-      <span className="lub-brand-label">{brand.name}</span>
+      <span className="lub-brand-label" onClick={() => onSelect(brand.id)}>{brand.name}</span>
+      <div className="lub-brand-card-actions">
+        <button
+          className="lub-brand-quote-btn"
+          onClick={() => onSelect(brand.id)}
+        >
+          Request Quote
+        </button>
+        <button
+          className={`lub-brand-cart-btn${inCart ? ' in-cart' : ''}`}
+          onClick={(e) => { e.stopPropagation(); onAddCart(brand.id); }}
+          title={inCart ? 'Already in Cart' : 'Add to Cart'}
+        >
+          <ShoppingCart size={14} />
+          <span>{inCart ? 'In Cart' : 'Add to Cart'}</span>
+        </button>
+      </div>
     </div>
   );
 }
