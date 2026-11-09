@@ -11,10 +11,148 @@ import './LubricantsQuoteModal.css';
 
 export type LubricantBrand = 'ATLAS COPCO' | 'SULLAIR' | 'INGERSOLL RAND' | 'DENAIR' | 'OTHERS';
 
+export interface FluidGroup {
+  group?: string;
+  items: string[];
+}
+
+export interface BrandLubricantConfig {
+  tagline: string;
+  defaultFluid: string;
+  groups: FluidGroup[];
+}
+
+export const BRAND_LUBRICANTS: Record<LubricantBrand, BrandLubricantConfig> = {
+  'ATLAS COPCO': {
+    tagline: '12 Factory Engineered Formulations & Food-Grade Fluids',
+    defaultFluid: 'Roto Synthetic Fluid ULTRA',
+    groups: [
+      {
+        group: 'Atlas Copco Standard & Severe Duty Fluids',
+        items: [
+          'Roto Synthetic Fluid ULTRA',
+          'Roto XTEND Duty Fluid',
+          'Roto Z Fluid',
+          'Roto Inject Fluid NDURANCE',
+          'ParOil M',
+          'ParOil S',
+          'ParOil M Xtreme',
+          'ParOil S Xtreme',
+          'ParOil E',
+          'Roto H Plus',
+          'Roto Glide Green',
+        ],
+      },
+      {
+        group: 'Atlas Copco Food Grade Certified Fluids',
+        items: [
+          'Food Grade - Roto Synthetic Fluid ULTRA',
+          'Food Grade - Roto XTEND Duty Fluid',
+          'Food Grade - Roto Z Fluid',
+          'Food Grade - Roto Inject Fluid NDURANCE',
+        ],
+      },
+      {
+        group: 'Other',
+        items: ['Other Atlas Copco Fluid (Specify)'],
+      },
+    ],
+  },
+  'INGERSOLL RAND': {
+    tagline: 'OEM Ultra Coolants & Precision Rotary Synthetic Fluids',
+    defaultFluid: 'Ultra Coolant Synthetic Rotary Coolant',
+    groups: [
+      {
+        group: 'Ingersoll Rand Factory Coolants',
+        items: [
+          'Ultra Coolant Synthetic Rotary Coolant',
+          'Ultra Food Grade',
+          'Ultra 4k',
+          'Ultra Plus Coolant',
+          'Techtrol Gold CL',
+          'Techtrol Gold TL',
+        ],
+      },
+      {
+        group: 'Other',
+        items: ['Other Ingersoll Rand Fluid (Specify)'],
+      },
+    ],
+  },
+  'SULLAIR': {
+    tagline: 'Sullube Synthetic Coolants, SRF & 24KT Formulations',
+    defaultFluid: 'Sullube 32',
+    groups: [
+      {
+        group: 'Sullair Genuine Synthetic Fluids',
+        items: [
+          'Sullube 32',
+          'Sullube 60',
+          'SRF I/4000',
+          'SRF II/8000',
+          '24KT',
+          'AWF',
+          'Pristine FG',
+          'CCL',
+        ],
+      },
+      {
+        group: 'Other',
+        items: ['Other Sullair Fluid (Specify)'],
+      },
+    ],
+  },
+  'DENAIR': {
+    tagline: 'High-Performance Rotary Screw Lubricants',
+    defaultFluid: 'Denair Screw Compressor Fluid',
+    groups: [
+      {
+        group: 'Denair Specialized Fluids',
+        items: [
+          'Denair Screw Compressor Fluid',
+        ],
+      },
+      {
+        group: 'Other',
+        items: ['Other Denair Fluid (Specify)'],
+      },
+    ],
+  },
+  'OTHERS': {
+    tagline: 'Universal Synthetic, Mineral & High-Temperature Compressor Oils',
+    defaultFluid: 'Synthetic Rotary Screw Fluid (8,000h Rating)',
+    groups: [
+      {
+        group: 'Universal Synthetic & Mineral Formulations',
+        items: [
+          'Synthetic Rotary Screw Fluid (8,000h Rating)',
+          'OEM Genuine Factory Fluid',
+          'High-Temperature Synthetic Polyolester (POE)',
+          'Food-Grade H1 Certified Compressor Oil',
+          'Mineral-Based Compressor Break-In Oil',
+          'Heavy-Duty Hydraulic & Turbine Oil (ISO VG 32/46/68)',
+          'Flushing & Chemical Cleaning Fluid',
+        ],
+      },
+      {
+        group: 'Other',
+        items: ['Other / Custom Specification (Specify)'],
+      },
+    ],
+  },
+};
+
+export function getAllBrandFluids(brand: LubricantBrand): string[] {
+  const brandData = BRAND_LUBRICANTS[brand];
+  if (!brandData) return [];
+  return brandData.groups.flatMap((g) => g.items.filter((item) => !item.includes('Other')));
+}
+
 export interface LubricantsQuoteModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialBrand?: LubricantBrand | null;
+  initialFluid?: string | null;
 }
 
 export const LUBRICANT_BRANDS: {
@@ -32,13 +170,19 @@ export default function LubricantsQuoteModal({
   isOpen,
   onClose,
   initialBrand,
+  initialFluid,
 }: LubricantsQuoteModalProps) {
   const [selectedBrand, setSelectedBrand] = useState<LubricantBrand | null>(initialBrand || null);
   const [step, setStep] = useState<1 | 2 | 3>(initialBrand ? 2 : 1);
   const [customBrand, setCustomBrand] = useState('');
 
   // Form Fields
-  const [fluidType, setFluidType] = useState('Synthetic Rotary Screw Fluid (8,000h Rating)');
+  const [fluidType, setFluidType] = useState(
+    initialFluid ||
+      (initialBrand && BRAND_LUBRICANTS[initialBrand]?.defaultFluid) ||
+      'Roto Synthetic Fluid ULTRA'
+  );
+  const [customFluid, setCustomFluid] = useState('');
   const [volume, setVolume] = useState('20 Litre Pail');
   const [companyName, setCompanyName] = useState('');
   const [contactName, setContactName] = useState('');
@@ -62,19 +206,27 @@ export default function LubricantsQuoteModal({
       if (initialBrand) {
         setSelectedBrand(initialBrand);
         setStep(initialBrand === 'OTHERS' ? 1 : 2);
+        setFluidType(
+          initialFluid ||
+            BRAND_LUBRICANTS[initialBrand]?.defaultFluid ||
+            'Roto Synthetic Fluid ULTRA'
+        );
       } else {
         setSelectedBrand(null);
         setStep(1);
       }
       setCustomBrand('');
+      setCustomFluid('');
       setSubmitError(null);
     }
-  }, [isOpen, initialBrand]);
+  }, [isOpen, initialBrand, initialFluid]);
 
   if (!isOpen) return null;
 
   const handleSelectBrand = (brand: LubricantBrand) => {
     setSelectedBrand(brand);
+    setFluidType(BRAND_LUBRICANTS[brand]?.defaultFluid || 'Other');
+    setCustomFluid('');
     if (brand === 'OTHERS') {
       setCustomBrand('');
       // Stay on step 1 to show the custom brand input
@@ -85,12 +237,21 @@ export default function LubricantsQuoteModal({
 
   const effectiveBrand = selectedBrand === 'OTHERS' ? customBrand.trim() : (selectedBrand ?? '');
 
+  const isCustomFluidSelected = fluidType.includes('Other') || fluidType.includes('Specify');
+  const effectiveFluidType = isCustomFluidSelected
+    ? (customFluid.trim() ? `Other: ${customFluid.trim()}` : fluidType)
+    : fluidType;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedBrand) return;
 
     if (selectedBrand === 'OTHERS' && !customBrand.trim()) {
       setSubmitError('Please specify the lubricant brand you need.');
+      return;
+    }
+    if (isCustomFluidSelected && !customFluid.trim()) {
+      setSubmitError('Please specify the exact fluid name, viscosity, or part number.');
       return;
     }
     if (!contactName.trim()) {
@@ -116,7 +277,7 @@ export default function LubricantsQuoteModal({
     try {
       const res = await submitLubricantRequest({
         brand: effectiveBrand || selectedBrand,
-        fluid_type: fluidType,
+        fluid_type: effectiveFluidType,
         volume,
         hub,
         company_name: companyName.trim(),
@@ -132,7 +293,7 @@ export default function LubricantsQuoteModal({
       setSuccessTicket({
         id: ticketRef,
         brand: effectiveBrand || selectedBrand,
-        fluidType,
+        fluidType: effectiveFluidType,
         volume,
         hub,
       });
@@ -149,6 +310,7 @@ export default function LubricantsQuoteModal({
     setStep(1);
     setSelectedBrand(null);
     setCustomBrand('');
+    setCustomFluid('');
     setCompanyName('');
     setContactName('');
     setEmail('');
@@ -273,14 +435,44 @@ export default function LubricantsQuoteModal({
                     value={fluidType}
                     onChange={(e) => setFluidType(e.target.value)}
                   >
-                    <option value="Synthetic Rotary Screw Fluid (8,000h Rating)">Synthetic Rotary Screw Fluid (8,000h Rating)</option>
-                    <option value="OEM Genuine Factory Fluid (Roto-Inject / Sullube / Ultra Coolant)">OEM Genuine Factory Fluid (Roto-Inject / Sullube / Ultra Coolant)</option>
-                    <option value="High-Temperature Synthetic Polyolester (POE)">High-Temperature Synthetic Polyolester (POE)</option>
-                    <option value="Food-Grade H1 Certified Compressor Oil">Food-Grade H1 Certified Compressor Oil</option>
-                    <option value="Mineral-Based Compressor Break-In Oil">Mineral-Based Compressor Break-In Oil</option>
-                    <option value="Heavy-Duty Hydraulic & Turbine Oil (ISO VG 32/46/68)">Heavy-Duty Hydraulic &amp; Turbine Oil (ISO VG 32/46/68)</option>
-                    <option value="Flushing & Chemical Cleaning Fluid">Flushing &amp; Chemical Cleaning Fluid</option>
+                    {selectedBrand && BRAND_LUBRICANTS[selectedBrand] ? (
+                      BRAND_LUBRICANTS[selectedBrand].groups.map((grp, gIdx) => (
+                        <optgroup key={gIdx} label={grp.group || 'Available Fluids'}>
+                          {grp.items.map((item, iIdx) => (
+                            <option key={iIdx} value={item}>
+                              {item}
+                            </option>
+                          ))}
+                        </optgroup>
+                      ))
+                    ) : (
+                      <>
+                        <option value="Synthetic Rotary Screw Fluid (8,000h Rating)">Synthetic Rotary Screw Fluid (8,000h Rating)</option>
+                        <option value="OEM Genuine Factory Fluid">OEM Genuine Factory Fluid</option>
+                        <option value="High-Temperature Synthetic Polyolester (POE)">High-Temperature Synthetic Polyolester (POE)</option>
+                        <option value="Food-Grade H1 Certified Compressor Oil">Food-Grade H1 Certified Compressor Oil</option>
+                        <option value="Other">Other Specification</option>
+                      </>
+                    )}
                   </select>
+
+                  {/* Conditional input when Other/Specify is selected */}
+                  {isCustomFluidSelected && (
+                    <div style={{ marginTop: '10px' }}>
+                      <label className="lub-field-label" style={{ fontSize: '12px', color: '#166534' }}>
+                        Specify Fluid Name / Viscosity Grade / Part Number <span className="req">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        className="lub-input"
+                        placeholder="e.g. Atlas Copco 2901 0522 00, Sullair 250022-669, ISO VG 46/68..."
+                        value={customFluid}
+                        onChange={(e) => setCustomFluid(e.target.value)}
+                        required
+                        autoFocus
+                      />
+                    </div>
+                  )}
                 </div>
 
                 {/* Packaging Volume */}

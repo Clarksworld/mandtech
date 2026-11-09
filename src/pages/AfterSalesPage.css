@@ -273,3 +273,455 @@
   border-color: #16a34a;
   color: #15803d;
 }
+
+/* ── Hero Quote Button ────────────────────────────────────── */
+.lub-btn-hero-quote {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--primary-container, #54b435);
+  color: #ffffff;
+  padding: 13px 24px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 18px rgba(84, 180, 53, 0.35);
+}
+
+.lub-btn-hero-quote:hover {
+  background: #449d29;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px rgba(84, 180, 53, 0.45);
+}
+
+/* ── 5-Column Brand Grid ─────────────────────────────────── */
+.lub-brands-grid-5 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.lub-brand-card {
+  width: auto;
+  min-height: 270px;
+  padding: 20px 16px 18px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  transition: all 0.22s ease;
+  cursor: pointer;
+}
+
+.lub-brand-card:hover {
+  border-color: var(--primary-container, #54b435);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(84, 180, 53, 0.12);
+}
+
+.lub-brand-card.active-brand-card {
+  border-color: var(--primary-container, #54b435);
+  background: #fcfdfc;
+  box-shadow: 0 0 0 2px var(--primary-container, #54b435), 0 10px 25px rgba(84, 180, 53, 0.14);
+}
+
+.lub-brand-top-row {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.lub-brand-badge {
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--primary-container, #54b435);
+  background: rgba(84, 180, 53, 0.1);
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+
+.lub-brand-snippet {
+  font-size: 11.5px;
+  color: #64748b;
+  line-height: 1.45;
+  margin: 6px 0 14px;
+  flex: 1;
+}
+
+.lub-brand-explore-btn {
+  width: 100%;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  border-radius: 7px;
+  padding: 6px 10px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.lub-brand-explore-btn:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+/* ── Interactive Catalog Section ─────────────────────────── */
+.lub-catalog-section {
+  background: #f8fafc;
+  padding: 64px 0 80px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.lub-catalog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.lub-catalog-title {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--deep-charcoal, #121412);
+  margin: 6px 0 8px;
+}
+
+.lub-catalog-desc {
+  font-size: 14.5px;
+  color: #64748b;
+  max-width: 580px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Tabs Bar */
+.lub-tabs-bar {
+  display: flex;
+  gap: 8px;
+  background: #ffffff;
+  padding: 5px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  flex-wrap: wrap;
+}
+
+.lub-tab-pill {
+  border: none;
+  background: transparent;
+  padding: 8px 16px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.lub-tab-pill:hover {
+  color: #1e293b;
+  background: #f1f5f9;
+}
+
+.lub-tab-pill.active {
+  background: var(--primary-container, #54b435);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(84, 180, 53, 0.28);
+}
+
+/* ── Fluid Groups & Cards ────────────────────────────────── */
+.lub-groups-container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.lub-fluid-group-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.lub-group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+  border-bottom: 1.5px solid #f1f5f9;
+}
+
+.lub-group-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lub-group-icon {
+  color: var(--primary-container, #54b435);
+}
+
+.lub-group-heading {
+  font-size: 17px;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 0;
+}
+
+.lub-group-count {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+/* Fluids Grid */
+.lub-fluids-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 18px;
+}
+
+.lub-item-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1.5px solid #edf2f7;
+  border-radius: 10px;
+  padding: 18px;
+  background: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.lub-item-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
+}
+
+.lub-item-card.food-grade-card {
+  border-color: #bbf7d0;
+  background: #fcfdfc;
+}
+
+.lub-item-badge-row {
+  margin-bottom: 8px;
+}
+
+.lub-item-badge {
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  padding: 3px 7px;
+  border-radius: 4px;
+  display: inline-block;
+  text-transform: uppercase;
+}
+
+.lub-item-badge.factory {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.lub-item-badge.food-grade {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.lub-item-badge.custom {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.lub-item-name {
+  font-size: 15px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 6px;
+  line-height: 1.35;
+}
+
+.lub-item-sub {
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0 0 14px;
+}
+
+.lub-item-specs-bar {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  padding-top: 10px;
+  border-top: 1px dashed #e2e8f0;
+}
+
+.lub-spec-chip {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #475569;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+.lub-item-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.lub-item-quote-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: transparent;
+  border: 1.5px solid var(--primary-container, #54b435);
+  color: var(--primary-container, #54b435);
+  border-radius: 7px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.lub-item-quote-btn:hover {
+  background: var(--primary-container, #54b435);
+  color: #ffffff;
+}
+
+.lub-item-cart-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: #f1f5f9;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+  border-radius: 7px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.lub-item-cart-btn:hover {
+  background: #334155;
+  color: #ffffff;
+  border-color: #334155;
+}
+
+.lub-item-cart-btn.in-cart {
+  background: #dcfce7;
+  border-color: #16a34a;
+  color: #15803d;
+}
+
+/* ── Support & Testing Banner ────────────────────────────── */
+.lub-support-banner {
+  margin-top: 40px;
+  background: #111827;
+  border-radius: 12px;
+  padding: 24px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  color: #ffffff;
+  flex-wrap: wrap;
+}
+
+.lub-support-text {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  max-width: 720px;
+}
+
+.lub-sparkle-icon {
+  color: #54b435;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.lub-support-text h4 {
+  font-size: 16px;
+  font-weight: 800;
+  margin: 0 0 6px;
+  color: #f8fafc;
+}
+
+.lub-support-text p {
+  font-size: 13px;
+  color: #94a3b8;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.lub-btn-support {
+  background: #54b435;
+  border: none;
+  color: #ffffff;
+  padding: 11px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+
+.lub-btn-support:hover {
+  background: #449d29;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .lub-brands-grid-5 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .lub-brands-grid-5 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .lub-fluids-grid {
+    grid-template-columns: 1fr;
+  }
+  .lub-support-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .lub-brands-grid-5 {
+    grid-template-columns: 1fr;
+  }
+}
