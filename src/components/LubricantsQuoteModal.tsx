@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   X, ArrowLeft, ArrowRight,
   Phone, Mail, Building, CheckCircle2, RotateCcw,
-  AlertCircle, Package, MapPin, HelpCircle
+  AlertCircle, Package, MapPin, HelpCircle, Droplets
 } from 'lucide-react';
 import { BrandLogo } from './BrandLogo';
 import { MandtechLogo } from './Logo';
@@ -166,23 +166,22 @@ export const LUBRICANT_BRANDS: {
   { id: 'OTHERS', name: 'OTHERS' },
 ];
 
+// Steps: 1=Brand Selection, 2=Fluid Selection, 3=Quotation Form, 4=Success
+type Step = 1 | 2 | 3 | 4;
+
 export default function LubricantsQuoteModal({
   isOpen,
   onClose,
   initialBrand,
   initialFluid,
 }: LubricantsQuoteModalProps) {
+  const [step, setStep] = useState<Step>(1);
   const [selectedBrand, setSelectedBrand] = useState<LubricantBrand | null>(initialBrand || null);
-  const [step, setStep] = useState<1 | 2 | 3>(initialBrand ? 2 : 1);
+  const [selectedFluid, setSelectedFluid] = useState<string | null>(initialFluid || null);
   const [customBrand, setCustomBrand] = useState('');
+  const [customFluid, setCustomFluid] = useState('');
 
   // Form Fields
-  const [fluidType, setFluidType] = useState(
-    initialFluid ||
-      (initialBrand && BRAND_LUBRICANTS[initialBrand]?.defaultFluid) ||
-      'Roto Synthetic Fluid ULTRA'
-  );
-  const [customFluid, setCustomFluid] = useState('');
   const [volume, setVolume] = useState('20 Litre Pail');
   const [companyName, setCompanyName] = useState('');
   const [contactName, setContactName] = useState('');
@@ -203,21 +202,23 @@ export default function LubricantsQuoteModal({
 
   useEffect(() => {
     if (isOpen) {
-      if (initialBrand) {
+      if (initialBrand && initialFluid) {
         setSelectedBrand(initialBrand);
+        setSelectedFluid(initialFluid);
+        setStep(3);
+      } else if (initialBrand) {
+        setSelectedBrand(initialBrand);
+        setSelectedFluid(null);
         setStep(initialBrand === 'OTHERS' ? 1 : 2);
-        setFluidType(
-          initialFluid ||
-            BRAND_LUBRICANTS[initialBrand]?.defaultFluid ||
-            'Roto Synthetic Fluid ULTRA'
-        );
       } else {
         setSelectedBrand(null);
+        setSelectedFluid(null);
         setStep(1);
       }
       setCustomBrand('');
       setCustomFluid('');
       setSubmitError(null);
+      setSuccessTicket(null);
     }
   }, [isOpen, initialBrand, initialFluid]);
 
@@ -225,22 +226,43 @@ export default function LubricantsQuoteModal({
 
   const handleSelectBrand = (brand: LubricantBrand) => {
     setSelectedBrand(brand);
-    setFluidType(BRAND_LUBRICANTS[brand]?.defaultFluid || 'Other');
+    setSelectedFluid(null);
     setCustomFluid('');
     if (brand === 'OTHERS') {
       setCustomBrand('');
-      // Stay on step 1 to show the custom brand input
+      // Stay on step 1 to show custom brand input
     } else {
       setStep(2);
     }
   };
 
-  const effectiveBrand = selectedBrand === 'OTHERS' ? customBrand.trim() : (selectedBrand ?? '');
+  const handleSelectFluid = (fluid: string) => {
+    if (fluid.includes('Other') || fluid.includes('Specify')) {
+      setSelectedFluid(fluid);
+      // Wait for custom text input in step 2
+    } else {
+      setSelectedFluid(fluid);
+      setStep(3);
+    }
+  };
 
-  const isCustomFluidSelected = fluidType.includes('Other') || fluidType.includes('Specify');
-  const effectiveFluidType = isCustomFluidSelected
-    ? (customFluid.trim() ? `Other: ${customFluid.trim()}` : fluidType)
-    : fluidType;
+  const handleCustomFluidContinue = () => {
+    if (customFluid.trim()) {
+      setSelectedFluid(`Other: ${customFluid.trim()}`);
+      setStep(3);
+    }
+  };
+
+  const effectiveBrand = selectedBrand === 'OTHERS' ? customBrand.trim() : (selectedBrand ?? '');
+  const effectiveFluid = selectedFluid?.startsWith('Other:')
+    ? selectedFluid
+    : selectedFluid === 'Other Atlas Copco Fluid (Specify)' ||
+      selectedFluid === 'Other Ingersoll Rand Fluid (Specify)' ||
+      selectedFluid === 'Other Sullair Fluid (Specify)' ||
+      selectedFluid === 'Other Denair Fluid (Specify)' ||
+      selectedFluid === 'Other / Custom Specification (Specify)'
+    ? (customFluid.trim() ? `Other: ${customFluid.trim()}` : selectedFluid)
+    : (selectedFluid || 'Standard Synthetic Fluid');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -250,8 +272,8 @@ export default function LubricantsQuoteModal({
       setSubmitError('Please specify the lubricant brand you need.');
       return;
     }
-    if (isCustomFluidSelected && !customFluid.trim()) {
-      setSubmitError('Please specify the exact fluid name, viscosity, or part number.');
+    if (!selectedFluid) {
+      setSubmitError('Please select a fluid formulation.');
       return;
     }
     if (!contactName.trim()) {
@@ -263,7 +285,7 @@ export default function LubricantsQuoteModal({
       return;
     }
     if (!email.trim() || !email.includes('@')) {
-      setSubmitError('Valid business email address is required.');
+      setSubmitError('Valid corporate email address is required.');
       return;
     }
     if (!phone.trim()) {
@@ -277,7 +299,7 @@ export default function LubricantsQuoteModal({
     try {
       const res = await submitLubricantRequest({
         brand: effectiveBrand || selectedBrand,
-        fluid_type: effectiveFluidType,
+        fluid_type: effectiveFluid,
         volume,
         hub,
         company_name: companyName.trim(),
@@ -293,12 +315,12 @@ export default function LubricantsQuoteModal({
       setSuccessTicket({
         id: ticketRef,
         brand: effectiveBrand || selectedBrand,
-        fluidType: effectiveFluidType,
+        fluidType: effectiveFluid,
         volume,
         hub,
       });
 
-      setStep(3);
+      setStep(4);
     } catch (err: any) {
       setSubmitError(err.message || 'Failed to submit quotation request. Please try again.');
     } finally {
@@ -309,6 +331,7 @@ export default function LubricantsQuoteModal({
   const resetForm = () => {
     setStep(1);
     setSelectedBrand(null);
+    setSelectedFluid(null);
     setCustomBrand('');
     setCustomFluid('');
     setCompanyName('');
@@ -320,6 +343,8 @@ export default function LubricantsQuoteModal({
     setSubmitError(null);
   };
 
+  const currentBrandConfig = selectedBrand ? BRAND_LUBRICANTS[selectedBrand] : null;
+
   return (
     <div className="lub-modal-overlay" onClick={onClose}>
       <div className="lub-modal-box" onClick={(e) => e.stopPropagation()}>
@@ -328,9 +353,10 @@ export default function LubricantsQuoteModal({
           <div>
             <span className="lub-modal-badge">MANDTECH INDUSTRIAL FLUIDS</span>
             <h2 className="lub-modal-heading">
-              {step === 1 && 'Select Lubricant Brand'}
-              {step === 2 && 'Request Lubricant Quotation'}
-              {step === 3 && 'Quotation Request Submitted'}
+              {step === 1 && 'Select Equipment Manufacturer'}
+              {step === 2 && `${selectedBrand === 'OTHERS' ? customBrand || 'Special Fluids' : selectedBrand} — Select Formulation`}
+              {step === 3 && 'Request Quotation Details'}
+              {step === 4 && 'Quotation Request Registered'}
             </h2>
           </div>
           <button className="lub-close-btn" onClick={onClose} aria-label="Close">
@@ -338,17 +364,42 @@ export default function LubricantsQuoteModal({
           </button>
         </div>
 
+        {/* Step Progress Stepper Bar */}
+        {step < 4 && (
+          <div className="lub-modal-stepper">
+            <div className={`lub-stepper-step ${step >= 1 ? 'is-active' : ''} ${step > 1 ? 'is-done' : ''}`}>
+              <span className="lub-stepper-num">1</span>
+              <span className="lub-stepper-text">Manufacturer</span>
+            </div>
+            <div className="lub-stepper-line" />
+            <div className={`lub-stepper-step ${step >= 2 ? 'is-active' : ''} ${step > 2 ? 'is-done' : ''}`}>
+              <span className="lub-stepper-num">2</span>
+              <span className="lub-stepper-text">Formulation</span>
+            </div>
+            <div className="lub-stepper-line" />
+            <div className={`lub-stepper-step ${step >= 3 ? 'is-active' : ''}`}>
+              <span className="lub-stepper-num">3</span>
+              <span className="lub-stepper-text">Details &amp; Quote</span>
+            </div>
+          </div>
+        )}
+
         {/* Modal Body */}
         <div className="lub-modal-body">
           {/* STEP 1: Select Brand */}
           {step === 1 && (
-            <div>
+            <div className="lub-step-panel">
+              <p className="lub-step-prompt">
+                Select your compressor manufacturer to view factory-approved synthetic lubricants and fluids:
+              </p>
               <div className="lub-brands-grid">
                 {LUBRICANT_BRANDS.map((b) => (
                   <div
                     key={b.id}
                     className={`lub-brand-card ${selectedBrand === b.id ? 'lub-brand-card--selected' : ''}`}
                     onClick={() => handleSelectBrand(b.id)}
+                    role="button"
+                    tabIndex={0}
                   >
                     <div className="lub-brand-logo-box">
                       {b.id === 'OTHERS' ? (
@@ -369,12 +420,12 @@ export default function LubricantsQuoteModal({
               {selectedBrand === 'OTHERS' && (
                 <div className="lub-others-input-wrap">
                   <label className="lub-others-label">
-                    Please specify the compressor brand / lubricant type you need:
+                    Please specify the compressor brand / lubricant manufacturer: <span className="req">*</span>
                   </label>
                   <input
                     type="text"
                     className="lub-others-input"
-                    placeholder="e.g. Kaeser, CompAir, Hitachi, Kaishan, or generic mineral oil..."
+                    placeholder="e.g. Kaeser, CompAir, Gardner Denver, Quincy..."
                     value={customBrand}
                     onChange={(e) => setCustomBrand(e.target.value)}
                     autoFocus
@@ -385,16 +436,16 @@ export default function LubricantsQuoteModal({
                     disabled={!customBrand.trim()}
                     onClick={() => { if (customBrand.trim()) setStep(2); }}
                   >
-                    Continue <ArrowRight size={15} />
+                    Continue to Formulations <ArrowRight size={15} />
                   </button>
                 </div>
               )}
             </div>
           )}
 
-          {/* STEP 2: Request For Quote Form */}
+          {/* STEP 2: Fluid Type Selection (The Multiple Modal Step!) */}
           {step === 2 && selectedBrand && (
-            <form onSubmit={handleSubmit} className="lub-form">
+            <div className="lub-step-panel">
               {/* Selected Brand Quick Bar */}
               <div className="lub-selected-bar">
                 <div className="lub-selected-info">
@@ -417,6 +468,114 @@ export default function LubricantsQuoteModal({
                 </button>
               </div>
 
+              <p className="lub-step-prompt">
+                Select the certified fluid formulation or cooling lubricant required:
+              </p>
+
+              {/* Formulations by Category */}
+              <div className="lub-fluids-select-container">
+                {currentBrandConfig?.groups.map((group, gIdx) => (
+                  <div key={gIdx} className="lub-modal-fluid-group">
+                    <h4 className="lub-mfg-title">{group.group || 'Available Formulations'}</h4>
+                    <div className="lub-mfg-grid">
+                      {group.items.map((item, iIdx) => {
+                        const isFoodGrade = item.includes('Food Grade') || item.includes('FG');
+                        const isOther = item.includes('Other') || item.includes('Specify');
+                        const isSelected = selectedFluid === item;
+
+                        return (
+                          <div
+                            key={iIdx}
+                            className={`lub-fluid-choice-card ${isSelected ? 'is-selected' : ''} ${isFoodGrade ? 'is-food-grade' : ''}`}
+                            onClick={() => handleSelectFluid(item)}
+                            role="button"
+                            tabIndex={0}
+                          >
+                            <div className="lub-fcc-icon">
+                              <Droplets size={16} />
+                            </div>
+                            <div className="lub-fcc-content">
+                              <div className="lub-fcc-top">
+                                {isFoodGrade && <span className="lub-fcc-badge food-grade">H1 Food Grade</span>}
+                                {isOther && <span className="lub-fcc-badge custom">Custom Spec</span>}
+                              </div>
+                              <span className="lub-fcc-title">{item}</span>
+                            </div>
+                            <ArrowRight size={15} className="lub-fcc-arrow" />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Custom Fluid Input when "Other" option is active */}
+              {selectedFluid && (selectedFluid.includes('Other') || selectedFluid.includes('Specify')) && (
+                <div className="lub-custom-fluid-box">
+                  <label className="lub-others-label">
+                    Specify the exact fluid grade, viscosity, or OEM part number: <span className="req">*</span>
+                  </label>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <input
+                      type="text"
+                      className="lub-others-input"
+                      placeholder="e.g. Atlas Copco 2901 0522 00, Sullair 250022-669, ISO VG 46/68..."
+                      value={customFluid}
+                      onChange={(e) => setCustomFluid(e.target.value)}
+                      autoFocus
+                    />
+                    <button
+                      type="button"
+                      className="lub-others-continue-btn"
+                      disabled={!customFluid.trim()}
+                      onClick={handleCustomFluidContinue}
+                    >
+                      Continue <ArrowRight size={15} />
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Bottom Nav Bar */}
+              <div className="lub-modal-nav-bar">
+                <button
+                  type="button"
+                  className="lub-btn-back"
+                  onClick={() => setStep(1)}
+                >
+                  <ArrowLeft size={16} />
+                  <span>Back to Manufacturers</span>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 3: Request For Quote Form */}
+          {step === 3 && selectedBrand && (
+            <form onSubmit={handleSubmit} className="lub-step-panel">
+              {/* Locked Selection Banner */}
+              <div className="lub-locked-selection-banner">
+                <div className="lub-locked-col">
+                  <span className="lub-locked-label">Manufacturer</span>
+                  <span className="lub-locked-val">
+                    {selectedBrand === 'OTHERS' ? customBrand : selectedBrand}
+                  </span>
+                </div>
+                <div className="lub-locked-sep" />
+                <div className="lub-locked-col" style={{ flex: 2 }}>
+                  <span className="lub-locked-label">Formulation / Fluid</span>
+                  <span className="lub-locked-val">{effectiveFluid}</span>
+                </div>
+                <button
+                  type="button"
+                  className="lub-locked-change"
+                  onClick={() => setStep(2)}
+                >
+                  Change Fluid
+                </button>
+              </div>
+
               {submitError && (
                 <div className="lub-error-banner">
                   <AlertCircle size={16} />
@@ -425,56 +584,6 @@ export default function LubricantsQuoteModal({
               )}
 
               <div className="lub-form-grid">
-                {/* Fluid Type / Grade */}
-                <div className="lub-field">
-                  <label className="lub-field-label">
-                    Fluid Specification / Grade <span className="req">*</span>
-                  </label>
-                  <select
-                    className="lub-select"
-                    value={fluidType}
-                    onChange={(e) => setFluidType(e.target.value)}
-                  >
-                    {selectedBrand && BRAND_LUBRICANTS[selectedBrand] ? (
-                      BRAND_LUBRICANTS[selectedBrand].groups.map((grp, gIdx) => (
-                        <optgroup key={gIdx} label={grp.group || 'Available Fluids'}>
-                          {grp.items.map((item, iIdx) => (
-                            <option key={iIdx} value={item}>
-                              {item}
-                            </option>
-                          ))}
-                        </optgroup>
-                      ))
-                    ) : (
-                      <>
-                        <option value="Synthetic Rotary Screw Fluid (8,000h Rating)">Synthetic Rotary Screw Fluid (8,000h Rating)</option>
-                        <option value="OEM Genuine Factory Fluid">OEM Genuine Factory Fluid</option>
-                        <option value="High-Temperature Synthetic Polyolester (POE)">High-Temperature Synthetic Polyolester (POE)</option>
-                        <option value="Food-Grade H1 Certified Compressor Oil">Food-Grade H1 Certified Compressor Oil</option>
-                        <option value="Other">Other Specification</option>
-                      </>
-                    )}
-                  </select>
-
-                  {/* Conditional input when Other/Specify is selected */}
-                  {isCustomFluidSelected && (
-                    <div style={{ marginTop: '10px' }}>
-                      <label className="lub-field-label" style={{ fontSize: '12px', color: '#166534' }}>
-                        Specify Fluid Name / Viscosity Grade / Part Number <span className="req">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        className="lub-input"
-                        placeholder="e.g. Atlas Copco 2901 0522 00, Sullair 250022-669, ISO VG 46/68..."
-                        value={customFluid}
-                        onChange={(e) => setCustomFluid(e.target.value)}
-                        required
-                        autoFocus
-                      />
-                    </div>
-                  )}
-                </div>
-
                 {/* Packaging Volume */}
                 <div className="lub-field">
                   <label className="lub-field-label">
@@ -493,21 +602,6 @@ export default function LubricantsQuoteModal({
                   </select>
                 </div>
 
-                {/* Contact Person */}
-                <div className="lub-field">
-                  <label className="lub-field-label">
-                    Contact Person Name <span className="req">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    className="lub-input"
-                    placeholder="e.g. Engr. Michael Okon"
-                    value={contactName}
-                    onChange={(e) => setContactName(e.target.value)}
-                    required
-                  />
-                </div>
-
                 {/* Company Name */}
                 <div className="lub-field">
                   <label className="lub-field-label">
@@ -519,6 +613,21 @@ export default function LubricantsQuoteModal({
                     placeholder="e.g. Niger Delta Gas &amp; Refining"
                     value={companyName}
                     onChange={(e) => setCompanyName(e.target.value)}
+                    required
+                  />
+                </div>
+
+                {/* Contact Person */}
+                <div className="lub-field">
+                  <label className="lub-field-label">
+                    Contact Person Name <span className="req">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    className="lub-input"
+                    placeholder="e.g. Engr. Michael Okon"
+                    value={contactName}
+                    onChange={(e) => setContactName(e.target.value)}
                     required
                   />
                 </div>
@@ -552,34 +661,34 @@ export default function LubricantsQuoteModal({
                     required
                   />
                 </div>
-              </div>
 
-              {/* Delivery Hub */}
-              <div className="lub-field" style={{ marginTop: '14px' }}>
-                <label className="lub-field-label">
-                  <MapPin size={14} /> Mobilization Yard / Delivery Hub
-                </label>
-                <select
-                  className="lub-select"
-                  value={hub}
-                  onChange={(e) => setHub(e.target.value)}
-                >
-                  <option value="Port Harcourt HQ (Elelenwo Ops Yard)">Port Harcourt HQ (Elelenwo Ops Yard)</option>
-                  <option value="Lagos Hub (16 Oshuketan Street)">Lagos Hub (16 Oshuketan Street)</option>
-                  <option value="Abuja Hub (Camp David Garden Estate, Karsana)">Abuja Hub (Camp David Garden Estate, Karsana)</option>
-                  <option value="Direct Site Delivery (Nationwide)">Direct Site Delivery (Nationwide)</option>
-                </select>
+                {/* Delivery Hub */}
+                <div className="lub-field">
+                  <label className="lub-field-label">
+                    <MapPin size={14} /> Mobilization Yard / Delivery Hub
+                  </label>
+                  <select
+                    className="lub-select"
+                    value={hub}
+                    onChange={(e) => setHub(e.target.value)}
+                  >
+                    <option value="Port Harcourt HQ (Elelenwo Ops Yard)">Port Harcourt HQ (Elelenwo Ops Yard)</option>
+                    <option value="Lagos Hub (16 Oshuketan Street)">Lagos Hub (16 Oshuketan Street)</option>
+                    <option value="Abuja Hub (Camp David Garden Estate, Karsana)">Abuja Hub (Camp David Garden Estate, Karsana)</option>
+                    <option value="Direct Site Delivery (Nationwide)">Direct Site Delivery (Nationwide)</option>
+                  </select>
+                </div>
               </div>
 
               {/* Notes */}
               <div className="lub-field" style={{ marginTop: '14px' }}>
                 <label className="lub-field-label">
-                  Compressor Model or Specific Part Number (Optional)
+                  Compressor Model or Specific Operating Conditions (Optional)
                 </label>
                 <textarea
                   className="lub-textarea"
                   rows={2}
-                  placeholder="e.g. Sullair 3700 / Atlas Copco GA75, Part # 2901 0522 00, or require MSDS &amp; certificate of analysis..."
+                  placeholder="e.g. Operating on GA75 VSD+, ambient temperature ~38°C, or require MSDS and Certificate of Analysis..."
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                 />
@@ -590,10 +699,10 @@ export default function LubricantsQuoteModal({
                 <button
                   type="button"
                   className="lub-btn-back"
-                  onClick={() => setStep(1)}
+                  onClick={() => setStep(2)}
                   disabled={isSubmitting}
                 >
-                  <ArrowLeft size={16} /> Select Brand
+                  <ArrowLeft size={16} /> Back to Formulations
                 </button>
                 <button
                   type="submit"
@@ -607,8 +716,8 @@ export default function LubricantsQuoteModal({
             </form>
           )}
 
-          {/* STEP 3: Success Screen */}
-          {step === 3 && successTicket && (
+          {/* STEP 4: Success Screen */}
+          {step === 4 && successTicket && (
             <div className="lub-success-view">
               <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '14px' }}>
                 <MandtechLogo height={32} />
@@ -616,9 +725,9 @@ export default function LubricantsQuoteModal({
               <div className="lub-success-icon-wrap">
                 <CheckCircle2 size={52} className="lub-check-icon" />
               </div>
-              <h3 className="lub-success-heading">Quotation Request Received</h3>
+              <h3 className="lub-success-heading">Quotation Request Registered</h3>
               <p className="lub-success-text">
-                Your request for <strong>{successTicket.brand}</strong> lubricants has been logged. Our fluids specialist will send formal pricing and delivery ETA within 2 hours.
+                Your request for <strong>{successTicket.brand}</strong> (<em>{successTicket.fluidType}</em>) has been logged. Our fluids specialist will send formal pricing and delivery ETA within 2 hours.
               </p>
 
               <div className="lub-ticket-box">
@@ -627,11 +736,11 @@ export default function LubricantsQuoteModal({
                   <strong>{successTicket.id}</strong>
                 </div>
                 <div className="lub-ticket-row">
-                  <span>Brand:</span>
+                  <span>Manufacturer:</span>
                   <strong>{successTicket.brand}</strong>
                 </div>
                 <div className="lub-ticket-row">
-                  <span>Fluid Grade:</span>
+                  <span>Formulation:</span>
                   <strong>{successTicket.fluidType}</strong>
                 </div>
                 <div className="lub-ticket-row">
@@ -644,35 +753,20 @@ export default function LubricantsQuoteModal({
                 </div>
               </div>
 
-              <div className="lub-hotlines-row">
-                <div>
-                  <span>Port-Harcourt HQ</span>
-                  <a href="tel:08064204187">08064204187</a>
-                </div>
-                <div>
-                  <span>Lagos Branch</span>
-                  <a href="tel:08027779298">08027779298</a>
-                </div>
-                <div>
-                  <span>Abuja Operations</span>
-                  <a href="tel:08067980479">08067980479</a>
-                </div>
-              </div>
-
               <div className="lub-success-actions">
                 <button
                   type="button"
-                  className="lub-btn-reset"
+                  className="lub-btn-new-request"
                   onClick={resetForm}
                 >
-                  <RotateCcw size={15} /> Request Another Grade
+                  <RotateCcw size={16} /> Request Another Formulation
                 </button>
                 <button
                   type="button"
-                  className="lub-btn-done"
+                  className="lub-btn-close-final"
                   onClick={onClose}
                 >
-                  Done
+                  Close Window
                 </button>
               </div>
             </div>
