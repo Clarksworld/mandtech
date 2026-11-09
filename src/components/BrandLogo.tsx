@@ -1,7 +1,7 @@
 import React from 'react';
 import atlasCopcoLogo from '../assets/atlas_copco.svg';
 import sullairLogo from '../assets/sullair.svg';
-import ingersollRandLogo from '../assets/ingersoll_rand.svg';
+import ingersollRandLogo from '../assets/ingersoll_rand_logo.jpg';
 import denairLogo from '../assets/denair.png';
 import { HelpCircle } from 'lucide-react';
 import './BrandLogo.css';
