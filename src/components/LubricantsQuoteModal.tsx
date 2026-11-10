@@ -227,7 +227,7 @@ export default function LubricantsQuoteModal({
           setSelectedFluids([initialFluid]);
           setStep(3);
         } else {
-          setSelectedFluids([BRAND_LUBRICANTS[initialBrand]?.defaultFluid || '']);
+          setSelectedFluids([]);
           setStep(initialBrand === 'OTHERS' ? 1 : 2);
         }
       } else {
@@ -249,8 +249,7 @@ export default function LubricantsQuoteModal({
     setSelectedBrand(brand);
     setIsFoodGradeExpanded(false);
     setIsFoodGradeHovered(false);
-    const defFluid = BRAND_LUBRICANTS[brand]?.defaultFluid;
-    setSelectedFluids(defFluid ? [defFluid] : []);
+    setSelectedFluids([]);
     setCustomFluid('');
     if (brand === 'OTHERS') {
       setCustomBrand('');

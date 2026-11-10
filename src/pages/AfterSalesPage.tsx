@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { HelpCircle, ArrowRight, ShoppingCart } from 'lucide-react';
+import { HelpCircle, ArrowRight } from 'lucide-react';
 import LubricantsQuoteModal, {
   type LubricantBrand,
 } from '../components/LubricantsQuoteModal';
 import { BrandLogo } from '../components/BrandLogo';
-import { useInquiry } from '../context/InquiryContext';
 import compressorHero from '../assets/compressor_hero.jpg';
 import './AfterSalesPage.css';
 
@@ -57,8 +56,6 @@ export const AfterSalesPage: React.FC<AfterSalesPageProps> = ({ initialBrand }) 
   const [selectedBrand, setSelectedBrand] = useState<LubricantBrand | null>(initialBrand || null);
   const [selectedFluid, setSelectedFluid] = useState<string | null>(null);
 
-  const { addToInquiry, isInInquiry } = useInquiry();
-
   useEffect(() => {
     if (initialBrand) {
       setSelectedBrand(initialBrand);
@@ -70,18 +67,6 @@ export const AfterSalesPage: React.FC<AfterSalesPageProps> = ({ initialBrand }) 
     setSelectedBrand(brand);
     setSelectedFluid(fluid || null);
     setModalOpen(true);
-  };
-
-  const handleAddToCart = (brand: LubricantBrand) => {
-    const itemId = `lub-${brand.toLowerCase().replace(/\s+/g, '-')}-general`;
-    addToInquiry({
-      id: itemId,
-      title: `${brand === 'OTHERS' ? 'Custom / Universal' : brand} Certified Lubricant`,
-      category: 'Lubricants',
-      type: 'part',
-      brand: brand,
-      specSummary: 'Packaging: 20L Pail / 209L Drum • Factory Certified Lubricant',
-    });
   };
 
   return (
@@ -139,44 +124,26 @@ export const AfterSalesPage: React.FC<AfterSalesPageProps> = ({ initialBrand }) 
           </div>
 
           <div className="capabilities-grid lub-brands-capabilities-grid">
-            {BRANDS_LIST.map((brand) => {
-              const inCart = isInInquiry(`lub-${brand.id.toLowerCase().replace(/\s+/g, '-')}-general`);
-              return (
-                <div
-                  key={brand.id}
-                  className="capability-card lub-brand-capability-card"
-                  onClick={() => handleOpenBrandModal(brand.id)}
-                  role="button"
-                  tabIndex={0}
-                >
-                  <div className="card-icon-wrapper lub-brand-icon-wrapper">
-                    {brand.id === 'OTHERS' ? (
-                      <HelpCircle size={28} color="#64748b" />
-                    ) : (
-                      <BrandLogo brand={brand.id} size="md" />
-                    )}
-                  </div>
-
-                  <h3 className="card-title">{brand.name}</h3>
-                  <p className="card-desc">{brand.desc}</p>
-
-                  <div className="lub-card-bottom-actions centered">
-                    <button
-                      type="button"
-                      className={`lub-card-cart-btn ${inCart ? 'in-cart' : ''}`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleAddToCart(brand.id);
-                      }}
-                      title={inCart ? 'Added to Yard Cart' : 'Quick Add to Yard Cart'}
-                    >
-                      <ShoppingCart size={14} />
-                      <span>{inCart ? 'In Cart' : 'Add to Cart'}</span>
-                    </button>
-                  </div>
+            {BRANDS_LIST.map((brand) => (
+              <div
+                key={brand.id}
+                className="capability-card lub-brand-capability-card"
+                onClick={() => handleOpenBrandModal(brand.id)}
+                role="button"
+                tabIndex={0}
+              >
+                <div className="card-icon-wrapper lub-brand-icon-wrapper">
+                  {brand.id === 'OTHERS' ? (
+                    <HelpCircle size={28} color="#64748b" />
+                  ) : (
+                    <BrandLogo brand={brand.id} size="md" />
+                  )}
                 </div>
-              );
-            })}
+
+                <h3 className="card-title">{brand.name}</h3>
+                <p className="card-desc">{brand.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

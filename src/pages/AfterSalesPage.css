@@ -154,7 +154,7 @@
   background-color: #ffffff !important;
   border: 1.5px solid #e2e8f0 !important;
   border-radius: 12px;
-  padding: 36px 24px 28px;
+  padding: 38px 24px 34px;
   cursor: pointer;
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
@@ -200,7 +200,7 @@
   font-size: 19px;
   font-weight: 800;
   color: var(--deep-charcoal, #121412);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   text-align: center;
 }
 
@@ -208,47 +208,9 @@
   font-size: 14px;
   color: var(--on-surface-muted, #6b7280);
   line-height: 1.55;
-  margin-bottom: 24px;
+  margin-bottom: 0;
   flex-grow: 1;
   text-align: center;
-}
-
-.lub-card-bottom-actions.centered {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  margin-top: auto;
-  padding-top: 18px;
-  border-top: 1px solid #f1f5f9;
-}
-
-.lub-card-cart-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: #f8fafc;
-  border: 1px solid #cbd5e1;
-  color: #334155;
-  border-radius: 6px;
-  padding: 7px 16px;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  white-space: nowrap;
-}
-
-.lub-card-cart-btn:hover {
-  background: #0f172a;
-  color: #ffffff;
-  border-color: #0f172a;
-}
-
-.lub-card-cart-btn.in-cart {
-  background: #dcfce7;
-  border-color: #16a34a;
-  color: #15803d;
 }
 
 @media (max-width: 900px) {
@@ -268,10 +230,5 @@
 
   .capabilities-title {
     font-size: 26px;
-  }
-
-  .lub-card-cart-btn {
-    width: 100%;
-    justify-content: center;
   }
 }

@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
-import { ArrowRight, HelpCircle, ShoppingCart } from 'lucide-react';
+import { ArrowRight, HelpCircle } from 'lucide-react';
 import SparePartsQuoteModal, {
   type SparePartsBrand,
 } from '../components/SparePartsQuoteModal';
 import { BrandLogo } from '../components/BrandLogo';
-import { useInquiry } from '../context/InquiryContext';
 import './SparePartsPage.css';
 import compressorHero from '../assets/compressor_hero.jpg';
 
@@ -49,7 +48,6 @@ const BRANDS_LIST: BrandCardInfo[] = [
 export default function SparePartsPage({ initialBrand }: SparePartsPageProps) {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedBrand, setSelectedBrand] = useState<SparePartsBrand | null>(initialBrand || null);
-  const { addToInquiry, isInInquiry } = useInquiry();
 
   useEffect(() => {
     if (initialBrand) {
@@ -146,24 +144,6 @@ export default function SparePartsPage({ initialBrand }: SparePartsPageProps) {
                   <span>Configure &amp; Request Quote</span>
                   <ArrowRight size={16} className="sp-boc-arrow" />
                 </div>
-                <button
-                  className={`sp-boc-cart-btn${isInInquiry(`spare-${brand.id}`) ? ' in-cart' : ''}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    addToInquiry({
-                      id: `spare-${brand.id}`,
-                      title: `${brand.name} Spare Parts`,
-                      category: 'Spare Parts',
-                      type: 'part',
-                      brand: brand.id,
-                      specSummary: brand.desc,
-                    });
-                  }}
-                  title={isInInquiry(`spare-${brand.id}`) ? 'Already in Cart' : 'Add to Cart'}
-                >
-                  <ShoppingCart size={15} />
-                  <span>{isInInquiry(`spare-${brand.id}`) ? 'In Cart' : 'Add to Cart'}</span>
-                </button>
               </div>
             </div>
           ))}
