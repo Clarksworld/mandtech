@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { HelpCircle, ShoppingCart, ArrowRight, Droplets, Sparkles } from 'lucide-react';
+import {
+  HelpCircle, ShoppingCart, ArrowRight, Droplets, Sparkles,
+  CheckSquare, Square, CheckCircle2
+} from 'lucide-react';
 import LubricantsQuoteModal, {
   type LubricantBrand,
   BRAND_LUBRICANTS
@@ -57,7 +60,12 @@ export const AfterSalesPage: React.FC<AfterSalesPageProps> = ({ initialBrand }) 
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedBrand, setSelectedBrand] = useState<LubricantBrand | null>(initialBrand || null);
   const [selectedFluid, setSelectedFluid] = useState<string | null>(null);
+  const [selectedFluidsForQuote, setSelectedFluidsForQuote] = useState<string[]>([]);
   const [activeCatalogBrand, setActiveCatalogBrand] = useState<LubricantBrand>(initialBrand || 'ATLAS COPCO');
+
+  // Multi-selection state for current brand catalog
+  const [selectedFluids, setSelectedFluids] = useState<string[]>([]);
+  const [bulkCartNotice, setBulkCartNotice] = useState<string | null>(null);
 
   const { addToInquiry, isInInquiry } = useInquiry();
 
@@ -69,9 +77,25 @@ export const AfterSalesPage: React.FC<AfterSalesPageProps> = ({ initialBrand }) 
     }
   }, [initialBrand]);
 
+  // Reset selected fluids when switching brand tab
+  const handleTabSwitch = (brand: LubricantBrand) => {
+    setActiveCatalogBrand(brand);
+    setSelectedFluids([]);
+    setBulkCartNotice(null);
+  };
+
   const handleOpenBrandModal = (brand: LubricantBrand, fluid?: string) => {
     setSelectedBrand(brand);
     setSelectedFluid(fluid || null);
+    setSelectedFluidsForQuote(fluid ? [fluid] : []);
+    setModalOpen(true);
+  };
+
+  const handleOpenMultiQuoteModal = (brand: LubricantBrand) => {
+    if (selectedFluids.length === 0) return;
+    setSelectedBrand(brand);
+    setSelectedFluid(null);
+    setSelectedFluidsForQuote(selectedFluids);
     setModalOpen(true);
   };
 
@@ -87,7 +111,40 @@ export const AfterSalesPage: React.FC<AfterSalesPageProps> = ({ initialBrand }) 
     });
   };
 
+  // Toggle single fluid selection
+  const handleToggleSelectFluid = (fluidName: string) => {
+    setSelectedFluids((prev) =>
+      prev.includes(fluidName)
+        ? prev.filter((f) => f !== fluidName)
+        : [...prev, fluidName]
+    );
+  };
+
+  // Select all / deselect all for active brand
   const activeConfig = BRAND_LUBRICANTS[activeCatalogBrand];
+  const allBrandItems = activeConfig
+    ? activeConfig.groups.flatMap((g) => g.items.filter((item) => !item.includes('Other')))
+    : [];
+  const areAllBrandItemsSelected =
+    allBrandItems.length > 0 && allBrandItems.every((item) => selectedFluids.includes(item));
+
+  const handleToggleSelectAll = () => {
+    if (areAllBrandItemsSelected) {
+      setSelectedFluids([]);
+    } else {
+      setSelectedFluids(allBrandItems);
+    }
+  };
+
+  // Bulk Add to Cart
+  const handleBulkAddToCart = () => {
+    if (selectedFluids.length === 0) return;
+    selectedFluids.forEach((fluidName) => {
+      handleAddToCart(activeCatalogBrand, fluidName);
+    });
+    setBulkCartNotice(`Successfully added ${selectedFluids.length} formulation(s) to your Yard Cart!`);
+    setTimeout(() => setBulkCartNotice(null), 3500);
+  };
 
   return (
     <div className="lub-page">
@@ -97,9 +154,11 @@ export const AfterSalesPage: React.FC<AfterSalesPageProps> = ({ initialBrand }) 
         onClose={() => {
           setModalOpen(false);
           setSelectedFluid(null);
+          setSelectedFluidsForQuote([]);
         }}
         initialBrand={selectedBrand}
         initialFluid={selectedFluid}
+        initialFluids={selectedFluidsForQuote}
       />
 
       {/* Hero Section */}
@@ -151,12 +210,12 @@ export const AfterSalesPage: React.FC<AfterSalesPageProps> = ({ initialBrand }) 
                 className={`lub-brand-card ${isSelected ? 'active-brand-card' : ''}`}
                 role="button"
                 tabIndex={0}
-                onClick={() => setActiveCatalogBrand(brand.id)}
+                onClick={() => handleTabSwitch(brand.id)}
               >
                 <div className="lub-brand-top-row">
                   <span className="lub-brand-badge">{brand.badge}</span>
                 </div>
-                <div className="lub-brand-icon-wrap" onClick={(e) => { e.stopPropagation(); setActiveCatalogBrand(brand.id); }}>
+                <div className="lub-brand-icon-wrap" onClick={(e) => { e.stopPropagation(); handleTabSwitch(brand.id); }}>
                   {brand.id === 'OTHERS' ? (
                     <HelpCircle size={28} color="#64748b" />
                   ) : (
@@ -181,7 +240,7 @@ export const AfterSalesPage: React.FC<AfterSalesPageProps> = ({ initialBrand }) 
                     className="lub-brand-explore-btn"
                     onClick={(e) => {
                       e.stopPropagation();
-                      setActiveCatalogBrand(brand.id);
+                      handleTabSwitch(brand.id);
                     }}
                   >
                     <span>View Formulations</span>
@@ -193,14 +252,14 @@ export const AfterSalesPage: React.FC<AfterSalesPageProps> = ({ initialBrand }) 
         </div>
       </section>
 
-      {/* Interactive Certified Fluids Catalog */}
+      {/* Interactive Certified Fluids List & Multi-Select Catalog */}
       <section className="lub-catalog-section">
         <div className="container">
           <div className="lub-catalog-header">
             <div>
               <span className="lub-sub-tag">CERTIFIED FLUID FORMULATIONS</span>
               <h2 className="lub-catalog-title">
-                {activeCatalogBrand === 'OTHERS' ? 'Universal & Custom' : activeCatalogBrand} Fluids Catalog
+                {activeCatalogBrand === 'OTHERS' ? 'Universal & Custom' : activeCatalogBrand} Fluids List
               </h2>
               <p className="lub-catalog-desc">
                 {activeConfig?.tagline || 'Factory-tested synthetic fluids for guaranteed operational life and thermal stability.'}
@@ -213,7 +272,7 @@ export const AfterSalesPage: React.FC<AfterSalesPageProps> = ({ initialBrand }) 
                 <button
                   key={b.id}
                   className={`lub-tab-pill ${activeCatalogBrand === b.id ? 'active' : ''}`}
-                  onClick={() => setActiveCatalogBrand(b.id)}
+                  onClick={() => handleTabSwitch(b.id)}
                 >
                   {b.name}
                 </button>
@@ -221,73 +280,168 @@ export const AfterSalesPage: React.FC<AfterSalesPageProps> = ({ initialBrand }) 
             </div>
           </div>
 
-          {/* Grouped Fluids Lists */}
-          <div className="lub-groups-container">
+          {/* Sticky / Dedicated Multi-Selection Action Toolbar */}
+          <div className="lub-page-list-toolbar">
+            <div className="lub-plt-left">
+              <button
+                type="button"
+                className="lub-plt-select-all"
+                onClick={handleToggleSelectAll}
+              >
+                {areAllBrandItemsSelected ? (
+                  <CheckSquare size={17} className="text-green-600" />
+                ) : (
+                  <Square size={17} className="text-gray-400" />
+                )}
+                <span>
+                  {areAllBrandItemsSelected
+                    ? 'Deselect All'
+                    : `Select All Formulations (${allBrandItems.length})`}
+                </span>
+              </button>
+              {selectedFluids.length > 0 && (
+                <span className="lub-plt-counter">
+                  <strong>{selectedFluids.length}</strong> formulation{selectedFluids.length === 1 ? '' : 's'} selected
+                </span>
+              )}
+            </div>
+
+            <div className="lub-plt-right">
+              <button
+                type="button"
+                className="lub-plt-cart-btn"
+                disabled={selectedFluids.length === 0}
+                onClick={handleBulkAddToCart}
+                title="Add all checked fluids to your Yard Cart"
+              >
+                <ShoppingCart size={15} />
+                <span>Add Selected to Cart ({selectedFluids.length})</span>
+              </button>
+
+              <button
+                type="button"
+                className="lub-plt-quote-btn"
+                disabled={selectedFluids.length === 0}
+                onClick={() => handleOpenMultiQuoteModal(activeCatalogBrand)}
+                title="Request official corporate quote for all selected formulations"
+              >
+                <span>Request Quote for Selected ({selectedFluids.length})</span>
+                <ArrowRight size={15} />
+              </button>
+            </div>
+          </div>
+
+          {/* Cart Feedback Toast Banner */}
+          {bulkCartNotice && (
+            <div className="lub-cart-toast-banner" style={{ marginBottom: '18px' }}>
+              <CheckCircle2 size={17} color="#15803d" />
+              <span>{bulkCartNotice}</span>
+            </div>
+          )}
+
+          {/* Smooth Item List by Category */}
+          <div className="lub-list-container">
             {activeConfig?.groups.map((group, gIdx) => (
-              <div key={gIdx} className="lub-fluid-group-card">
-                <div className="lub-group-header">
-                  <div className="lub-group-title-wrap">
-                    <Droplets size={18} className="lub-group-icon" />
-                    <h3 className="lub-group-heading">{group.group || 'Available Formulations'}</h3>
+              <div key={gIdx} className="lub-list-group-block">
+                <div className="lub-group-title-row">
+                  <div className="lub-group-title-left">
+                    <Droplets size={17} className="lub-group-droplet" />
+                    <h3 className="lub-group-heading-text">{group.group || 'Available Formulations'}</h3>
                   </div>
-                  <span className="lub-group-count">{group.items.length} Options</span>
+                  <span className="lub-group-items-badge">{group.items.length} Formulations</span>
                 </div>
 
-                <div className="lub-fluids-grid">
+                <div className="lub-list-table">
                   {group.items.map((item, iIdx) => {
                     const isOther = item.includes('Other') || item.includes('Specify');
                     const isFoodGrade = item.includes('Food Grade') || item.includes('FG');
+                    const isChecked = selectedFluids.includes(item);
                     const itemId = `lub-${activeCatalogBrand.toLowerCase().replace(/\s+/g, '-')}-${item.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
                     const inCart = isInInquiry(itemId);
 
                     return (
-                      <div key={iIdx} className={`lub-item-card ${isFoodGrade ? 'food-grade-card' : ''}`}>
-                        <div className="lub-item-header">
-                          <div className="lub-item-badge-row">
+                      <div
+                        key={iIdx}
+                        className={`lub-table-row ${isChecked ? 'row-is-selected' : ''} ${isFoodGrade ? 'row-is-food-grade' : ''}`}
+                        onClick={() => {
+                          if (!isOther) handleToggleSelectFluid(item);
+                        }}
+                      >
+                        {/* Checkbox column */}
+                        <div className="lub-col-check" onClick={(e) => e.stopPropagation()}>
+                          {!isOther ? (
+                            <button
+                              type="button"
+                              className="lub-row-check-btn"
+                              onClick={() => handleToggleSelectFluid(item)}
+                              aria-label={`Select ${item}`}
+                            >
+                              {isChecked ? (
+                                <CheckSquare size={19} className="check-box-active" />
+                              ) : (
+                                <Square size={19} className="check-box-idle" />
+                              )}
+                            </button>
+                          ) : (
+                            <span className="lub-custom-bullet">•</span>
+                          )}
+                        </div>
+
+                        {/* S/N or Index */}
+                        <div className="lub-col-num">
+                          <span>{String(iIdx + 1).padStart(2, '0')}</span>
+                        </div>
+
+                        {/* Fluid Info & Badges */}
+                        <div className="lub-col-info">
+                          <div className="lub-col-name-row">
+                            <span className="lub-fluid-title">{item}</span>
                             {isFoodGrade ? (
-                              <span className="lub-item-badge food-grade">H1 FOOD GRADE CERTIFIED</span>
+                              <span className="lub-badge-tag food-grade">H1 FOOD GRADE</span>
                             ) : isOther ? (
-                              <span className="lub-item-badge custom">CUSTOM FORMULATION</span>
+                              <span className="lub-badge-tag custom">CUSTOM SPECIFICATION</span>
                             ) : (
-                              <span className="lub-item-badge factory">OEM FACTORY RATED</span>
+                              <span className="lub-badge-tag factory">FACTORY CERTIFIED</span>
                             )}
                           </div>
-                          <h4 className="lub-item-name">{item}</h4>
-                          <p className="lub-item-sub">
+                          <p className="lub-fluid-desc">
                             {isFoodGrade
-                              ? 'NSF H1 registered non-toxic synthetic lubricant for food packaging & pharma processing lines.'
+                              ? 'NSF H1 non-toxic synthetic lubricant engineered for food, beverage & pharmaceutical plants.'
                               : isOther
-                              ? 'Specify your OEM part number, viscosity grade (ISO VG 32/46/68), or operating temperature range.'
-                              : 'High-thermal stability synthetic rotary compressor fluid. Extended 4,000h – 8,000h operating life.'}
+                              ? 'Specify custom viscosity grade, high-pressure rating, or OEM cross-reference part number.'
+                              : 'High thermal-stability synthetic rotary screw fluid. Formulated for extended 4,000h – 8,000h drain intervals.'}
                           </p>
                         </div>
 
-                        <div className="lub-item-specs-bar">
-                          <span className="lub-spec-chip">20L Pail</span>
-                          <span className="lub-spec-chip">209L Drum</span>
-                          <span className="lub-spec-chip">1,000L Tote</span>
+                        {/* Packaging options */}
+                        <div className="lub-col-packaging">
+                          <span className="lub-pack-chip">20L Pail</span>
+                          <span className="lub-pack-chip">209L Drum</span>
+                          <span className="lub-pack-chip">1,000L Tote</span>
                         </div>
 
-                        <div className="lub-item-actions">
-                          <button
-                            type="button"
-                            className="lub-item-quote-btn"
-                            onClick={() => handleOpenBrandModal(activeCatalogBrand, item)}
-                          >
-                            <span>Request Quote</span>
-                            <ArrowRight size={14} />
-                          </button>
+                        {/* Quick Action Buttons */}
+                        <div className="lub-col-actions" onClick={(e) => e.stopPropagation()}>
                           {!isOther && (
                             <button
                               type="button"
-                              className={`lub-item-cart-btn ${inCart ? 'in-cart' : ''}`}
+                              className={`lub-row-cart-btn ${inCart ? 'in-cart' : ''}`}
                               onClick={() => handleAddToCart(activeCatalogBrand, item)}
-                              title={inCart ? 'In Yard Cart' : 'Add to Yard Cart'}
+                              title={inCart ? 'Item in Yard Cart' : 'Add formulation to Yard Cart'}
                             >
                               <ShoppingCart size={14} />
                               <span>{inCart ? 'In Cart' : 'Add to Cart'}</span>
                             </button>
                           )}
+                          <button
+                            type="button"
+                            className="lub-row-quote-btn"
+                            onClick={() => handleOpenBrandModal(activeCatalogBrand, item)}
+                            title="Request quotation for this formulation"
+                          >
+                            <span>Quote</span>
+                            <ArrowRight size={13} />
+                          </button>
                         </div>
                       </div>
                     );
@@ -297,7 +451,7 @@ export const AfterSalesPage: React.FC<AfterSalesPageProps> = ({ initialBrand }) 
             ))}
           </div>
 
-          {/* Sourcing / Assistance Footer */}
+          {/* Sourcing / Technical Lab Testing Banner */}
           <div className="lub-support-banner">
             <div className="lub-support-text">
               <Sparkles size={22} className="lub-sparkle-icon" />

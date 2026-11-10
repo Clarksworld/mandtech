@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import {
   X, ArrowLeft, ArrowRight,
   Phone, Mail, Building, CheckCircle2, RotateCcw,
-  AlertCircle, Package, MapPin, HelpCircle, Droplets
+  AlertCircle, Package, MapPin, HelpCircle,
+  ShoppingCart, CheckSquare, Square
 } from 'lucide-react';
 import { BrandLogo } from './BrandLogo';
 import { MandtechLogo } from './Logo';
 import { submitLubricantRequest } from '../services/api';
+import { useInquiry } from '../context/InquiryContext';
 import './LubricantsQuoteModal.css';
 
 export type LubricantBrand = 'ATLAS COPCO' | 'SULLAIR' | 'INGERSOLL RAND' | 'DENAIR' | 'OTHERS';
@@ -153,6 +155,7 @@ export interface LubricantsQuoteModalProps {
   onClose: () => void;
   initialBrand?: LubricantBrand | null;
   initialFluid?: string | null;
+  initialFluids?: string[] | null;
 }
 
 export const LUBRICANT_BRANDS: {
@@ -174,10 +177,11 @@ export default function LubricantsQuoteModal({
   onClose,
   initialBrand,
   initialFluid,
+  initialFluids,
 }: LubricantsQuoteModalProps) {
   const [step, setStep] = useState<Step>(1);
   const [selectedBrand, setSelectedBrand] = useState<LubricantBrand | null>(initialBrand || null);
-  const [selectedFluid, setSelectedFluid] = useState<string | null>(initialFluid || null);
+  const [selectedFluids, setSelectedFluids] = useState<string[]>([]);
   const [customBrand, setCustomBrand] = useState('');
   const [customFluid, setCustomFluid] = useState('');
 
@@ -192,6 +196,7 @@ export default function LubricantsQuoteModal({
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [cartFeedback, setCartFeedback] = useState<string | null>(null);
   const [successTicket, setSuccessTicket] = useState<{
     id: string;
     brand: string;
@@ -200,69 +205,93 @@ export default function LubricantsQuoteModal({
     hub: string;
   } | null>(null);
 
+  const { addToInquiry } = useInquiry();
+
   useEffect(() => {
     if (isOpen) {
-      if (initialBrand && initialFluid) {
+      if (initialBrand) {
         setSelectedBrand(initialBrand);
-        setSelectedFluid(initialFluid);
-        setStep(3);
-      } else if (initialBrand) {
-        setSelectedBrand(initialBrand);
-        setSelectedFluid(null);
-        setStep(initialBrand === 'OTHERS' ? 1 : 2);
+        if (initialFluids && initialFluids.length > 0) {
+          setSelectedFluids(initialFluids);
+          setStep(3);
+        } else if (initialFluid) {
+          setSelectedFluids([initialFluid]);
+          setStep(3);
+        } else {
+          setSelectedFluids([BRAND_LUBRICANTS[initialBrand]?.defaultFluid || '']);
+          setStep(initialBrand === 'OTHERS' ? 1 : 2);
+        }
       } else {
         setSelectedBrand(null);
-        setSelectedFluid(null);
+        setSelectedFluids([]);
         setStep(1);
       }
       setCustomBrand('');
       setCustomFluid('');
       setSubmitError(null);
+      setCartFeedback(null);
       setSuccessTicket(null);
     }
-  }, [isOpen, initialBrand, initialFluid]);
+  }, [isOpen, initialBrand, initialFluid, initialFluids]);
 
   if (!isOpen) return null;
 
   const handleSelectBrand = (brand: LubricantBrand) => {
     setSelectedBrand(brand);
-    setSelectedFluid(null);
+    const defFluid = BRAND_LUBRICANTS[brand]?.defaultFluid;
+    setSelectedFluids(defFluid ? [defFluid] : []);
     setCustomFluid('');
     if (brand === 'OTHERS') {
       setCustomBrand('');
-      // Stay on step 1 to show custom brand input
     } else {
       setStep(2);
     }
   };
 
-  const handleSelectFluid = (fluid: string) => {
-    if (fluid.includes('Other') || fluid.includes('Specify')) {
-      setSelectedFluid(fluid);
-      // Wait for custom text input in step 2
+  const toggleFluid = (fluid: string) => {
+    setSelectedFluids((prev) =>
+      prev.includes(fluid) ? prev.filter((f) => f !== fluid) : [...prev, fluid]
+    );
+  };
+
+  const handleSelectAll = (allFluids: string[]) => {
+    const isAllSelected = allFluids.every((f) => selectedFluids.includes(f));
+    if (isAllSelected) {
+      setSelectedFluids([]);
     } else {
-      setSelectedFluid(fluid);
-      setStep(3);
+      setSelectedFluids(allFluids);
     }
   };
 
-  const handleCustomFluidContinue = () => {
+  const handleAddCustomFluid = () => {
     if (customFluid.trim()) {
-      setSelectedFluid(`Other: ${customFluid.trim()}`);
-      setStep(3);
+      const formatted = `Other: ${customFluid.trim()}`;
+      if (!selectedFluids.includes(formatted)) {
+        setSelectedFluids((prev) => [...prev, formatted]);
+      }
+      setCustomFluid('');
     }
+  };
+
+  const handleAddSelectedToCart = () => {
+    if (!selectedBrand || selectedFluids.length === 0) return;
+    selectedFluids.forEach((fluid) => {
+      const itemId = `lub-${selectedBrand.toLowerCase().replace(/\s+/g, '-')}-${fluid.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+      addToInquiry({
+        id: itemId,
+        title: `${selectedBrand === 'OTHERS' ? '' : selectedBrand + ' '}${fluid}`,
+        category: 'Lubricants',
+        type: 'part',
+        brand: selectedBrand,
+        specSummary: 'Packaging: 20L Pail / 209L Drum • Factory Certified Lubricant',
+      });
+    });
+    setCartFeedback(`Added ${selectedFluids.length} item(s) to Yard Cart!`);
+    setTimeout(() => setCartFeedback(null), 3000);
   };
 
   const effectiveBrand = selectedBrand === 'OTHERS' ? customBrand.trim() : (selectedBrand ?? '');
-  const effectiveFluid = selectedFluid?.startsWith('Other:')
-    ? selectedFluid
-    : selectedFluid === 'Other Atlas Copco Fluid (Specify)' ||
-      selectedFluid === 'Other Ingersoll Rand Fluid (Specify)' ||
-      selectedFluid === 'Other Sullair Fluid (Specify)' ||
-      selectedFluid === 'Other Denair Fluid (Specify)' ||
-      selectedFluid === 'Other / Custom Specification (Specify)'
-    ? (customFluid.trim() ? `Other: ${customFluid.trim()}` : selectedFluid)
-    : (selectedFluid || 'Standard Synthetic Fluid');
+  const effectiveFluidSummary = selectedFluids.join(', ') || 'Standard Synthetic Fluid';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -272,8 +301,8 @@ export default function LubricantsQuoteModal({
       setSubmitError('Please specify the lubricant brand you need.');
       return;
     }
-    if (!selectedFluid) {
-      setSubmitError('Please select a fluid formulation.');
+    if (selectedFluids.length === 0) {
+      setSubmitError('Please select at least one fluid formulation from the list.');
       return;
     }
     if (!contactName.trim()) {
@@ -299,13 +328,15 @@ export default function LubricantsQuoteModal({
     try {
       const res = await submitLubricantRequest({
         brand: effectiveBrand || selectedBrand,
-        fluid_type: effectiveFluid,
+        fluid_type: effectiveFluidSummary,
         volume,
         hub,
         company_name: companyName.trim(),
         email: email.trim(),
         phone: phone.trim(),
-        notes: notes.trim() ? `Contact: ${contactName.trim()} | ${notes.trim()}` : `Contact: ${contactName.trim()}`,
+        notes: notes.trim()
+          ? `Items: [${effectiveFluidSummary}] | Contact: ${contactName.trim()} | ${notes.trim()}`
+          : `Items: [${effectiveFluidSummary}] | Contact: ${contactName.trim()}`,
       });
 
       const ticketRef = res.data?.id
@@ -315,7 +346,7 @@ export default function LubricantsQuoteModal({
       setSuccessTicket({
         id: ticketRef,
         brand: effectiveBrand || selectedBrand,
-        fluidType: effectiveFluid,
+        fluidType: effectiveFluidSummary,
         volume,
         hub,
       });
@@ -331,7 +362,7 @@ export default function LubricantsQuoteModal({
   const resetForm = () => {
     setStep(1);
     setSelectedBrand(null);
-    setSelectedFluid(null);
+    setSelectedFluids([]);
     setCustomBrand('');
     setCustomFluid('');
     setCompanyName('');
@@ -341,9 +372,14 @@ export default function LubricantsQuoteModal({
     setNotes('');
     setSuccessTicket(null);
     setSubmitError(null);
+    setCartFeedback(null);
   };
 
   const currentBrandConfig = selectedBrand ? BRAND_LUBRICANTS[selectedBrand] : null;
+  const allSelectableItems = currentBrandConfig
+    ? currentBrandConfig.groups.flatMap((g) => g.items.filter((item) => !item.includes('Other')))
+    : [];
+  const areAllSelected = allSelectableItems.length > 0 && allSelectableItems.every((item) => selectedFluids.includes(item));
 
   return (
     <div className="lub-modal-overlay" onClick={onClose}>
@@ -354,7 +390,7 @@ export default function LubricantsQuoteModal({
             <span className="lub-modal-badge">MANDTECH INDUSTRIAL FLUIDS</span>
             <h2 className="lub-modal-heading">
               {step === 1 && 'Select Equipment Manufacturer'}
-              {step === 2 && `${selectedBrand === 'OTHERS' ? customBrand || 'Special Fluids' : selectedBrand} — Select Formulation`}
+              {step === 2 && `${selectedBrand === 'OTHERS' ? customBrand || 'Special Fluids' : selectedBrand} — Select Formulations`}
               {step === 3 && 'Request Quotation Details'}
               {step === 4 && 'Quotation Request Registered'}
             </h2>
@@ -374,7 +410,7 @@ export default function LubricantsQuoteModal({
             <div className="lub-stepper-line" />
             <div className={`lub-stepper-step ${step >= 2 ? 'is-active' : ''} ${step > 2 ? 'is-done' : ''}`}>
               <span className="lub-stepper-num">2</span>
-              <span className="lub-stepper-text">Formulation</span>
+              <span className="lub-stepper-text">Select Formulations</span>
             </div>
             <div className="lub-stepper-line" />
             <div className={`lub-stepper-step ${step >= 3 ? 'is-active' : ''}`}>
@@ -390,7 +426,7 @@ export default function LubricantsQuoteModal({
           {step === 1 && (
             <div className="lub-step-panel">
               <p className="lub-step-prompt">
-                Select your compressor manufacturer to view factory-approved synthetic lubricants and fluids:
+                Select your compressor manufacturer to view certified lubricants and cooling fluids:
               </p>
               <div className="lub-brands-grid">
                 {LUBRICANT_BRANDS.map((b) => (
@@ -443,7 +479,7 @@ export default function LubricantsQuoteModal({
             </div>
           )}
 
-          {/* STEP 2: Fluid Type Selection (The Multiple Modal Step!) */}
+          {/* STEP 2: Fluid Selection (List with Checkboxes & Multi-select & Add to Cart) */}
           {step === 2 && selectedBrand && (
             <div className="lub-step-panel">
               {/* Selected Brand Quick Bar */}
@@ -468,40 +504,125 @@ export default function LubricantsQuoteModal({
                 </button>
               </div>
 
-              <p className="lub-step-prompt">
-                Select the certified fluid formulation or cooling lubricant required:
-              </p>
+              {/* Multi-Selection Control Toolbar */}
+              <div className="lub-list-toolbar">
+                <div className="lub-list-toolbar-left">
+                  <button
+                    type="button"
+                    className="lub-btn-select-all"
+                    onClick={() => handleSelectAll(allSelectableItems)}
+                  >
+                    {areAllSelected ? <CheckSquare size={16} color="#15803d" /> : <Square size={16} />}
+                    <span>{areAllSelected ? 'Deselect All' : `Select All (${allSelectableItems.length})`}</span>
+                  </button>
+                  <span className="lub-selection-counter">
+                    <strong>{selectedFluids.length}</strong> formulation{selectedFluids.length === 1 ? '' : 's'} selected
+                  </span>
+                </div>
 
-              {/* Formulations by Category */}
-              <div className="lub-fluids-select-container">
+                <div className="lub-list-toolbar-right">
+                  <button
+                    type="button"
+                    className="lub-btn-toolbar-cart"
+                    disabled={selectedFluids.length === 0}
+                    onClick={handleAddSelectedToCart}
+                    title="Add all selected items to Yard Cart"
+                  >
+                    <ShoppingCart size={15} />
+                    <span>Add to Cart ({selectedFluids.length})</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="lub-btn-toolbar-proceed"
+                    disabled={selectedFluids.length === 0}
+                    onClick={() => setStep(3)}
+                  >
+                    <span>Proceed to Quote</span>
+                    <ArrowRight size={15} />
+                  </button>
+                </div>
+              </div>
+
+              {cartFeedback && (
+                <div className="lub-cart-toast-banner">
+                  <CheckCircle2 size={16} color="#15803d" />
+                  <span>{cartFeedback}</span>
+                </div>
+              )}
+
+              {/* Formulations Organized as a Clean List */}
+              <div className="lub-fluids-list-wrapper">
                 {currentBrandConfig?.groups.map((group, gIdx) => (
                   <div key={gIdx} className="lub-modal-fluid-group">
-                    <h4 className="lub-mfg-title">{group.group || 'Available Formulations'}</h4>
-                    <div className="lub-mfg-grid">
+                    <div className="lub-list-group-header">
+                      <span className="lub-mfg-title">{group.group || 'Available Formulations'}</span>
+                      <span className="lub-group-sub-count">{group.items.length} options</span>
+                    </div>
+
+                    <div className="lub-modal-fluid-list">
                       {group.items.map((item, iIdx) => {
                         const isFoodGrade = item.includes('Food Grade') || item.includes('FG');
                         const isOther = item.includes('Other') || item.includes('Specify');
-                        const isSelected = selectedFluid === item;
+                        const isSelected = selectedFluids.includes(item);
+
+                        if (isOther) {
+                          return (
+                            <div key={iIdx} className="lub-fluid-row-custom">
+                              <span className="lub-row-custom-label">Need a specific part number or unlisted grade?</span>
+                              <div className="lub-row-custom-inputs">
+                                <input
+                                  type="text"
+                                  className="lub-others-input"
+                                  placeholder="e.g. Sullair 250022-669, Atlas Copco 2901 0522 00, ISO VG 68..."
+                                  value={customFluid}
+                                  onChange={(e) => setCustomFluid(e.target.value)}
+                                />
+                                <button
+                                  type="button"
+                                  className="lub-btn-add-custom"
+                                  disabled={!customFluid.trim()}
+                                  onClick={handleAddCustomFluid}
+                                >
+                                  + Add to List
+                                </button>
+                              </div>
+                            </div>
+                          );
+                        }
 
                         return (
                           <div
                             key={iIdx}
-                            className={`lub-fluid-choice-card ${isSelected ? 'is-selected' : ''} ${isFoodGrade ? 'is-food-grade' : ''}`}
-                            onClick={() => handleSelectFluid(item)}
+                            className={`lub-fluid-list-row ${isSelected ? 'row-selected' : ''} ${isFoodGrade ? 'row-food-grade' : ''}`}
+                            onClick={() => toggleFluid(item)}
                             role="button"
                             tabIndex={0}
                           >
-                            <div className="lub-fcc-icon">
-                              <Droplets size={16} />
+                            <div className="lub-row-check-box">
+                              {isSelected ? (
+                                <CheckSquare size={18} className="check-icon-active" />
+                              ) : (
+                                <Square size={18} className="check-icon-idle" />
+                              )}
                             </div>
-                            <div className="lub-fcc-content">
-                              <div className="lub-fcc-top">
-                                {isFoodGrade && <span className="lub-fcc-badge food-grade">H1 Food Grade</span>}
-                                {isOther && <span className="lub-fcc-badge custom">Custom Spec</span>}
+
+                            <div className="lub-row-details">
+                              <div className="lub-row-name-line">
+                                <span className="lub-row-item-name">{item}</span>
+                                {isFoodGrade && (
+                                  <span className="lub-fcc-badge food-grade">H1 Food Grade</span>
+                                )}
                               </div>
-                              <span className="lub-fcc-title">{item}</span>
+                              <span className="lub-row-item-sub">
+                                {isFoodGrade
+                                  ? 'NSF H1 registered non-toxic synthetic lubricant for food and beverage packaging.'
+                                  : 'Factory OEM formulated synthetic fluid. Extended thermal durability.'}
+                              </span>
                             </div>
-                            <ArrowRight size={15} className="lub-fcc-arrow" />
+
+                            <div className="lub-row-specs-tag">
+                              <span>20L • 209L</span>
+                            </div>
                           </div>
                         );
                       })}
@@ -509,33 +630,6 @@ export default function LubricantsQuoteModal({
                   </div>
                 ))}
               </div>
-
-              {/* Custom Fluid Input when "Other" option is active */}
-              {selectedFluid && (selectedFluid.includes('Other') || selectedFluid.includes('Specify')) && (
-                <div className="lub-custom-fluid-box">
-                  <label className="lub-others-label">
-                    Specify the exact fluid grade, viscosity, or OEM part number: <span className="req">*</span>
-                  </label>
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <input
-                      type="text"
-                      className="lub-others-input"
-                      placeholder="e.g. Atlas Copco 2901 0522 00, Sullair 250022-669, ISO VG 46/68..."
-                      value={customFluid}
-                      onChange={(e) => setCustomFluid(e.target.value)}
-                      autoFocus
-                    />
-                    <button
-                      type="button"
-                      className="lub-others-continue-btn"
-                      disabled={!customFluid.trim()}
-                      onClick={handleCustomFluidContinue}
-                    >
-                      Continue <ArrowRight size={15} />
-                    </button>
-                  </div>
-                </div>
-              )}
 
               {/* Bottom Nav Bar */}
               <div className="lub-modal-nav-bar">
@@ -547,6 +641,26 @@ export default function LubricantsQuoteModal({
                   <ArrowLeft size={16} />
                   <span>Back to Manufacturers</span>
                 </button>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button
+                    type="button"
+                    className="lub-btn-toolbar-cart"
+                    disabled={selectedFluids.length === 0}
+                    onClick={handleAddSelectedToCart}
+                  >
+                    <ShoppingCart size={15} />
+                    <span>Add to Cart ({selectedFluids.length})</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="lub-btn-toolbar-proceed"
+                    disabled={selectedFluids.length === 0}
+                    onClick={() => setStep(3)}
+                  >
+                    <span>Proceed to Quote ({selectedFluids.length})</span>
+                    <ArrowRight size={15} />
+                  </button>
+                </div>
               </div>
             </div>
           )}
@@ -554,7 +668,7 @@ export default function LubricantsQuoteModal({
           {/* STEP 3: Request For Quote Form */}
           {step === 3 && selectedBrand && (
             <form onSubmit={handleSubmit} className="lub-step-panel">
-              {/* Locked Selection Banner */}
+              {/* Locked Selection Banner with Multiple Fluid Pills */}
               <div className="lub-locked-selection-banner">
                 <div className="lub-locked-col">
                   <span className="lub-locked-label">Manufacturer</span>
@@ -563,17 +677,27 @@ export default function LubricantsQuoteModal({
                   </span>
                 </div>
                 <div className="lub-locked-sep" />
-                <div className="lub-locked-col" style={{ flex: 2 }}>
-                  <span className="lub-locked-label">Formulation / Fluid</span>
-                  <span className="lub-locked-val">{effectiveFluid}</span>
+                <div className="lub-locked-col" style={{ flex: 3 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span className="lub-locked-label">
+                      Selected Formulations ({selectedFluids.length})
+                    </span>
+                    <button
+                      type="button"
+                      className="lub-locked-change"
+                      onClick={() => setStep(2)}
+                    >
+                      Change / Add More
+                    </button>
+                  </div>
+                  <div className="lub-locked-fluids-pill-wrap">
+                    {selectedFluids.map((fluid, fIdx) => (
+                      <span key={fIdx} className="lub-locked-pill">
+                        {fluid}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-                <button
-                  type="button"
-                  className="lub-locked-change"
-                  onClick={() => setStep(2)}
-                >
-                  Change Fluid
-                </button>
               </div>
 
               {submitError && (
@@ -709,7 +833,7 @@ export default function LubricantsQuoteModal({
                   className="lub-btn-submit"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? 'Submitting...' : 'Submit Quotation Request'}
+                  {isSubmitting ? 'Submitting...' : `Submit Quotation Request (${selectedFluids.length} item${selectedFluids.length === 1 ? '' : 's'})`}
                   {!isSubmitting && <ArrowRight size={16} />}
                 </button>
               </div>
@@ -740,7 +864,7 @@ export default function LubricantsQuoteModal({
                   <strong>{successTicket.brand}</strong>
                 </div>
                 <div className="lub-ticket-row">
-                  <span>Formulation:</span>
+                  <span>Formulation(s):</span>
                   <strong>{successTicket.fluidType}</strong>
                 </div>
                 <div className="lub-ticket-row">
