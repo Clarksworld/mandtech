@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  HelpCircle, ArrowRight, ChevronRight, ShoppingCart, Sparkles
-} from 'lucide-react';
+import { HelpCircle, ArrowRight, ShoppingCart } from 'lucide-react';
 import LubricantsQuoteModal, {
   type LubricantBrand,
 } from '../components/LubricantsQuoteModal';
@@ -128,7 +126,7 @@ export const AfterSalesPage: React.FC<AfterSalesPageProps> = ({ initialBrand }) 
         </div>
       </section>
 
-      {/* Brand Selection Section — Designed identical to Our Core Capabilities in HomePage */}
+      {/* Brand Selection Section — All-white cards with green edges on click/hover */}
       <section className="section-padding lub-capabilities-section">
         <div className="container">
           <div className="capabilities-header">
@@ -146,36 +144,23 @@ export const AfterSalesPage: React.FC<AfterSalesPageProps> = ({ initialBrand }) 
               return (
                 <div
                   key={brand.id}
-                  className="capability-card highlighted lub-brand-capability-card"
+                  className="capability-card lub-brand-capability-card"
                   onClick={() => handleOpenBrandModal(brand.id)}
                   role="button"
                   tabIndex={0}
                 >
-                  <div className="lub-card-top">
-                    <div className="card-icon-wrapper lub-brand-icon-wrapper">
-                      {brand.id === 'OTHERS' ? (
-                        <HelpCircle size={26} color="#64748b" />
-                      ) : (
-                        <BrandLogo brand={brand.id} size="md" />
-                      )}
-                    </div>
-                    <span className="lub-card-formulation-badge">{brand.badge}</span>
+                  <div className="card-icon-wrapper lub-brand-icon-wrapper">
+                    {brand.id === 'OTHERS' ? (
+                      <HelpCircle size={28} color="#64748b" />
+                    ) : (
+                      <BrandLogo brand={brand.id} size="md" />
+                    )}
                   </div>
 
                   <h3 className="card-title">{brand.name}</h3>
                   <p className="card-desc">{brand.desc}</p>
 
-                  <div className="lub-card-bottom-actions">
-                    <button
-                      type="button"
-                      className="card-link-btn text-orange"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleOpenBrandModal(brand.id);
-                      }}
-                    >
-                      Configure &amp; Request Quote <ChevronRight size={14} style={{ display: 'inline', verticalAlign: 'middle' }} />
-                    </button>
+                  <div className="lub-card-bottom-actions centered">
                     <button
                       type="button"
                       className={`lub-card-cart-btn ${inCart ? 'in-cart' : ''}`}
@@ -192,26 +177,6 @@ export const AfterSalesPage: React.FC<AfterSalesPageProps> = ({ initialBrand }) 
                 </div>
               );
             })}
-          </div>
-
-          {/* Sourcing / Technical Lab Testing Banner */}
-          <div className="lub-support-banner">
-            <div className="lub-support-text">
-              <Sparkles size={24} className="lub-sparkle-icon" />
-              <div>
-                <h4>Require MSDS, Certificate of Analysis (COA), or Oil Sample Testing?</h4>
-                <p>
-                  Mandtech engineers provide fluid lab analysis, viscosity verification, and scheduled oil sampling for industrial facilities across Port Harcourt, Lagos, and Abuja.
-                </p>
-              </div>
-            </div>
-            <button
-              type="button"
-              className="lub-btn-support"
-              onClick={() => handleOpenBrandModal('ATLAS COPCO', 'Special Lubricant Request')}
-            >
-              Contact Fluid Specialist
-            </button>
           </div>
         </div>
       </section>

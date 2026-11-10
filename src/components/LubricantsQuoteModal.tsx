@@ -3,7 +3,7 @@ import {
   X, ArrowLeft, ArrowRight,
   Phone, Mail, Building, CheckCircle2, RotateCcw,
   AlertCircle, Package, MapPin, HelpCircle,
-  ShoppingCart, CheckSquare, Square, Sparkles
+  ShoppingCart, CheckSquare, Square, Sparkles, ChevronDown
 } from 'lucide-react';
 import { BrandLogo } from './BrandLogo';
 import { MandtechLogo } from './Logo';
@@ -184,7 +184,8 @@ export default function LubricantsQuoteModal({
   const [step, setStep] = useState<Step>(1);
   const [selectedBrand, setSelectedBrand] = useState<LubricantBrand | null>(initialBrand || null);
   const [selectedFluids, setSelectedFluids] = useState<string[]>([]);
-  const [isFoodGradeFlow, setIsFoodGradeFlow] = useState(false);
+  const [isFoodGradeExpanded, setIsFoodGradeExpanded] = useState(false);
+  const [isFoodGradeHovered, setIsFoodGradeHovered] = useState(false);
   const [customBrand, setCustomBrand] = useState('');
   const [customFluid, setCustomFluid] = useState('');
 
@@ -210,9 +211,13 @@ export default function LubricantsQuoteModal({
 
   const { addToInquiry } = useInquiry();
 
+  const selectedFoodGradeItems = selectedFluids.filter((f) => ATLAS_COPCO_FOOD_GRADE_ITEMS.includes(f));
+  const isFoodGradeSubVisible = isFoodGradeExpanded || isFoodGradeHovered || selectedFoodGradeItems.length > 0;
+
   useEffect(() => {
     if (isOpen) {
-      setIsFoodGradeFlow(false);
+      setIsFoodGradeExpanded(false);
+      setIsFoodGradeHovered(false);
       if (initialBrand) {
         setSelectedBrand(initialBrand);
         if (initialFluids && initialFluids.length > 0) {
@@ -242,7 +247,8 @@ export default function LubricantsQuoteModal({
 
   const handleSelectBrand = (brand: LubricantBrand) => {
     setSelectedBrand(brand);
-    setIsFoodGradeFlow(false);
+    setIsFoodGradeExpanded(false);
+    setIsFoodGradeHovered(false);
     const defFluid = BRAND_LUBRICANTS[brand]?.defaultFluid;
     setSelectedFluids(defFluid ? [defFluid] : []);
     setCustomFluid('');
@@ -382,7 +388,10 @@ export default function LubricantsQuoteModal({
 
   const currentBrandConfig = selectedBrand ? BRAND_LUBRICANTS[selectedBrand] : null;
   const allSelectableItems = currentBrandConfig
-    ? currentBrandConfig.groups.flatMap((g) => g.items.filter((item) => !item.includes('Other')))
+    ? [
+        ...currentBrandConfig.groups.flatMap((g) => g.items.filter((item) => !item.includes('Other'))),
+        ...(selectedBrand === 'ATLAS COPCO' ? ATLAS_COPCO_FOOD_GRADE_ITEMS : [])
+      ]
     : [];
   const areAllSelected = allSelectableItems.length > 0 && allSelectableItems.every((item) => selectedFluids.includes(item));
 
@@ -504,7 +513,8 @@ export default function LubricantsQuoteModal({
                   type="button"
                   className="lub-change-brand-btn"
                   onClick={() => {
-                    setIsFoodGradeFlow(false);
+                    setIsFoodGradeExpanded(false);
+                    setIsFoodGradeHovered(false);
                     setStep(1);
                   }}
                 >
@@ -512,157 +522,8 @@ export default function LubricantsQuoteModal({
                 </button>
               </div>
 
-              {/* ATLAS COPCO Dedicated Food Grade Sub-Step Flow */}
-              {selectedBrand === 'ATLAS COPCO' && isFoodGradeFlow ? (
-                <div className="lub-food-grade-flow-panel">
-                  <div className="lub-fg-top-nav">
-                    <button
-                      type="button"
-                      className="lub-fg-back-btn"
-                      onClick={() => setIsFoodGradeFlow(false)}
-                    >
-                      <ArrowLeft size={15} />
-                      <span>Back to Main Formulations</span>
-                    </button>
-                    <span className="lub-fcc-badge food-grade">H1 CERTIFIED FOOD GRADE</span>
-                  </div>
-
-                  <div className="lub-fg-header-box">
-                    <h3 className="lub-fg-title">Atlas Copco Food Grade Certified Fluids</h3>
-                    <p className="lub-fg-desc">
-                      Select one or more NSF H1 registered non-toxic synthetic lubricants engineered for sensitive food, beverage, and pharmaceutical processing lines:
-                    </p>
-                  </div>
-
-                  {/* Toolbar */}
-                  <div className="lub-list-toolbar">
-                    <div className="lub-list-toolbar-left">
-                      <button
-                        type="button"
-                        className="lub-btn-select-all"
-                        onClick={() => handleSelectAll(ATLAS_COPCO_FOOD_GRADE_ITEMS)}
-                      >
-                        {ATLAS_COPCO_FOOD_GRADE_ITEMS.every(f => selectedFluids.includes(f)) ? (
-                          <CheckSquare size={16} color="#15803d" />
-                        ) : (
-                          <Square size={16} />
-                        )}
-                        <span>
-                          {ATLAS_COPCO_FOOD_GRADE_ITEMS.every(f => selectedFluids.includes(f))
-                            ? 'Deselect All'
-                            : 'Select All (4)'}
-                        </span>
-                      </button>
-                      <span className="lub-selection-counter">
-                        <strong>
-                          {selectedFluids.filter(f => ATLAS_COPCO_FOOD_GRADE_ITEMS.includes(f)).length}
-                        </strong>{' '}
-                        selected
-                      </span>
-                    </div>
-
-                    <div className="lub-list-toolbar-right">
-                      <button
-                        type="button"
-                        className="lub-btn-toolbar-cart"
-                        disabled={!selectedFluids.some(f => ATLAS_COPCO_FOOD_GRADE_ITEMS.includes(f))}
-                        onClick={handleAddSelectedToCart}
-                      >
-                        <ShoppingCart size={15} />
-                        <span>Add to Cart ({selectedFluids.filter(f => ATLAS_COPCO_FOOD_GRADE_ITEMS.includes(f)).length})</span>
-                      </button>
-                      <button
-                        type="button"
-                        className="lub-btn-toolbar-proceed"
-                        disabled={!selectedFluids.some(f => ATLAS_COPCO_FOOD_GRADE_ITEMS.includes(f))}
-                        onClick={() => setStep(3)}
-                      >
-                        <span>Proceed to Quote</span>
-                        <ArrowRight size={15} />
-                      </button>
-                    </div>
-                  </div>
-
-                  {cartFeedback && (
-                    <div className="lub-cart-toast-banner">
-                      <CheckCircle2 size={16} color="#15803d" />
-                      <span>{cartFeedback}</span>
-                    </div>
-                  )}
-
-                  {/* 4 Food Grade Items */}
-                  <div className="lub-modal-fluid-list" style={{ marginTop: '10px' }}>
-                    {ATLAS_COPCO_FOOD_GRADE_ITEMS.map((item, idx) => {
-                      const isSelected = selectedFluids.includes(item);
-                      return (
-                        <div
-                          key={idx}
-                          className={`lub-fluid-list-row row-food-grade ${isSelected ? 'row-selected' : ''}`}
-                          onClick={() => toggleFluid(item)}
-                          role="button"
-                          tabIndex={0}
-                        >
-                          <div className="lub-row-check-box">
-                            {isSelected ? (
-                              <CheckSquare size={18} className="check-icon-active" />
-                            ) : (
-                              <Square size={18} className="check-icon-idle" />
-                            )}
-                          </div>
-                          <div className="lub-row-details">
-                            <div className="lub-row-name-line">
-                              <span className="lub-row-item-name">{item}</span>
-                              <span className="lub-fcc-badge food-grade">H1 Food Grade</span>
-                            </div>
-                            <span className="lub-row-item-sub">
-                              NSF H1 registered food-grade synthetic lubricant. Certified non-toxic and odorless.
-                            </span>
-                          </div>
-                          <div className="lub-row-specs-tag">
-                            <span>20L • 209L</span>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  {/* Substep Bottom Nav */}
-                  <div className="lub-modal-nav-bar">
-                    <button
-                      type="button"
-                      className="lub-btn-back"
-                      onClick={() => setIsFoodGradeFlow(false)}
-                    >
-                      <ArrowLeft size={16} />
-                      <span>Back to Main Formulations</span>
-                    </button>
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                      <button
-                        type="button"
-                        className="lub-btn-toolbar-cart"
-                        disabled={!selectedFluids.some(f => ATLAS_COPCO_FOOD_GRADE_ITEMS.includes(f))}
-                        onClick={handleAddSelectedToCart}
-                      >
-                        <ShoppingCart size={15} />
-                        <span>Add to Cart ({selectedFluids.filter(f => ATLAS_COPCO_FOOD_GRADE_ITEMS.includes(f)).length})</span>
-                      </button>
-                      <button
-                        type="button"
-                        className="lub-btn-toolbar-proceed"
-                        disabled={!selectedFluids.some(f => ATLAS_COPCO_FOOD_GRADE_ITEMS.includes(f))}
-                        onClick={() => setStep(3)}
-                      >
-                        <span>Proceed to Quote ({selectedFluids.filter(f => ATLAS_COPCO_FOOD_GRADE_ITEMS.includes(f)).length})</span>
-                        <ArrowRight size={15} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                /* Standard Main Step 2 List */
-                <>
-                  {/* Multi-Selection Control Toolbar */}
-                  <div className="lub-list-toolbar">
+              {/* Multi-Selection Control Toolbar */}
+              <div className="lub-list-toolbar">
                     <div className="lub-list-toolbar-left">
                       <button
                         type="button"
@@ -724,30 +585,93 @@ export default function LubricantsQuoteModal({
                             if (isOther) {
                               return (
                                 <React.Fragment key={iIdx}>
-                                  {/* In ATLAS COPCO, insert the Food Grade next-step card right before Other */}
+                                  {/* In ATLAS COPCO, insert Food Grade expandable card right before Other */}
                                   {selectedBrand === 'ATLAS COPCO' && (
                                     <div
-                                      className={`lub-fluid-list-row row-food-grade-cta ${selectedFluids.some(f => ATLAS_COPCO_FOOD_GRADE_ITEMS.includes(f)) ? 'row-selected' : ''}`}
-                                      onClick={() => setIsFoodGradeFlow(true)}
-                                      role="button"
-                                      tabIndex={0}
+                                      className={`lub-fg-accordion-container ${isFoodGradeSubVisible ? 'is-visible' : ''}`}
+                                      onMouseEnter={() => setIsFoodGradeHovered(true)}
+                                      onMouseLeave={() => setIsFoodGradeHovered(false)}
                                     >
-                                      <div className="lub-row-check-box">
-                                        <Sparkles size={18} color="#15803d" />
-                                      </div>
-                                      <div className="lub-row-details">
-                                        <div className="lub-row-name-line">
-                                          <span className="lub-row-item-name">Food Grade Formulations</span>
-                                          <span className="lub-fcc-badge food-grade">4 Options Available</span>
+                                      <div
+                                        className={`lub-fluid-list-row row-food-grade-cta ${selectedFoodGradeItems.length > 0 ? 'row-selected' : ''}`}
+                                        onClick={() => setIsFoodGradeExpanded((prev) => !prev)}
+                                        role="button"
+                                        tabIndex={0}
+                                        title="Click or hover to view Food Grade sub-options"
+                                      >
+                                        <div className="lub-row-check-box">
+                                          {selectedFoodGradeItems.length > 0 ? (
+                                            <CheckSquare size={18} className="check-icon-active" />
+                                          ) : (
+                                            <Sparkles size={18} color="#15803d" />
+                                          )}
                                         </div>
-                                        <span className="lub-row-item-sub">
-                                          Click to configure certified NSF H1 Food-Grade fluids (Roto Synthetic ULTRA, XTEND, Z, NDURANCE).
-                                        </span>
+                                        <div className="lub-row-details">
+                                          <div className="lub-row-name-line">
+                                            <span className="lub-row-item-name">Food Grade</span>
+                                            <span className="lub-fcc-badge food-grade">
+                                              {selectedFoodGradeItems.length > 0
+                                                ? `${selectedFoodGradeItems.length} Selected`
+                                                : '4 Sub-Options (Click or Hover)'}
+                                            </span>
+                                          </div>
+                                          <span className="lub-row-item-sub">
+                                            {selectedFoodGradeItems.length > 0
+                                              ? selectedFoodGradeItems.map((f) => f.replace(/^Food Grade - /, '')).join(', ')
+                                              : 'NSF H1 non-toxic synthetic lubricants. Click or hover to view sub-options.'}
+                                          </span>
+                                        </div>
+                                        <div className="lub-food-grade-arrow-btn">
+                                          <span>{isFoodGradeSubVisible ? 'Hide Sub-Options' : 'View Sub-Options'}</span>
+                                          <ChevronDown
+                                            size={15}
+                                            style={{
+                                              transform: isFoodGradeSubVisible ? 'rotate(180deg)' : 'rotate(0deg)',
+                                              transition: 'transform 0.2s ease',
+                                            }}
+                                          />
+                                        </div>
                                       </div>
-                                      <div className="lub-food-grade-arrow-btn">
-                                        <span>Configure Options</span>
-                                        <ArrowRight size={14} />
-                                      </div>
+
+                                      {/* 4 Food Grade Sub-Options: visible only when clicked or hovered over */}
+                                      {isFoodGradeSubVisible && (
+                                        <div className="lub-fg-sub-options-box">
+                                          <div className="lub-fg-sub-box-title">
+                                            <span>SELECT NSF H1 FOOD GRADE FLUID(S):</span>
+                                          </div>
+                                          <div className="lub-fg-sub-items-grid">
+                                            {ATLAS_COPCO_FOOD_GRADE_ITEMS.map((subItem, sIdx) => {
+                                              const isSubSelected = selectedFluids.includes(subItem);
+                                              const displayName = subItem.replace(/^Food Grade - /, '');
+                                              return (
+                                                <div
+                                                  key={sIdx}
+                                                  className={`lub-fg-sub-card ${isSubSelected ? 'sub-card-selected' : ''}`}
+                                                  onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    toggleFluid(subItem);
+                                                  }}
+                                                  role="button"
+                                                  tabIndex={0}
+                                                >
+                                                  <div className="lub-sub-card-check">
+                                                    {isSubSelected ? (
+                                                      <CheckSquare size={16} className="check-icon-active" />
+                                                    ) : (
+                                                      <Square size={16} className="check-icon-idle" />
+                                                    )}
+                                                  </div>
+                                                  <div className="lub-sub-card-info">
+                                                    <span className="lub-sub-card-title">{displayName}</span>
+                                                    <span className="lub-sub-card-desc">Food-grade synthetic compressor oil • NSF H1 Certified</span>
+                                                  </div>
+                                                  <span className="lub-sub-card-tag">20L • 209L</span>
+                                                </div>
+                                              );
+                                            })}
+                                          </div>
+                                        </div>
+                                      )}
                                     </div>
                                   )}
 
@@ -843,8 +767,6 @@ export default function LubricantsQuoteModal({
                       </button>
                     </div>
                   </div>
-                </>
-              )}
             </div>
           )}
 
