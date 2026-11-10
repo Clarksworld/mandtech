@@ -1185,3 +1185,96 @@
   border-radius: 16px;
   padding: 3px 10px;
 }
+
+/* ── Food Grade Sub-Step Modal Flow Styles ─────────────────── */
+.row-food-grade-cta {
+  border-left: 3.5px solid #16a34a !important;
+  background: #fcfdfc !important;
+  transition: all 0.18s ease;
+}
+
+.row-food-grade-cta:hover {
+  background: #f0fdf4 !important;
+  border-color: #16a34a !important;
+  transform: translateX(2px);
+}
+
+.lub-food-grade-arrow-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #15803d;
+  background: #dcfce7;
+  border: 1px solid #86efac;
+  padding: 6px 12px;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.row-food-grade-cta:hover .lub-food-grade-arrow-btn {
+  background: #15803d;
+  border-color: #15803d;
+  color: #ffffff;
+}
+
+.lub-food-grade-flow-panel {
+  background: #fcfdfc;
+  border: 1.5px solid #bbf7d0;
+  border-radius: 10px;
+  padding: 18px 20px;
+  animation: lubFadeIn 0.2s ease;
+}
+
+.lub-fg-top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 12px;
+}
+
+.lub-fg-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 7px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.lub-fg-back-btn:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+.lub-fg-header-box {
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.lub-fg-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+
+.lub-fg-desc {
+  font-size: 12.5px;
+  color: #475569;
+  line-height: 1.5;
+  margin: 0;
+}
+

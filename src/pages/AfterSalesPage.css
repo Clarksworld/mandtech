@@ -1,6 +1,6 @@
 /* ================================================
    LUBRICANTS / SPECIAL FLUIDS PAGE
-   Mirrors SparePartsPage hero dimensions & brand style
+   Clean OEM Brand Showcase styled like HomePage Core Capabilities
    ================================================ */
 
 .lub-page {
@@ -13,7 +13,7 @@
 .lub-hero-wrap {
   position: relative;
   width: 100%;
-  height: 520px;
+  height: 500px;
   overflow: hidden;
   display: flex;
   align-items: flex-end;
@@ -33,9 +33,9 @@
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(10, 18, 10, 0.88) 0%,
-    rgba(10, 18, 10, 0.45) 55%,
-    rgba(10, 18, 10, 0.15) 100%
+    rgba(10, 18, 10, 0.90) 0%,
+    rgba(10, 18, 10, 0.50) 55%,
+    rgba(10, 18, 10, 0.20) 100%
   );
 }
 
@@ -70,211 +70,11 @@
 
 .lub-hero-lead {
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.75);
-  max-width: 500px;
+  color: rgba(255, 255, 255, 0.80);
+  max-width: 540px;
   line-height: 1.6;
 }
 
-/* ── Brand Section ────────────────────────────── */
-.lub-brands-section {
-  padding: 72px 0 80px;
-}
-
-.lub-section-head {
-  text-align: center;
-  margin-bottom: 52px;
-}
-
-.lub-sub-tag {
-  display: inline-block;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 2px;
-  color: var(--primary-container, #54b435);
-  text-transform: uppercase;
-  margin-bottom: 10px;
-}
-
-.lub-main-title {
-  font-size: 32px;
-  font-weight: 900;
-  color: var(--deep-charcoal, #121412);
-  margin-bottom: 10px;
-}
-
-.lub-main-desc {
-  font-size: 15px;
-  color: var(--on-surface-muted, #6b7280);
-  max-width: 420px;
-  margin: 0 auto;
-  line-height: 1.6;
-}
-
-/* Staggered rows: 3 then 2 (centred) */
-.lub-brands-row {
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-  flex-wrap: wrap;
-}
-
-.lub-brands-row.top-row {
-  margin-bottom: 24px;
-}
-
-/* ── Individual Brand Card ─────────────────────── */
-.lub-brand-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  width: 190px;
-  padding: 36px 20px 32px;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 14px;
-  background: #fafbfa;
-  cursor: pointer;
-  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.22s ease,
-              box-shadow 0.22s ease,
-              background 0.22s ease;
-  text-align: center;
-  outline: none;
-}
-
-.lub-brand-card:hover,
-.lub-brand-card:focus-visible {
-  border-color: var(--primary-container, #54b435);
-  background: #ffffff;
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(84, 180, 53, 0.14);
-}
-
-.lub-brand-icon-wrap {
-  width: 120px;
-  height: 52px;
-  padding: 6px 12px;
-  border-radius: 10px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  box-sizing: border-box;
-  transition: all 0.2s ease;
-}
-
-.lub-brand-icon-wrap img {
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
-  object-fit: contain;
-  display: block;
-}
-
-.lub-brand-card:hover .lub-brand-icon-wrap {
-  background: #ffffff;
-  border-color: var(--primary-container, #54b435);
-}
-
-.lub-brand-label {
-  font-size: 12px;
-  font-weight: 800;
-  color: #121412;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
-/* ── Responsive ───────────────────────────────── */
-@media (max-width: 768px) {
-  .lub-hero-wrap {
-    height: 420px;
-  }
-
-  .lub-hero-heading {
-    font-size: 32px;
-  }
-
-  .lub-brand-card {
-    width: 140px;
-    padding: 28px 14px 24px;
-  }
-
-  .lub-brands-row {
-    gap: 14px;
-  }
-}
-
-@media (max-width: 480px) {
-  .lub-brands-row {
-    flex-wrap: wrap;
-  }
-
-  .lub-brand-card {
-    width: calc(50% - 8px);
-  }
-}
-
-/* ── Lubricant Brand Card Actions ─────────────────────────── */
-.lub-brand-card-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-  margin-top: 10px;
-}
-
-.lub-brand-quote-btn {
-  width: 100%;
-  background: transparent;
-  border: 1.5px solid var(--primary-container, #1a56a0);
-  color: var(--primary-container, #1a56a0);
-  border-radius: 7px;
-  padding: 7px 10px;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s;
-}
-
-.lub-brand-quote-btn:hover {
-  background: var(--primary-container, #1a56a0);
-  color: #fff;
-}
-
-.lub-brand-cart-btn {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  background: #f1f5f9;
-  border: 1.5px solid #cbd5e1;
-  color: #374151;
-  border-radius: 7px;
-  padding: 7px 10px;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
-}
-
-.lub-brand-cart-btn:hover {
-  background: #334155;
-  color: #fff;
-  border-color: #334155;
-}
-
-.lub-brand-cart-btn.in-cart {
-  background: #dcfce7;
-  border-color: #16a34a;
-  color: #15803d;
-}
-
-/* ── Hero Quote Button ────────────────────────────────────── */
 .lub-btn-hero-quote {
   display: inline-flex;
   align-items: center;
@@ -298,822 +98,280 @@
   box-shadow: 0 6px 22px rgba(84, 180, 53, 0.45);
 }
 
-/* ── 5-Column Brand Grid ─────────────────────────────────── */
-.lub-brands-grid-5 {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 16px;
-  margin-top: 10px;
+/* ── Capabilities-Style Brand Showcase Section ── */
+.lub-capabilities-section {
+  background-color: #ffffff;
+  padding: 72px 0 88px;
 }
 
-.lub-brand-card {
-  width: auto;
-  min-height: 270px;
-  padding: 20px 16px 18px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  background: #ffffff;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 12px;
-  transition: all 0.22s ease;
-  cursor: pointer;
+.capabilities-header {
+  margin-bottom: 44px;
 }
 
-.lub-brand-card:hover {
-  border-color: var(--primary-container, #54b435);
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(84, 180, 53, 0.12);
-}
-
-.lub-brand-card.active-brand-card {
-  border-color: var(--primary-container, #54b435);
-  background: #fcfdfc;
-  box-shadow: 0 0 0 2px var(--primary-container, #54b435), 0 10px 25px rgba(84, 180, 53, 0.14);
-}
-
-.lub-brand-top-row {
-  width: 100%;
-  display: flex;
-  justify-content: center;
+.lub-sub-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--primary-container, #54b435);
+  text-transform: uppercase;
   margin-bottom: 8px;
 }
 
-.lub-brand-badge {
-  font-size: 9.5px;
+.capabilities-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--deep-charcoal, #121412);
+  letter-spacing: -0.5px;
+  margin: 0;
+}
+
+.capabilities-accent-line {
+  width: 60px;
+  height: 4px;
+  background-color: var(--primary-container, #54b435);
+  margin-top: 12px;
+  border-radius: 2px;
+}
+
+.lub-capabilities-intro {
+  font-size: 15px;
+  color: var(--on-surface-muted, #6b7280);
+  margin-top: 14px;
+  max-width: 640px;
+  line-height: 1.6;
+}
+
+/* ── 5-Brand Capabilities Grid ────────────────── */
+.lub-brands-capabilities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.lub-brand-capability-card {
+  background-color: #ffffff;
+  border: 1px solid var(--outline-variant, #e5e7eb);
+  border-radius: var(--radius-sm, 6px);
+  padding: 32px 24px;
+  cursor: pointer;
+  transition: var(--transition-smooth, all 0.2s ease);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.lub-brand-capability-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(84, 180, 53, 0.35);
+  box-shadow: var(--shadow-premium, 0 10px 25px rgba(0, 0, 0, 0.08));
+}
+
+.lub-brand-capability-card.highlighted {
+  border-top: 4px solid var(--primary-container, #54b435);
+}
+
+.lub-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.lub-brand-icon-wrapper {
+  width: 76px;
+  height: 48px;
+  border-radius: var(--radius-sm, 6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--primary-light, #ebf6e8);
+  color: var(--primary-container, #54b435);
+  border: 1px solid rgba(84, 180, 53, 0.2);
+  padding: 6px 10px;
+  flex-shrink: 0;
+  transition: var(--transition-smooth, all 0.2s ease);
+}
+
+.lub-brand-capability-card:hover .lub-brand-icon-wrapper {
+  background-color: #e2f3de;
+  border-color: rgba(84, 180, 53, 0.4);
+}
+
+.lub-card-formulation-badge {
+  font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.8px;
   text-transform: uppercase;
   color: var(--primary-container, #54b435);
   background: rgba(84, 180, 53, 0.1);
-  padding: 3px 8px;
-  border-radius: 20px;
+  border: 1px solid rgba(84, 180, 53, 0.25);
+  padding: 4px 8px;
+  border-radius: 4px;
 }
 
-.lub-brand-snippet {
-  font-size: 11.5px;
-  color: #64748b;
-  line-height: 1.45;
-  margin: 6px 0 14px;
-  flex: 1;
-}
-
-.lub-brand-explore-btn {
-  width: 100%;
-  background: #f8fafc;
-  border: 1px solid #cbd5e1;
-  color: #475569;
-  border-radius: 7px;
-  padding: 6px 10px;
-  font-size: 11.5px;
+.lub-brand-capability-card .card-title {
+  font-size: 19px;
   font-weight: 700;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.lub-brand-explore-btn:hover {
-  background: #e2e8f0;
-  color: #1e293b;
-}
-
-/* ── Interactive Catalog Section ─────────────────────────── */
-.lub-catalog-section {
-  background: #f8fafc;
-  padding: 64px 0 80px;
-  border-top: 1px solid #e2e8f0;
-}
-
-.lub-catalog-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 24px;
-  margin-bottom: 32px;
-  flex-wrap: wrap;
-}
-
-.lub-catalog-title {
-  font-size: 28px;
-  font-weight: 900;
   color: var(--deep-charcoal, #121412);
-  margin: 6px 0 8px;
+  margin-bottom: 10px;
 }
 
-.lub-catalog-desc {
-  font-size: 14.5px;
-  color: #64748b;
-  max-width: 580px;
-  line-height: 1.5;
-  margin: 0;
+.lub-brand-capability-card .card-desc {
+  font-size: 14px;
+  color: var(--on-surface-muted, #6b7280);
+  line-height: 1.55;
+  margin-bottom: 24px;
+  flex-grow: 1;
 }
 
-/* Tabs Bar */
-.lub-tabs-bar {
+.lub-card-bottom-actions {
   display: flex;
-  gap: 8px;
-  background: #ffffff;
-  padding: 5px;
-  border-radius: 10px;
-  border: 1px solid #e2e8f0;
-  flex-wrap: wrap;
-}
-
-.lub-tab-pill {
-  border: none;
-  background: transparent;
-  padding: 8px 16px;
-  border-radius: 7px;
-  font-size: 12px;
-  font-weight: 700;
-  color: #64748b;
-  cursor: pointer;
-  transition: all 0.18s ease;
-  white-space: nowrap;
-}
-
-.lub-tab-pill:hover {
-  color: #1e293b;
-  background: #f1f5f9;
-}
-
-.lub-tab-pill.active {
-  background: var(--primary-container, #54b435);
-  color: #ffffff;
-  box-shadow: 0 2px 8px rgba(84, 180, 53, 0.28);
-}
-
-/* ── Fluid Groups & Cards ────────────────────────────────── */
-.lub-groups-container {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-}
-
-.lub-fluid-group-card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
-  padding: 24px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
-}
-
-.lub-group-header {
-  display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  padding-bottom: 16px;
-  margin-bottom: 20px;
-  border-bottom: 1.5px solid #f1f5f9;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid #f1f5f9;
 }
 
-.lub-group-title-wrap {
+.lub-brand-capability-card .card-link-btn.text-orange {
+  font-size: 13.5px;
+  font-weight: 700;
+  text-align: left;
+  transition: var(--transition-smooth, all 0.2s ease);
+  color: var(--primary-container, #54b435);
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
 }
 
-.lub-group-icon {
-  color: var(--primary-container, #54b435);
+.lub-brand-capability-card:hover .card-link-btn.text-orange {
+  color: #3b8e21;
 }
 
-.lub-group-heading {
-  font-size: 17px;
-  font-weight: 800;
-  color: #1e293b;
-  margin: 0;
-}
-
-.lub-group-count {
+.lub-card-cart-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #374151;
+  border-radius: 6px;
+  padding: 6px 11px;
   font-size: 11.5px;
   font-weight: 700;
-  color: #64748b;
-  background: #f1f5f9;
-  padding: 4px 10px;
-  border-radius: 20px;
-}
-
-/* Fluids Grid */
-.lub-fluids-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 18px;
-}
-
-.lub-item-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  border: 1.5px solid #edf2f7;
-  border-radius: 10px;
-  padding: 18px;
-  background: #ffffff;
-  transition: all 0.2s ease;
-}
-
-.lub-item-card:hover {
-  border-color: #cbd5e1;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-  transform: translateY(-2px);
-}
-
-.lub-item-card.food-grade-card {
-  border-color: #bbf7d0;
-  background: #fcfdfc;
-}
-
-.lub-item-badge-row {
-  margin-bottom: 8px;
-}
-
-.lub-item-badge {
-  font-size: 9.5px;
-  font-weight: 800;
-  letter-spacing: 0.6px;
-  padding: 3px 7px;
-  border-radius: 4px;
-  display: inline-block;
-  text-transform: uppercase;
-}
-
-.lub-item-badge.factory {
-  background: #f1f5f9;
-  color: #475569;
-}
-
-.lub-item-badge.food-grade {
-  background: #dcfce7;
-  color: #15803d;
-}
-
-.lub-item-badge.custom {
-  background: #fef3c7;
-  color: #b45309;
-}
-
-.lub-item-name {
-  font-size: 15px;
-  font-weight: 800;
-  color: #0f172a;
-  margin: 0 0 6px;
-  line-height: 1.35;
-}
-
-.lub-item-sub {
-  font-size: 12px;
-  color: #64748b;
-  line-height: 1.5;
-  margin: 0 0 14px;
-}
-
-.lub-item-specs-bar {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  margin-bottom: 16px;
-  padding-top: 10px;
-  border-top: 1px dashed #e2e8f0;
-}
-
-.lub-spec-chip {
-  font-size: 10.5px;
-  font-weight: 600;
-  color: #475569;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  padding: 2px 7px;
-  border-radius: 4px;
-}
-
-.lub-item-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.lub-item-quote-btn {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  background: transparent;
-  border: 1.5px solid var(--primary-container, #54b435);
-  color: var(--primary-container, #54b435);
-  border-radius: 7px;
-  padding: 8px 12px;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.lub-item-quote-btn:hover {
-  background: var(--primary-container, #54b435);
-  color: #ffffff;
-}
-
-.lub-item-cart-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  background: #f1f5f9;
-  border: 1.5px solid #cbd5e1;
-  color: #334155;
-  border-radius: 7px;
-  padding: 8px 12px;
-  font-size: 12px;
-  font-weight: 700;
   cursor: pointer;
   transition: all 0.15s ease;
   white-space: nowrap;
 }
 
-.lub-item-cart-btn:hover {
-  background: #334155;
+.lub-card-cart-btn:hover {
+  background: #0f172a;
   color: #ffffff;
-  border-color: #334155;
+  border-color: #0f172a;
 }
 
-.lub-item-cart-btn.in-cart {
+.lub-card-cart-btn.in-cart {
   background: #dcfce7;
   border-color: #16a34a;
   color: #15803d;
 }
 
-/* ── Support & Testing Banner ────────────────────────────── */
+/* ── Technical Lab Testing Banner ─────────────── */
 .lub-support-banner {
-  margin-top: 40px;
-  background: #111827;
-  border-radius: 12px;
+  background: #f8faf8;
+  border: 1px solid #d1e7dd;
+  border-radius: 10px;
   padding: 24px 28px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   gap: 24px;
-  color: #ffffff;
-  flex-wrap: wrap;
+  margin-top: 56px;
 }
 
 .lub-support-text {
   display: flex;
   align-items: flex-start;
   gap: 16px;
-  max-width: 720px;
 }
 
 .lub-sparkle-icon {
-  color: #54b435;
+  color: var(--primary-container, #54b435);
   flex-shrink: 0;
   margin-top: 2px;
 }
 
 .lub-support-text h4 {
-  font-size: 16px;
+  font-size: 15.5px;
   font-weight: 800;
-  margin: 0 0 6px;
-  color: #f8fafc;
+  color: var(--deep-charcoal, #121412);
+  margin-bottom: 6px;
 }
 
 .lub-support-text p {
-  font-size: 13px;
-  color: #94a3b8;
+  font-size: 13.5px;
+  color: var(--on-surface-muted, #6b7280);
   line-height: 1.5;
   margin: 0;
 }
 
 .lub-btn-support {
-  background: #54b435;
-  border: none;
-  color: #ffffff;
-  padding: 11px 20px;
-  border-radius: 8px;
+  background: #ffffff;
+  border: 1.5px solid var(--primary-container, #54b435);
+  color: var(--primary-container, #54b435);
+  padding: 10px 20px;
+  border-radius: 6px;
   font-size: 13px;
   font-weight: 800;
   cursor: pointer;
   white-space: nowrap;
-  transition: background 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 .lub-btn-support:hover {
-  background: #449d29;
+  background: var(--primary-container, #54b435);
+  color: #ffffff;
 }
 
-/* Responsive adjustments */
-@media (max-width: 1024px) {
-  .lub-brands-grid-5 {
-    grid-template-columns: repeat(3, 1fr);
+@media (max-width: 900px) {
+  .lub-brands-capabilities-grid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   }
-}
 
-@media (max-width: 768px) {
-  .lub-brands-grid-5 {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .lub-fluids-grid {
-    grid-template-columns: 1fr;
-  }
   .lub-support-banner {
     flex-direction: column;
     align-items: flex-start;
   }
 }
 
-@media (max-width: 480px) {
-  .lub-brands-grid-5 {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ── Page List Toolbar ────────────────────────────────────── */
-.lub-page-list-toolbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  background: #ffffff;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 12px 18px;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-.lub-plt-left {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.lub-plt-select-all {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #f8fafc;
-  border: 1px solid #cbd5e1;
-  color: #334155;
-  border-radius: 6px;
-  padding: 8px 14px;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.lub-plt-select-all:hover {
-  background: #edf2f7;
-  border-color: #94a3b8;
-}
-
-.lub-plt-counter {
-  font-size: 13px;
-  color: #64748b;
-}
-
-.lub-plt-counter strong {
-  color: var(--primary-container, #54b435);
-}
-
-.lub-plt-right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.lub-plt-cart-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: #ffffff;
-  border: 1.5px solid #cbd5e1;
-  color: #1e293b;
-  border-radius: 7px;
-  padding: 8px 16px;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.lub-plt-cart-btn:hover:not(:disabled) {
-  background: #1e293b;
-  color: #ffffff;
-  border-color: #1e293b;
-}
-
-.lub-plt-cart-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.lub-plt-quote-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--primary-container, #54b435);
-  border: none;
-  color: #ffffff;
-  border-radius: 7px;
-  padding: 9px 18px;
-  font-size: 13px;
-  font-weight: 800;
-  cursor: pointer;
-  transition: background 0.15s ease;
-  box-shadow: 0 2px 8px rgba(84, 180, 53, 0.25);
-}
-
-.lub-plt-quote-btn:hover:not(:disabled) {
-  background: #449d29;
-}
-
-.lub-plt-quote-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-/* ── Smooth List Layout ──────────────────────────────────── */
-.lub-list-container {
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-}
-
-.lub-list-group-block {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
-}
-
-.lub-group-title-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px 20px;
-  background: #f8fafc;
-  border-bottom: 1.5px solid #edf2f7;
-}
-
-.lub-group-title-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.lub-group-droplet {
-  color: var(--primary-container, #54b435);
-}
-
-.lub-group-heading-text {
-  font-size: 15.5px;
-  font-weight: 800;
-  color: #1e293b;
-  margin: 0;
-}
-
-.lub-group-items-badge {
-  font-size: 11px;
-  font-weight: 700;
-  color: #64748b;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  padding: 3px 10px;
-  border-radius: 20px;
-}
-
-/* Table List Rows */
-.lub-list-table {
-  display: flex;
-  flex-direction: column;
-}
-
-.lub-table-row {
-  display: grid;
-  grid-template-columns: 44px 38px 1fr auto auto;
-  align-items: center;
-  gap: 16px;
-  padding: 14px 20px;
-  border-bottom: 1px solid #f1f5f9;
-  transition: all 0.15s ease;
-  cursor: pointer;
-}
-
-.lub-table-row:last-child {
-  border-bottom: none;
-}
-
-.lub-table-row:hover {
-  background: #f8faf8;
-}
-
-.lub-table-row.row-is-selected {
-  background: #f0fdf4;
-}
-
-.lub-table-row.row-is-food-grade {
-  border-left: 3px solid #16a34a;
-}
-
-/* Columns */
-.lub-col-check {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.lub-row-check-btn {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #64748b;
-  transition: color 0.15s;
-}
-
-.check-box-active {
-  color: var(--primary-container, #54b435);
-}
-
-.check-box-idle {
-  color: #cbd5e1;
-}
-
-.lub-row-check-btn:hover .check-box-idle {
-  color: #94a3b8;
-}
-
-.lub-custom-bullet {
-  color: #94a3b8;
-  font-size: 20px;
-  line-height: 1;
-}
-
-.lub-col-num {
-  font-size: 12px;
-  font-weight: 700;
-  color: #94a3b8;
-  font-family: monospace;
-}
-
-.lub-col-info {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  min-width: 0;
-}
-
-.lub-col-name-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.lub-fluid-title {
-  font-size: 14.5px;
-  font-weight: 800;
-  color: #0f172a;
-}
-
-.lub-badge-tag {
-  font-size: 9.5px;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  padding: 2px 7px;
-  border-radius: 4px;
-  text-transform: uppercase;
-}
-
-.lub-badge-tag.factory {
-  background: #f1f5f9;
-  color: #475569;
-}
-
-.lub-badge-tag.food-grade {
-  background: #dcfce7;
-  color: #15803d;
-}
-
-.lub-badge-tag.custom {
-  background: #fef3c7;
-  color: #b45309;
-}
-
-.lub-fluid-desc {
-  font-size: 12px;
-  color: #64748b;
-  line-height: 1.45;
-  margin: 0;
-}
-
-/* Packaging Column */
-.lub-col-packaging {
-  display: flex;
-  gap: 5px;
-  align-items: center;
-  flex-shrink: 0;
-}
-
-.lub-pack-chip {
-  font-size: 10.5px;
-  font-weight: 600;
-  color: #475569;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  padding: 3px 7px;
-  border-radius: 4px;
-  white-space: nowrap;
-}
-
-/* Action Buttons Column */
-.lub-col-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
-.lub-row-cart-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background: #f1f5f9;
-  border: 1.5px solid #cbd5e1;
-  color: #334155;
-  border-radius: 6px;
-  padding: 7px 11px;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  white-space: nowrap;
-}
-
-.lub-row-cart-btn:hover {
-  background: #1e293b;
-  color: #ffffff;
-  border-color: #1e293b;
-}
-
-.lub-row-cart-btn.in-cart {
-  background: #dcfce7;
-  border-color: #16a34a;
-  color: #15803d;
-}
-
-.lub-row-quote-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background: transparent;
-  border: 1.5px solid var(--primary-container, #54b435);
-  color: var(--primary-container, #54b435);
-  border-radius: 6px;
-  padding: 7px 11px;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  white-space: nowrap;
-}
-
-.lub-row-quote-btn:hover {
-  background: var(--primary-container, #54b435);
-  color: #ffffff;
-}
-
-@media (max-width: 900px) {
-  .lub-table-row {
-    grid-template-columns: 36px 1fr auto;
-    gap: 12px;
-  }
-  .lub-col-num, .lub-col-packaging {
-    display: none;
-  }
-}
-
 @media (max-width: 600px) {
-  .lub-page-list-toolbar {
+  .lub-hero-wrap {
+    height: 420px;
+  }
+
+  .lub-capabilities-section {
+    padding: 48px 0 60px;
+  }
+
+  .capabilities-title {
+    font-size: 26px;
+  }
+
+  .lub-card-bottom-actions {
     flex-direction: column;
-    align-items: stretch;
-  }
-  .lub-plt-left, .lub-plt-right {
-    justify-content: space-between;
-  }
-  .lub-table-row {
-    grid-template-columns: 32px 1fr;
+    align-items: flex-start;
     gap: 10px;
   }
-  .lub-col-actions {
-    grid-column: 2;
-    margin-top: 6px;
+
+  .lub-card-cart-btn {
+    width: 100%;
+    justify-content: center;
   }
 }
