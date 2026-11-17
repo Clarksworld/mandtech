@@ -253,6 +253,8 @@ export const CatalogPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [showProcureModal, setShowProcureModal] = useState(false);
   const [procurePartNo, setProcurePartNo] = useState('');
+  const [procureCompany, setProcureCompany] = useState('');
+  const [procureAddress, setProcureAddress] = useState('');
   const [procureDetails, setProcureDetails] = useState('');
   const [procureSuccess, setProcureSuccess] = useState(false);
 
@@ -321,13 +323,14 @@ export const CatalogPage: React.FC = () => {
 
   const handleProcureSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!procurePartNo.trim()) return;
+    if (!procurePartNo.trim() || !procureCompany.trim() || !procureAddress.trim()) return;
     try {
       await submitInquiry({
         name: 'Procurement Request',
-        company: 'Catalog Parts Sourcing',
+        company: procureCompany.trim(),
+        address: procureAddress.trim(),
         email: 'sourcing@customer.portal',
-        message: `Custom part sourcing request for SKU/Part No: ${procurePartNo.trim()}. Details: ${procureDetails.trim() || 'No additional details provided.'}`,
+        message: `Company Address: ${procureAddress.trim()}\n\nCustom part sourcing request for SKU/Part No: ${procurePartNo.trim()}. Details: ${procureDetails.trim() || 'No additional details provided.'}`,
         equipment_interests: [`Part Sourcing: ${procurePartNo.trim()}`],
       });
     } catch {
@@ -338,6 +341,8 @@ export const CatalogPage: React.FC = () => {
       setProcureSuccess(false);
       setShowProcureModal(false);
       setProcurePartNo('');
+      setProcureCompany('');
+      setProcureAddress('');
       setProcureDetails('');
     }, 2500);
   };
@@ -414,6 +419,28 @@ export const CatalogPage: React.FC = () => {
                       placeholder="e.g. 02250112-031 or IR-SSR-904"
                       value={procurePartNo}
                       onChange={(e) => setProcurePartNo(e.target.value)}
+                      style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '4px', fontSize: '14px' }}
+                    />
+                  </div>
+                  <div style={{ marginBottom: '14px' }}>
+                    <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px' }}>Company / Organization *</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Dangote Cement, BUA Group"
+                      value={procureCompany}
+                      onChange={(e) => setProcureCompany(e.target.value)}
+                      style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '4px', fontSize: '14px' }}
+                    />
+                  </div>
+                  <div style={{ marginBottom: '14px' }}>
+                    <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, marginBottom: '6px' }}>Company Address / Delivery Site *</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Factory Site, Km 15 Lagos-Ibadan Expressway"
+                      value={procureAddress}
+                      onChange={(e) => setProcureAddress(e.target.value)}
                       style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '4px', fontSize: '14px' }}
                     />
                   </div>

@@ -43,6 +43,7 @@ export const ContactPage: React.FC = () => {
   // Inquiry form state
   const [name, setName] = useState('');
   const [company, setCompany] = useState('');
+  const [address, setAddress] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
@@ -95,6 +96,10 @@ export const ContactPage: React.FC = () => {
       setFormError('Please enter your organization or company name.');
       return;
     }
+    if (!address.trim()) {
+      setFormError('Please enter your company address or facility location.');
+      return;
+    }
     if (!email.trim() || !email.includes('@')) {
       setFormError('Please enter a valid business email address.');
       return;
@@ -127,9 +132,12 @@ export const ContactPage: React.FC = () => {
       const response = await submitInquiry({
         name: name.trim(),
         company: company.trim(),
+        address: address.trim(),
         email: email.trim(),
         phone: phone.trim() || undefined,
-        message: message.trim() || (inquiryItems.length > 0 ? `Inquiry for ${inquiryItems.length} selected catalog item(s)` : 'General RFQ inquiry'),
+        message: address.trim()
+          ? `Company Address: ${address.trim()}\n\n${message.trim() || (inquiryItems.length > 0 ? `Inquiry for ${inquiryItems.length} selected catalog item(s)` : 'General RFQ inquiry')}`
+          : message.trim() || (inquiryItems.length > 0 ? `Inquiry for ${inquiryItems.length} selected catalog item(s)` : 'General RFQ inquiry'),
         equipment_interests: interests,
         newsletter_opt_in: newsletter,
       });
@@ -143,6 +151,7 @@ export const ContactPage: React.FC = () => {
       clearInquiry();
       setName('');
       setCompany('');
+      setAddress('');
       setEmail('');
       setPhone('');
       setMessage('');
@@ -339,6 +348,14 @@ export const ContactPage: React.FC = () => {
                   placeholder="e.g. Dangote Fertilizer Annex"
                   value={company}
                   onChange={(e) => setCompany(e.target.value)}
+                  required
+                />
+
+                <InputField
+                  label="Company Address / Facility Location"
+                  placeholder="e.g. Km 15 Lekki-Epe Expressway, Lagos"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
                   required
                 />
 

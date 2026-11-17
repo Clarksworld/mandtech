@@ -3,6 +3,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://mandtech-backend-r
 export interface InquiryPayload {
   name: string;
   company: string;
+  address?: string;
   email: string;
   phone?: string;
   message: string;
@@ -110,6 +111,7 @@ export interface CompressorRequestPayload {
   brand: string;
   condition?: 'NEW' | 'USED';
   company_name: string;
+  address?: string;
   email: string;
   phone: string;
   notes?: string;
@@ -146,6 +148,7 @@ export interface SparePartsRequestPayload {
   brand: string;
   part_name: string;
   company_name: string;
+  address?: string;
   email: string;
   phone: string;
   notes?: string;
@@ -233,6 +236,7 @@ export interface LubricantRequestPayload {
   volume: string;
   hub: string;
   company_name: string;
+  address?: string;
   email: string;
   phone: string;
   notes?: string;

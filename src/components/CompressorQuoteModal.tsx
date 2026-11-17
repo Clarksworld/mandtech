@@ -55,6 +55,7 @@ export default function CompressorQuoteModal({
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [companyName, setCompanyName] = useState('');
+  const [address, setAddress] = useState('');
   const [notes, setNotes] = useState('');
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -65,6 +66,7 @@ export default function CompressorQuoteModal({
     brand: string;
     condition: string;
     company_name: string;
+    address?: string;
   } | null>(null);
 
   useEffect(() => {
@@ -138,6 +140,7 @@ export default function CompressorQuoteModal({
     if (selectedBrand === 'OTHERS' && !customBrand.trim()) { setSubmitError('Please specify the brand name.'); setStep(2); return; }
     if (!selectedCondition) { setSubmitError('Please select a compressor condition.'); setStep(3); return; }
     if (!companyName.trim()) { setSubmitError('Please provide your company name.'); return; }
+    if (!address.trim()) { setSubmitError('Please provide your company address or site location.'); return; }
     if (!email.trim() || !email.includes('@')) { setSubmitError('Please provide a valid corporate email.'); return; }
     if (!phone.trim() || phone.trim().length < 6) { setSubmitError('Please provide a valid phone number.'); return; }
 
@@ -149,9 +152,12 @@ export default function CompressorQuoteModal({
         brand: brandToSend,
         condition: selectedCondition,
         company_name: companyName.trim(),
+        address: address.trim(),
         email: email.trim(),
         phone: phone.trim(),
-        notes: notes.trim() || undefined,
+        notes: address.trim()
+          ? `Company Address: ${address.trim()}${notes.trim() ? '\n' + notes.trim() : ''}`
+          : notes.trim() || undefined,
       });
 
       setSuccessData({
@@ -160,11 +166,13 @@ export default function CompressorQuoteModal({
         brand: res.data.brand,
         condition: selectedCondition,
         company_name: res.data.company_name,
+        address: address.trim(),
       });
 
       setPhone('');
       setEmail('');
       setCompanyName('');
+      setAddress('');
       setNotes('');
       setStep(5);
     } catch (err: any) {
@@ -389,6 +397,13 @@ export default function CompressorQuoteModal({
                     </div>
                   </div>
                   <div className="cq-field">
+                    <label htmlFor="modalAddress" className="cq-label">Company Address / Site Location <span className="req">*</span></label>
+                    <div className="cq-input-wrap">
+                      <Building size={16} className="cq-field-icon" />
+                      <input id="modalAddress" type="text" placeholder="e.g. 12 Industrial Road, Port Harcourt" value={address} onChange={(e) => setAddress(e.target.value)} required className="cq-input" />
+                    </div>
+                  </div>
+                  <div className="cq-field">
                     <label htmlFor="modalEmail" className="cq-label">Corporate / Official Email <span className="req">*</span></label>
                     <div className="cq-input-wrap">
                       <Mail size={16} className="cq-field-icon" />
@@ -455,6 +470,12 @@ export default function CompressorQuoteModal({
                   <span>Company:</span>
                   <strong>{successData.company_name}</strong>
                 </div>
+                {successData.address && (
+                  <div className="cq-recap-row">
+                    <span>Address:</span>
+                    <strong>{successData.address}</strong>
+                  </div>
+                )}
               </div>
               <p className="cq-sla-note">
                 An official PDF quotation and technical data sheet will be emailed within <strong>2 to 4 business hours</strong>.

@@ -73,6 +73,7 @@ export default function SparePartsQuoteModal({
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [companyName, setCompanyName] = useState('');
+  const [address, setAddress] = useState('');
   const [notes, setNotes] = useState('');
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -82,6 +83,7 @@ export default function SparePartsQuoteModal({
     brand: string;
     part_name: string;
     company_name: string;
+    address?: string;
   } | null>(null);
 
   useEffect(() => {
@@ -138,6 +140,10 @@ export default function SparePartsQuoteModal({
       setSubmitError('Please enter your company name.');
       return;
     }
+    if (!address.trim()) {
+      setSubmitError('Please enter your company address or site location.');
+      return;
+    }
     if (!email.trim() || !email.includes('@')) {
       setSubmitError('Please enter a valid business email.');
       return;
@@ -157,9 +163,12 @@ export default function SparePartsQuoteModal({
         brand: brandToSend,
         part_name: basePartName,
         company_name: companyName.trim(),
+        address: address.trim(),
         email: email.trim(),
         phone: phone.trim(),
-        notes: notes.trim() || undefined,
+        notes: address.trim()
+          ? `Company Address: ${address.trim()}${notes.trim() ? '\n' + notes.trim() : ''}`
+          : notes.trim() || undefined,
       });
 
       setSuccessData({
@@ -167,6 +176,7 @@ export default function SparePartsQuoteModal({
         brand: selectedBrand,
         part_name: selectedPart,
         company_name: companyName.trim(),
+        address: address.trim(),
       });
       setStep(4);
     } catch (err: any) {
@@ -180,6 +190,7 @@ export default function SparePartsQuoteModal({
     setSelectedBrand(null);
     setSelectedPart(null);
     setCompanyName('');
+    setAddress('');
     setEmail('');
     setPhone('');
     setNotes('');
@@ -380,6 +391,22 @@ export default function SparePartsQuoteModal({
                 </div>
 
                 <div className="sp-input-box">
+                  <label className="sp-input-label" htmlFor="spAddress">
+                    <Building size={14} />
+                    <span>Company Address / Site Location *</span>
+                  </label>
+                  <input
+                    id="spAddress"
+                    type="text"
+                    className="sp-text-field"
+                    placeholder="e.g. Dangote Cement Plant, Obajana, Kogi State"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="sp-input-box">
                   <label className="sp-input-label" htmlFor="spEmail">
                     <Mail size={14} />
                     <span>Business Email *</span>
@@ -487,6 +514,12 @@ export default function SparePartsQuoteModal({
                   <span className="sp-receipt-label">Company:</span>
                   <span className="sp-receipt-val">{successData.company_name}</span>
                 </div>
+                {successData.address && (
+                  <div className="sp-receipt-row">
+                    <span className="sp-receipt-label">Address:</span>
+                    <span className="sp-receipt-val">{successData.address}</span>
+                  </div>
+                )}
               </div>
 
               <div className="sp-success-cta-row">

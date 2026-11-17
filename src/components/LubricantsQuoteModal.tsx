@@ -192,6 +192,7 @@ export default function LubricantsQuoteModal({
   // Form Fields
   const [volume, setVolume] = useState('20 Litre Pail');
   const [companyName, setCompanyName] = useState('');
+  const [address, setAddress] = useState('');
   const [contactName, setContactName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -207,6 +208,8 @@ export default function LubricantsQuoteModal({
     fluidType: string;
     volume: string;
     hub: string;
+    companyName?: string;
+    address?: string;
   } | null>(null);
 
   const { addToInquiry } = useInquiry();
@@ -323,6 +326,10 @@ export default function LubricantsQuoteModal({
       setSubmitError('Company or organization name is required.');
       return;
     }
+    if (!address.trim()) {
+      setSubmitError('Company address or site location is required.');
+      return;
+    }
     if (!email.trim() || !email.includes('@')) {
       setSubmitError('Valid corporate email address is required.');
       return;
@@ -342,11 +349,12 @@ export default function LubricantsQuoteModal({
         volume,
         hub,
         company_name: companyName.trim(),
+        address: address.trim(),
         email: email.trim(),
         phone: phone.trim(),
         notes: notes.trim()
-          ? `Items: [${effectiveFluidSummary}] | Contact: ${contactName.trim()} | ${notes.trim()}`
-          : `Items: [${effectiveFluidSummary}] | Contact: ${contactName.trim()}`,
+          ? `Items: [${effectiveFluidSummary}] | Contact: ${contactName.trim()} | Address: ${address.trim()} | ${notes.trim()}`
+          : `Items: [${effectiveFluidSummary}] | Contact: ${contactName.trim()} | Address: ${address.trim()}`,
       });
 
       const ticketRef = res.data?.id
@@ -359,6 +367,8 @@ export default function LubricantsQuoteModal({
         fluidType: effectiveFluidSummary,
         volume,
         hub,
+        companyName: companyName.trim(),
+        address: address.trim(),
       });
 
       setStep(4);
@@ -376,6 +386,7 @@ export default function LubricantsQuoteModal({
     setCustomBrand('');
     setCustomFluid('');
     setCompanyName('');
+    setAddress('');
     setContactName('');
     setEmail('');
     setPhone('');
@@ -845,6 +856,21 @@ export default function LubricantsQuoteModal({
                   />
                 </div>
 
+                {/* Company Address */}
+                <div className="lub-field">
+                  <label className="lub-field-label">
+                    <MapPin size={14} /> Company Address / Site Location <span className="req">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    className="lub-input"
+                    placeholder="e.g. NLNG Plant, Bonny Island, Rivers State"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    required
+                  />
+                </div>
+
                 {/* Contact Person */}
                 <div className="lub-field">
                   <label className="lub-field-label">
@@ -975,6 +1001,18 @@ export default function LubricantsQuoteModal({
                   <span>Packaging:</span>
                   <strong>{successTicket.volume}</strong>
                 </div>
+                {successTicket.companyName && (
+                  <div className="lub-ticket-row">
+                    <span>Company:</span>
+                    <strong>{successTicket.companyName}</strong>
+                  </div>
+                )}
+                {successTicket.address && (
+                  <div className="lub-ticket-row">
+                    <span>Delivery Address:</span>
+                    <strong>{successTicket.address}</strong>
+                  </div>
+                )}
                 <div className="lub-ticket-row">
                   <span>Dispatch Hub:</span>
                   <strong>{successTicket.hub}</strong>
