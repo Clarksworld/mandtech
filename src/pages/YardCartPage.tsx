@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   PackageCheck, Truck, MapPin, Search,
   ArrowRight, CheckCircle2, ShieldCheck,
   AlertCircle, ShoppingCart,
-  LogIn, UserCheck, RefreshCw, X
+  LogIn, UserCheck, RefreshCw, X,
+  ClipboardList, ChevronDown, ChevronUp,
 } from 'lucide-react';
 import { useInquiry } from '../context/InquiryContext';
 import { useAuth } from '../context/AuthContext';
-import { createOrder, trackOrder, type OrderRecord } from '../services/api';
+import { createOrder, trackOrder, fetchUserOrders, type OrderRecord } from '../services/api';
 import { MandtechLogo } from '../components/Logo';
 import './YardCartPage.css';
 
@@ -23,8 +24,14 @@ export const YardCartPage: React.FC<YardCartPageProps> = ({
   const { inquiryItems, removeFromInquiry, clearInquiry, updateQuantity, getItemQuantity } = useInquiry();
   const { user, isAuthenticated, logout } = useAuth();
 
-  // Tab: 'cart' (Fulfillment & Checkout) vs 'track' (Order Tracking)
-  const [activeTab, setActiveTab] = useState<'cart' | 'track'>('cart');
+  // Tab: 'cart' | 'track' | 'orders'
+  const [activeTab, setActiveTab] = useState<'cart' | 'track' | 'orders'>('cart');
+
+  // Past Orders tab state
+  const [pastOrders, setPastOrders] = useState<OrderRecord[]>([]);
+  const [ordersLoading, setOrdersLoading] = useState(false);
+  const [ordersError, setOrdersError] = useState<string | null>(null);
+  const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
 
   // Checkout form states
   const [customerName, setCustomerName] = useState(user?.name || '');
@@ -54,6 +61,27 @@ export const YardCartPage: React.FC<YardCartPageProps> = ({
       if (user.phone && !phone) setPhone(user.phone);
     }
   }, [user]);
+
+  // Load past orders when the orders tab is activated
+  const loadPastOrders = useCallback(async () => {
+    if (!user) return;
+    setOrdersLoading(true);
+    setOrdersError(null);
+    try {
+      const res = await fetchUserOrders(user.email, user.id);
+      setPastOrders(res.orders || []);
+    } catch (err: any) {
+      setOrdersError(err.message || 'Failed to load your order history.');
+    } finally {
+      setOrdersLoading(false);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (activeTab === 'orders' && isAuthenticated) {
+      loadPastOrders();
+    }
+  }, [activeTab, isAuthenticated, loadPastOrders]);
 
   const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -201,6 +229,19 @@ export const YardCartPage: React.FC<YardCartPageProps> = ({
             <Truck size={18} />
             <span>Track Live Order / Shipment</span>
           </button>
+
+          {isAuthenticated && (
+            <button
+              className={`yard-tab-btn ${activeTab === 'orders' ? 'active' : ''}`}
+              onClick={() => setActiveTab('orders')}
+            >
+              <ClipboardList size={18} />
+              <span>My Past Orders</span>
+              {pastOrders.length > 0 && (
+                <span className="yard-tab-badge">{pastOrders.length}</span>
+              )}
+            </button>
+          )}
         </div>
 
         {/* TAB 1: CART & CHECKOUT */}
@@ -582,6 +623,175 @@ export const YardCartPage: React.FC<YardCartPageProps> = ({
                     ))}
                   </div>
                 </div>
+              </div>
+            )}
+          </div>
+        )}
+        {/* TAB 3: MY PAST ORDERS */}
+        {activeTab === 'orders' && (
+          <div className="yard-orders-history-view">
+            <div className="orders-history-header-card">
+              <div className="orders-history-title-row">
+                <div className="orders-history-icon">
+                  <ClipboardList size={24} />
+                </div>
+                <div>
+                  <h3>My Order History</h3>
+                  <p>All requisition orders placed under your account — {user?.email}</p>
+                </div>
+                <button
+                  onClick={loadPastOrders}
+                  disabled={ordersLoading}
+                  className="orders-refresh-btn"
+                  title="Refresh orders"
+                >
+                  <RefreshCw size={16} className={ordersLoading ? 'animate-spin' : ''} />
+                </button>
+              </div>
+            </div>
+
+            {ordersError && (
+              <div className="track-error-alert" style={{ marginBottom: '16px' }}>
+                <AlertCircle size={16} />
+                <span>{ordersError}</span>
+              </div>
+            )}
+
+            {ordersLoading ? (
+              <div className="orders-loading-state">
+                <RefreshCw size={32} className="animate-spin" />
+                <p>Fetching your order history…</p>
+              </div>
+            ) : pastOrders.length === 0 ? (
+              <div className="orders-empty-state">
+                <ShoppingCart size={48} />
+                <h4>No Orders Found</h4>
+                <p>You haven't placed any yard requisition orders yet. Once you submit an order, it will appear here.</p>
+              </div>
+            ) : (
+              <div className="orders-list">
+                {pastOrders.map((order) => {
+                  const badge = getStatusBadge(order.status);
+                  const isExpanded = expandedOrderId === order.id;
+                  return (
+                    <div key={order.id} className="order-history-card">
+                      <div
+                        className="order-history-card-header"
+                        onClick={() => setExpandedOrderId(isExpanded ? null : order.id)}
+                      >
+                        <div className="order-history-left">
+                          <span className="order-ref-badge">{order.id}</span>
+                          <div className="order-history-meta">
+                            <span className="order-history-company">{order.company}</span>
+                            <span className="order-history-date">
+                              {new Date(order.created_at).toLocaleDateString('en-GB', {
+                                day: '2-digit', month: 'short', year: 'numeric'
+                              })}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="order-history-right">
+                          <span className={`order-status-pill ${badge.color}`}>{badge.label}</span>
+                          <span className="order-items-count">{order.items.length} item{order.items.length !== 1 ? 's' : ''}</span>
+                          {isExpanded
+                            ? <ChevronUp size={18} className="order-chevron" />
+                            : <ChevronDown size={18} className="order-chevron" />}
+                        </div>
+                      </div>
+
+                      {isExpanded && (
+                        <div className="order-history-expanded">
+                          {/* Info row */}
+                          <div className="order-expanded-info-grid">
+                            <div className="order-info-cell">
+                              <span className="info-cell-label">Contact</span>
+                              <span className="info-cell-value">{order.customer_name}</span>
+                            </div>
+                            <div className="order-info-cell">
+                              <span className="info-cell-label">Phone</span>
+                              <span className="info-cell-value">{order.phone}</span>
+                            </div>
+                            <div className="order-info-cell">
+                              <span className="info-cell-label">Fulfillment Hub</span>
+                              <span className="info-cell-value">{order.fulfillment_hub}</span>
+                            </div>
+                            <div className="order-info-cell">
+                              <span className="info-cell-label">Delivery Address</span>
+                              <span className="info-cell-value">{order.delivery_address}</span>
+                            </div>
+                          </div>
+
+                          {/* Items */}
+                          <div className="order-expanded-items">
+                            <h5 className="order-expanded-items-title">Ordered Items</h5>
+                            <div className="tracked-items-grid">
+                              {order.items.map((it, i) => (
+                                <div key={i} className="tracked-item-pill">
+                                  <span className="material-symbols-outlined item-pill-icon">inventory_2</span>
+                                  <div className="item-pill-info">
+                                    <strong>{it.title}</strong>
+                                    <span>
+                                      {it.category}
+                                      {it.sku ? ` • SKU: ${it.sku}` : ''}
+                                      {it.quantity && it.quantity > 1 ? ` • Qty: ${it.quantity}` : ''}
+                                    </span>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Timeline */}
+                          {order.tracking_history && order.tracking_history.length > 0 && (
+                            <div className="order-expanded-timeline">
+                              <h5 className="order-expanded-items-title">Tracking Timeline</h5>
+                              <div className="timeline-steps" style={{ marginTop: '8px' }}>
+                                {order.tracking_history.map((step, idx) => (
+                                  <div key={idx} className="timeline-step-row active">
+                                    <div className="step-marker-col">
+                                      <div className="step-dot"><CheckCircle2 size={14} /></div>
+                                      {idx < order.tracking_history.length - 1 && <div className="step-line" />}
+                                    </div>
+                                    <div className="step-body">
+                                      <div className="step-top-line">
+                                        <strong className="step-name">{step.label}</strong>
+                                        <span className="step-time">
+                                          {new Date(step.time).toLocaleString('en-GB', {
+                                            day: '2-digit', month: 'short',
+                                            hour: '2-digit', minute: '2-digit'
+                                          })}
+                                        </span>
+                                      </div>
+                                      {step.location && (
+                                        <div className="step-location"><MapPin size={12} /> {step.location}</div>
+                                      )}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Re-track shortcut */}
+                          <div className="order-expanded-actions">
+                            <button
+                              onClick={() => {
+                                setTrackQuery(order.id);
+                                setTrackedOrder(order);
+                                setActiveTab('track');
+                              }}
+                              className="btn-track-now"
+                              style={{ fontSize: '13px', padding: '8px 18px' }}
+                            >
+                              <Truck size={14} />
+                              <span>Open Live Tracker</span>
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>

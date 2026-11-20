@@ -1014,3 +1014,243 @@
   color: #64748b;
 }
 
+
+
+/* ═══════════════════════════════════════════════
+   MY PAST ORDERS TAB
+═══════════════════════════════════════════════ */
+
+.yard-orders-history-view {
+  padding-top: 8px;
+}
+
+/* Header card */
+.orders-history-header-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+}
+
+.orders-history-title-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.orders-history-icon {
+  width: 44px;
+  height: 44px;
+  background: #f1f5f9;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0f172a;
+  flex-shrink: 0;
+}
+
+.orders-history-title-row h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 2px 0;
+}
+
+.orders-history-title-row p {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0;
+}
+
+.orders-refresh-btn {
+  margin-left: auto;
+  background: none;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px;
+  cursor: pointer;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  transition: background 0.15s;
+}
+
+.orders-refresh-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+/* Loading / Empty states */
+.orders-loading-state,
+.orders-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 64px 24px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  color: #94a3b8;
+  text-align: center;
+}
+
+.orders-empty-state h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #475569;
+  margin: 0;
+}
+
+.orders-empty-state p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+  max-width: 380px;
+}
+
+/* Orders list */
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Individual order card */
+.order-history-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+
+.order-history-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+}
+
+.order-history-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  cursor: pointer;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.order-history-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.order-ref-badge {
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  font-weight: 800;
+  color: #0f172a;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+
+.order-history-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.order-history-company {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.order-history-date {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.order-history-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.order-status-pill {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+.order-items-count {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.order-chevron {
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+
+/* Expanded section */
+.order-history-expanded {
+  border-top: 1px solid #f1f5f9;
+  padding: 20px;
+  background: #fafbfc;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.order-expanded-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.order-info-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.info-cell-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-cell-value {
+  font-size: 13px;
+  color: #1e293b;
+  font-weight: 500;
+}
+
+.order-expanded-items-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin: 0 0 10px 0;
+}
+
+.order-expanded-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 4px;
+}
