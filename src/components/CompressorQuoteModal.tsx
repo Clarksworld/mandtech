@@ -57,7 +57,7 @@ export default function CompressorQuoteModal({
 
   // Cart integration
   const { addToInquiry, inquiryItems } = useInquiry();
-  const [addedToCartSuccess, setAddedToCartSuccess] = useState(false);
+  const [isCartSuccessView, setIsCartSuccessView] = useState(false);
 
   // Form fields
   const [phone, setPhone] = useState('');
@@ -98,7 +98,7 @@ export default function CompressorQuoteModal({
       setCustomBrand('');
       setSubmitError(null);
       setSuccessData(null);
-      setAddedToCartSuccess(false);
+      setIsCartSuccessView(false);
     }
   }, [isOpen, initialType, initialBrand]);
 
@@ -169,7 +169,7 @@ export default function CompressorQuoteModal({
     if (step > 1 && step < 5) {
       setStep((s) => (s - 1) as Step);
       setSubmitError(null);
-      setAddedToCartSuccess(false);
+      setIsCartSuccessView(false);
     }
   };
 
@@ -191,7 +191,22 @@ export default function CompressorQuoteModal({
       quantity: 1,
     });
 
-    setAddedToCartSuccess(true);
+    setIsCartSuccessView(true);
+  };
+
+  const handleCloseAndReset = () => {
+    setIsCartSuccessView(false);
+    handleReset();
+    onClose();
+  };
+
+  const handleCheckout = () => {
+    setIsCartSuccessView(false);
+    handleReset();
+    onClose();
+    if (onNavigateToCart) {
+      onNavigateToCart();
+    }
   };
 
   // Dual Action 2: Direct Formal Quotation Request
@@ -255,9 +270,103 @@ export default function CompressorQuoteModal({
     setCustomBrand('');
     setSuccessData(null);
     setSubmitError(null);
-    setAddedToCartSuccess(false);
+    setIsCartSuccessView(false);
     setStep(1);
   };
+
+  // Dedicated Added-to-Cart Confirmation View
+  if (isCartSuccessView) {
+    const brandsText = effectiveBrandsDisplay || 'Multiple OEM Brands';
+    const conditionText = selectedCondition === 'NEW' ? 'Brand New Unit' : 'Pre-Owned Unit';
+    const imageSrc = selectedType === 'ELECTRIC AIR COMPRESSOR' ? electricImg : dieselImg;
+    const titleText = `${selectedType === 'ELECTRIC AIR COMPRESSOR' ? 'Electric' : 'Diesel'} Air Compressor`;
+
+    return (
+      <div className="cq-modal-backdrop" onClick={handleCloseAndReset}>
+        <div className="cq-modal-container cq-cart-modal-container" onClick={(e) => e.stopPropagation()}>
+          {/* Top Bar */}
+          <div className="cq-modal-topbar">
+            <div className="cq-topbar-left">
+              <div className="cq-cart-pill-badge">
+                <ShoppingCart size={14} />
+                <span>Added to Yard Cart</span>
+              </div>
+            </div>
+            <button
+              type="button"
+              className="cq-close-btn"
+              onClick={handleCloseAndReset}
+              aria-label="Close modal"
+              title="Close"
+            >
+              <X size={18} />
+            </button>
+          </div>
+
+          {/* Modal Content */}
+          <div className="cq-modal-body cq-cart-modal-body cq-fade-in">
+            <div className="cq-cart-success-badge">
+              <CheckCircle2 size={38} className="text-emerald-500" />
+            </div>
+
+            <h3 className="cq-cart-modal-title">Air Compressor Added to Cart!</h3>
+            <p className="cq-cart-modal-subtitle">
+              Your equipment configuration is now staged in your Yard Cart. What would you like to do next?
+            </p>
+
+            {/* Configured Item Preview Card */}
+            <div className="cq-cart-item-preview">
+              <img src={imageSrc} alt={titleText} className="cq-cart-preview-thumb" />
+              <div className="cq-cart-preview-info">
+                <h4 className="cq-cart-preview-title">{titleText}</h4>
+                <div className="cq-cart-preview-meta">
+                  <span className={`cq-preview-badge ${selectedCondition === 'NEW' ? 'new' : 'used'}`}>
+                    {conditionText}
+                  </span>
+                  <span className="cq-preview-qty">Qty: 1</span>
+                </div>
+                <div className="cq-cart-preview-brands">
+                  <span className="cq-preview-brand-label">OEM Brand(s):</span>
+                  <strong className="cq-preview-brand-val">{brandsText}</strong>
+                </div>
+                {notes.trim() && (
+                  <p className="cq-preview-note">"{notes.trim()}"</p>
+                )}
+              </div>
+            </div>
+
+            <div className="cq-cart-status-pill">
+              <ShoppingCart size={14} />
+              <span>
+                Yard Cart Total: <strong>{inquiryItems.length} item{inquiryItems.length === 1 ? '' : 's'}</strong>
+              </span>
+            </div>
+
+            {/* Action Buttons: Continue Shopping vs Checkout */}
+            <div className="cq-cart-modal-actions">
+              <button
+                type="button"
+                className="cq-btn-continue-shopping"
+                onClick={handleCloseAndReset}
+              >
+                Continue Shopping
+              </button>
+
+              <button
+                type="button"
+                className="cq-btn-checkout"
+                onClick={handleCheckout}
+              >
+                <ShoppingCart size={16} />
+                <span>Checkout (View Cart)</span>
+                <ArrowRight size={16} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const progressPercent = step >= 5 ? 100 : Math.round(((step - 1) / TOTAL_STEPS) * 100);
 
@@ -532,61 +641,21 @@ export default function CompressorQuoteModal({
                 </div>
               </div>
 
-              {/* If already added to cart, show success banner */}
-              {addedToCartSuccess ? (
-                <div className="cq-added-cart-banner cq-fade-in">
-                  <div className="cq-added-cart-header">
-                    <div className="cq-cart-icon-wrap">
-                      <CheckCircle2 size={32} className="text-green" />
-                    </div>
-                    <div>
-                      <h4 className="cq-added-title">Air Compressor Added to Yard Cart!</h4>
-                      <p className="cq-added-sub">
-                        {selectedType === 'ELECTRIC AIR COMPRESSOR' ? 'Electric' : 'Diesel'} Compressor ({effectiveBrandsDisplay}) is staged in your cart.
-                      </p>
-                    </div>
-                  </div>
+              {/* Option A: Fast Add to Cart Button */}
+              <div className="cq-quick-cart-block">
+                <button
+                  type="button"
+                  className="cq-add-cart-btn"
+                  onClick={handleAddToCart}
+                >
+                  <ShoppingCart size={17} />
+                  <span>Add Configured Compressor to Yard Cart</span>
+                </button>
+                <span className="cq-quick-or-divider">OR REQUEST AN OFFICIAL PROFORMA INVOICE VIA EMAIL</span>
+              </div>
 
-                  <div className="cq-added-cart-actions">
-                    {onNavigateToCart && (
-                      <button
-                        type="button"
-                        className="cq-btn-view-cart"
-                        onClick={() => {
-                          onClose();
-                          onNavigateToCart();
-                        }}
-                      >
-                        <ShoppingCart size={16} />
-                        <span>View Cart &amp; Place Order ({inquiryItems.length})</span>
-                      </button>
-                    )}
-                    <button
-                      type="button"
-                      className="cq-btn-continue-browsing"
-                      onClick={onClose}
-                    >
-                      Continue Browsing Machinery
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  {/* Option A: Fast Add to Cart Button */}
-                  <div className="cq-quick-cart-block">
-                    <button
-                      type="button"
-                      className="cq-add-cart-btn"
-                      onClick={handleAddToCart}
-                    >
-                      <ShoppingCart size={17} />
-                      <span>Add Configured Compressor to Yard Cart</span>
-                    </button>
-                    <span className="cq-quick-or-divider">OR REQUEST AN OFFICIAL PROFORMA INVOICE VIA EMAIL</span>
-                  </div>
-
-                  {/* Option B: Formal Quotation Form */}
-                  <form onSubmit={handleSubmit} className="cq-form">
+              {/* Option B: Formal Quotation Form */}
+              <form onSubmit={handleSubmit} className="cq-form">
                     {submitError && (
                       <div className="cq-error-pill">
                         <AlertCircle size={16} />
@@ -702,8 +771,6 @@ export default function CompressorQuoteModal({
                       </button>
                     </div>
                   </form>
-                </>
-              )}
             </div>
           )}
 
