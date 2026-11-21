@@ -802,3 +802,352 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+/* ========================================================
+   MULTI-BRAND SELECTION & DUAL FLOW (CART + QUOTE) STYLES
+   ======================================================== */
+
+.cq-multiselect-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding: 6px 4px;
+}
+
+.cq-multiselect-count {
+  font-size: 12px;
+  font-weight: 700;
+  color: #475569;
+}
+
+.cq-multiselect-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cq-toolbar-link-btn {
+  background: none;
+  border: none;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--primary-container, #d9531e);
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: opacity 0.15s ease;
+}
+
+.cq-toolbar-link-btn:hover {
+  opacity: 0.8;
+}
+
+.cq-toolbar-link-btn.text-rose {
+  color: #e11d48;
+}
+
+/* Brand Card Multi-Select Enhancements */
+.cq-brand-multiselect {
+  position: relative;
+  border-width: 2px;
+  user-select: none;
+}
+
+.cq-brand-card--selected {
+  border-color: var(--primary-container, #d9531e) !important;
+  background: #fffaf7 !important;
+  box-shadow: 0 6px 18px rgba(217, 83, 30, 0.14) !important;
+}
+
+.cq-brand-checkbox {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 1.5px solid #cbd5e1;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cq-brand-checkbox.checked {
+  background: var(--primary-container, #d9531e);
+  border-color: var(--primary-container, #d9531e);
+  transform: scale(1.05);
+}
+
+.cq-brand-step-footer {
+  margin-top: 16px;
+}
+
+/* Summary Card in Step 4 */
+.cq-summary-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+
+.cq-summary-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.cq-summary-title {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #64748b;
+}
+
+.cq-condition-tag {
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.cq-condition-tag.new {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+.cq-condition-tag.used {
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fde68a;
+}
+
+.cq-summary-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cq-summary-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12.5px;
+}
+
+.cq-summary-label {
+  color: #64748b;
+  font-weight: 600;
+  min-width: 50px;
+}
+
+.cq-summary-val {
+  color: #0f172a;
+}
+
+.cq-summary-brands-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.cq-brand-pill-tag {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+/* Quick Cart CTA Block */
+.cq-quick-cart-block {
+  margin-bottom: 16px;
+}
+
+.cq-add-cart-btn {
+  width: 100%;
+  padding: 13px 18px;
+  background: #0f172a;
+  color: #ffffff;
+  border: 1px solid #0f172a;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.12);
+}
+
+.cq-add-cart-btn:hover {
+  background: #1e293b;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.2);
+}
+
+.cq-quick-or-divider {
+  display: block;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 800;
+  color: #94a3b8;
+  letter-spacing: 0.8px;
+  margin: 14px 0 6px;
+}
+
+/* Dual Actions at bottom of form */
+.cq-actions-dual-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.cq-secondary-cart-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 13px 18px;
+  background: #f1f5f9;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  color: #0f172a;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.cq-secondary-cart-btn:hover {
+  background: #e2e8f0;
+  border-color: #94a3b8;
+}
+
+.cq-field-row-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+@media (max-width: 480px) {
+  .cq-field-row-two {
+    grid-template-columns: 1fr;
+  }
+
+  .cq-actions-dual-row {
+    flex-direction: column;
+  }
+
+  .cq-secondary-cart-btn {
+    width: 100%;
+  }
+}
+
+/* Added to Cart Success Banner */
+.cq-added-cart-banner {
+  background: #ffffff;
+  border: 1.5px solid #22c55e;
+  border-radius: 14px;
+  padding: 24px 20px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(34, 197, 94, 0.1);
+  margin-top: 8px;
+}
+
+.cq-added-cart-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.cq-cart-icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #dcfce7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cq-added-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+}
+
+.cq-added-sub {
+  font-size: 13px;
+  color: #64748b;
+  margin: 4px 0 0;
+  max-width: 400px;
+  line-height: 1.5;
+}
+
+.cq-added-cart-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cq-btn-view-cart {
+  width: 100%;
+  padding: 13px 20px;
+  background: #0f172a;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.15s ease;
+}
+
+.cq-btn-view-cart:hover {
+  background: #1e293b;
+}
+
+.cq-btn-continue-browsing {
+  width: 100%;
+  padding: 11px 20px;
+  background: #ffffff;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cq-btn-continue-browsing:hover {
+  background: #f8fafc;
+  color: #0f172a;
+}

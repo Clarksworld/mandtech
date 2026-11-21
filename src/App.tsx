@@ -154,7 +154,12 @@ export default function App() {
       case 'home':
         return <HomePage onNavigate={(page) => navigateTo(page as ActivePage)} />;
       case 'equipmentSales':
-        return <EquipmentSalesPage initialType={selectedCompressorType} />;
+        return (
+          <EquipmentSalesPage
+            initialType={selectedCompressorType}
+            onNavigateToCart={() => navigateTo('yard-cart')}
+          />
+        );
       case 'catalog':
         return <SparePartsPage initialBrand={selectedSparePartsBrand} />;
       case 'leasing':
@@ -901,6 +906,10 @@ export default function App() {
         isOpen={compressorModalOpen}
         onClose={() => setCompressorModalOpen(false)}
         initialType={modalInitialType}
+        onNavigateToCart={() => {
+          setCompressorModalOpen(false);
+          navigateTo('yard-cart');
+        }}
       />
 
       {/* Global Leasing and Rental Modal */}

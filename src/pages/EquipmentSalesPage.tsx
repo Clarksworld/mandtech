@@ -15,9 +15,10 @@ import dieselImg from '../assets/diesel_compressor.jpg';
 
 interface EquipmentSalesPageProps {
   initialType?: CompressorType | null;
+  onNavigateToCart?: () => void;
 }
 
-export default function EquipmentSalesPage({ initialType }: EquipmentSalesPageProps) {
+export default function EquipmentSalesPage({ initialType, onNavigateToCart }: EquipmentSalesPageProps) {
   // Modal State
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<CompressorType | null>(initialType || null);
@@ -47,6 +48,10 @@ export default function EquipmentSalesPage({ initialType }: EquipmentSalesPagePr
         onClose={() => setModalOpen(false)}
         initialType={modalType}
         initialBrand={modalBrand}
+        onNavigateToCart={() => {
+          setModalOpen(false);
+          if (onNavigateToCart) onNavigateToCart();
+        }}
       />
 
 
