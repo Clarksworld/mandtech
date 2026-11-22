@@ -161,7 +161,12 @@ export default function App() {
           />
         );
       case 'catalog':
-        return <SparePartsPage initialBrand={selectedSparePartsBrand} />;
+        return (
+          <SparePartsPage
+            initialBrand={selectedSparePartsBrand}
+            onNavigateToCart={() => navigateTo('yard-cart')}
+          />
+        );
       case 'leasing':
         return (
           <LeasingPage 

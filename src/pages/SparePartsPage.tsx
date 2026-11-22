@@ -9,6 +9,7 @@ import compressorHero from '../assets/compressor_hero.jpg';
 
 interface SparePartsPageProps {
   initialBrand?: SparePartsBrand | null;
+  onNavigateToCart?: () => void;
 }
 
 interface BrandCardInfo {
@@ -45,7 +46,7 @@ const BRANDS_LIST: BrandCardInfo[] = [
   },
 ];
 
-export default function SparePartsPage({ initialBrand }: SparePartsPageProps) {
+export default function SparePartsPage({ initialBrand, onNavigateToCart }: SparePartsPageProps) {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedBrand, setSelectedBrand] = useState<SparePartsBrand | null>(initialBrand || null);
 
@@ -73,6 +74,10 @@ export default function SparePartsPage({ initialBrand }: SparePartsPageProps) {
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         initialBrand={selectedBrand}
+        onNavigateToCart={() => {
+          setModalOpen(false);
+          if (onNavigateToCart) onNavigateToCart();
+        }}
       />
 
       {/* Hero Header with Bigger, Authoritative Image */}
