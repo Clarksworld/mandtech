@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Wrench, ShieldCheck, Scale, Package, Calendar, Zap, ChevronRight, Download, FileText, Check } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Wrench, ShieldCheck, Scale, Package, Calendar, Zap, ChevronRight, ChevronDown } from 'lucide-react';
 import './HomePage.css';
 import heroBg from '../assets/hero_bg.png';
 import compressorImg from '../assets/compressor.png';
@@ -13,139 +13,40 @@ interface HomePageProps {
 }
 
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
-  const [showSpecsModal, setShowSpecsModal] = useState(false);
-  const [downloadSuccess, setDownloadSuccess] = useState(false);
+  const [equipmentDropdownOpen, setEquipmentDropdownOpen] = useState(false);
+  const equipmentDropdownRef = useRef<HTMLDivElement>(null);
+  const equipmentDropdownTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const handleSimulateDownload = () => {
-    setDownloadSuccess(true);
-    // Create an actual downloadable text/spec file dynamically
-    const specContent = `MANDTECH SERVICES LIMITED - CORPORATE SPECIFICATIONS & DIRECTORY
-----------------------------------------------------------------------
-ENGINEERING STANDARDS: ISO 8573.1 Class 0, CE, ASME, SONCAP
-
-PRODUCT LINE:
-1. AIR COMPRESSORS (Rotary Screw, Portable & Stationary, New & Used)
-   - Atlas Copco, Sullair, Ingersoll Rand, Denair
-2. AIR DRYER (Refrigerated & Desiccant Industrial Dryers)
-3. AIR RECEIVER (High-Pressure Industrial Tanks & Vessels)
-4. SPARE PARTS (OEM Filters, Separators, Valves, Airends, Coolers, Sensors)
-5. LUBRICANTS (Synthetic & Mineral Industrial Compressor Fluids)
-
-INDUSTRIAL SERVICES:
-- Equipment Rentals
-- On-Site Maintenance
-- System Audit
-- Technical Support / Advice
-- Installation
-- Troubleshooting
-
-REGIONAL OPERATING HUBS & HEADQUARTERS:
-1. HEADQUARTERS (PORT-HARCOURT):
-   Mandtech Services Limited
-   42 Old Refinery Road, Elelenwo, Port-Harcourt, Rivers State
-   Phone: 08064204187 | Email: info@mandtech.com.ng
-
-2. LAGOS BRANCH:
-   Mandtech Services Limited
-   16 Oshuketan Street, Return, Lagos State
-   Phone: 08027779298 | Email: info@mandtech.com.ng
-
-3. ABUJA BRANCH:
-   Mandtech Services Limited
-   Camp David Garden Estate, Karsana District, Abuja FCT
-   Phone: 08067980479 | Email: sales@mandtech.com.ng
-
-Corporate Web: https://mandtech.com.ng`;
-
-    const blob = new Blob([specContent], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'Mandtech_Industrial_Specs_Catalog.txt';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-
-    setTimeout(() => {
-      setDownloadSuccess(false);
-      setShowSpecsModal(false);
-    }, 2500);
+  const handleMouseEnterDropdown = () => {
+    if (equipmentDropdownTimeoutRef.current) {
+      clearTimeout(equipmentDropdownTimeoutRef.current);
+    }
+    setEquipmentDropdownOpen(true);
   };
+
+  const handleMouseLeaveDropdown = () => {
+    equipmentDropdownTimeoutRef.current = setTimeout(() => {
+      setEquipmentDropdownOpen(false);
+    }, 220);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (equipmentDropdownRef.current && !equipmentDropdownRef.current.contains(event.target as Node)) {
+        setEquipmentDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      if (equipmentDropdownTimeoutRef.current) {
+        clearTimeout(equipmentDropdownTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="home-page-container">
-      {/* Specs Download Modal */}
-      {showSpecsModal && (
-        <div className="status-modal-overlay" onClick={() => setShowSpecsModal(false)}>
-          <div className="status-modal-card" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h3 className="modal-title">
-                <FileText size={20} className="text-orange" />
-                <span>Mandtech Technical Specifications Catalog</span>
-              </h3>
-              <button className="modal-close-btn" onClick={() => setShowSpecsModal(false)}>✕</button>
-            </div>
-            <div className="modal-body-content" style={{ padding: '24px' }}>
-              <p style={{ fontSize: '14.5px', color: '#4b5563', lineHeight: '1.6', marginBottom: '20px' }}>
-                Download our comprehensive engineering datasheet catalog detailing CFM curves, power factor ratings, diesel fuel burn rates, and ISO standard compliance certifications.
-              </p>
-
-              {downloadSuccess ? (
-                <div style={{
-                  background: '#ecfdf5',
-                  border: '1px solid #10b981',
-                  borderRadius: '6px',
-                  padding: '16px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  color: '#065f46',
-                  fontWeight: 600
-                }}>
-                  <Check size={20} color="#10b981" />
-                  <span>Datasheet downloaded successfully!</span>
-                </div>
-              ) : (
-                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
-                  <button
-                    onClick={() => setShowSpecsModal(false)}
-                    style={{
-                      background: 'transparent',
-                      border: '1px solid #d1d5db',
-                      padding: '10px 18px',
-                      borderRadius: '6px',
-                      cursor: 'pointer',
-                      fontWeight: 600,
-                      color: '#374151'
-                    }}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleSimulateDownload}
-                    style={{
-                      background: 'var(--primary-container)',
-                      border: 'none',
-                      padding: '10px 20px',
-                      borderRadius: '6px',
-                      cursor: 'pointer',
-                      fontWeight: 700,
-                      color: '#ffffff',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '8px'
-                    }}
-                  >
-                    <Download size={16} /> Download Datasheet (.TXT)
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Redesigned Hero Block with Industrial Workshop Image */}
       <section className="hero-section" style={{ backgroundImage: `url(${heroBg})` }}>
         <div className="hero-dim-overlay"></div>
@@ -161,10 +62,80 @@ Corporate Web: https://mandtech.com.ng`;
             Providing High-Precision Robust Air Solutions, Air systems, &amp; comprehensive Maintenance Support to: Manufacturing,  Oil &amp; Gas, Mining, Packaging,  Pharmaceuticals, Power Generation, etc., Industries
           </p>
           <div className="hero-cta-group">
-            <button className="home-btn-primary" onClick={() => onNavigate('equipmentSales')}>
-              Explore Equipment Sales <ChevronRight size={16} style={{ display: 'inline', marginLeft: '4px', verticalAlign: 'middle' }} />
-            </button>
-            <button className="home-btn-ghost" onClick={() => onNavigate('aftersales')}>
+            {/* Explore Equipment Sales with Hover/Click Dropdown */}
+            <div 
+              className="hero-equipment-dropdown-container"
+              ref={equipmentDropdownRef}
+              onMouseEnter={handleMouseEnterDropdown}
+              onMouseLeave={handleMouseLeaveDropdown}
+            >
+              <button 
+                type="button"
+                className={`home-btn-primary hero-dropdown-trigger ${equipmentDropdownOpen ? 'active' : ''}`}
+                onClick={() => setEquipmentDropdownOpen(prev => !prev)}
+                aria-expanded={equipmentDropdownOpen}
+              >
+                <span>Explore Equipment Sales</span>
+                <ChevronDown size={16} className={`hero-cta-chevron ${equipmentDropdownOpen ? 'rotated' : ''}`} />
+              </button>
+
+              {equipmentDropdownOpen && (
+                <div className="hero-equipment-dropdown-menu">
+                  <div 
+                    className="hero-dropdown-item"
+                    onClick={() => {
+                      setEquipmentDropdownOpen(false);
+                      onNavigate('equipmentSales');
+                    }}
+                  >
+                    <div className="hero-dropdown-icon">
+                      <Scale size={18} />
+                    </div>
+                    <div className="hero-dropdown-info">
+                      <span className="hero-dropdown-title">Air Compressors</span>
+                      <span className="hero-dropdown-sub">Electric &amp; Diesel Rotary Screw Fleet</span>
+                    </div>
+                    <ChevronRight size={14} className="hero-dropdown-arrow" />
+                  </div>
+
+                  <div 
+                    className="hero-dropdown-item"
+                    onClick={() => {
+                      setEquipmentDropdownOpen(false);
+                      onNavigate('catalog');
+                    }}
+                  >
+                    <div className="hero-dropdown-icon">
+                      <Package size={18} />
+                    </div>
+                    <div className="hero-dropdown-info">
+                      <span className="hero-dropdown-title">Spare parts</span>
+                      <span className="hero-dropdown-sub">OEM Filters, Valves, Elements &amp; Kits</span>
+                    </div>
+                    <ChevronRight size={14} className="hero-dropdown-arrow" />
+                  </div>
+
+                  <div 
+                    className="hero-dropdown-item"
+                    onClick={() => {
+                      setEquipmentDropdownOpen(false);
+                      onNavigate('aftersales');
+                    }}
+                  >
+                    <div className="hero-dropdown-icon">
+                      <Wrench size={18} />
+                    </div>
+                    <div className="hero-dropdown-info">
+                      <span className="hero-dropdown-title">lubricants/ special fluids</span>
+                      <span className="hero-dropdown-sub">Synthetic Oils, Coolants &amp; Specialty Fluids</span>
+                    </div>
+                    <ChevronRight size={14} className="hero-dropdown-arrow" />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <button className="home-btn-ghost" onClick={() => onNavigate('support')}>
               Technical Support
             </button>
           </div>
@@ -181,55 +152,6 @@ Corporate Web: https://mandtech.com.ng`;
               <div className="bar-item" onClick={() => onNavigate('leasing')}>Leasing &amp; Rentals</div>
               <div className="bar-divider"></div>
               <div className="bar-item" onClick={() => onNavigate('aftersales')}>Lubricants/Special Fluids</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* OEM Partners & Global Brands Showcase */}
-      <section className="partners-section">
-        <div className="container">
-          <div className="partners-header">
-            <span className="partners-tagline">Authorized Distribution &amp; Technical Fleet Brands</span>
-            <h2 className="partners-title">Our OEM Partners &amp; Trusted Brands</h2>
-            <p className="partners-subtitle">
-              Official Distributors of Denair Air Compressors in Nigeria, with certified factory OEM supply and maintenance support across major world-class machinery brands.
-            </p>
-          </div>
-
-          <div className="partners-grid">
-            <div className="partner-card" onClick={() => onNavigate('equipmentSales')} title="Atlas Copco Air Compressors & Fleet">
-              <img src={atlasCopcoSvg} alt="Atlas Copco" />
-            </div>
-            <div className="partner-card" onClick={() => onNavigate('equipmentSales')} title="Sullair Industrial Air Compressors">
-              <img src={sullairSvg} alt="Sullair" />
-            </div>
-            <div className="partner-card" onClick={() => onNavigate('equipmentSales')} title="Denair Air Compressors (Official Distributor in Nigeria)">
-              <img src={denairPng} alt="Denair" />
-            </div>
-            <div className="partner-card" onClick={() => onNavigate('equipmentSales')} title="Ingersoll Rand Compressors & Heavy Equipment">
-              <img src={ingersollRandSvg} alt="Ingersoll Rand" />
-            </div>
-            <div className="partner-card" onClick={() => onNavigate('catalog')} title="Kaeser Compressors OEM Spares & Systems">
-              <div className="partner-kaeser-badge">
-                <span className="kaeser-main">KAESER</span>
-                <span className="kaeser-sub">COMPRESSORS</span>
-              </div>
-            </div>
-            <div className="partner-card" onClick={() => onNavigate('catalog')} title="CompAir Industrial Systems">
-              <span className="partner-compair-text">CompAir</span>
-            </div>
-            <div className="partner-card" onClick={() => onNavigate('leasing')} title="Doosan Industrial Fleet">
-              <span className="partner-doosan-text">DOOSAN</span>
-            </div>
-            <div className="partner-card" onClick={() => onNavigate('equipmentSales')} title="Sollant Industrial Compressors">
-              <span className="partner-sollant-text">SOLLANT</span>
-            </div>
-            <div className="partner-card" onClick={() => onNavigate('leasing')} title="JMG Power & Air Systems">
-              <span className="partner-jmg-text">JMG</span>
-            </div>
-            <div className="partner-card" onClick={() => onNavigate('leasing')} title="Atlas Copco Mobile & Plant Fleet">
-              <span className="partner-atlasred-text">Atlas Copco</span>
             </div>
           </div>
         </div>
@@ -349,14 +271,55 @@ Corporate Web: https://mandtech.com.ng`;
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
 
-            <button 
-              className="power-download-btn"
-              onClick={() => setShowSpecsModal(true)}
-            >
-              <Download size={16} style={{ display: 'inline', marginRight: '6px', verticalAlign: 'middle' }} />
-              Download Specs Catalog
-            </button>
+      {/* OEM Partners & Global Brands Showcase (Placed below High-Performance Power Solutions) */}
+      <section className="partners-section">
+        <div className="container">
+          <div className="partners-header">
+            <span className="partners-tagline">Authorized Distribution &amp; Technical Fleet Brands</span>
+            <h2 className="partners-title">Our OEM Partners &amp; Trusted Brands</h2>
+            <p className="partners-subtitle">
+              Official Distributors of Denair Air Compressors in Nigeria, with certified factory OEM supply and maintenance support across major world-class machinery brands.
+            </p>
+          </div>
+
+          <div className="partners-grid">
+            <div className="partner-card" onClick={() => onNavigate('equipmentSales')} title="Atlas Copco Air Compressors & Fleet">
+              <img src={atlasCopcoSvg} alt="Atlas Copco" />
+            </div>
+            <div className="partner-card" onClick={() => onNavigate('equipmentSales')} title="Sullair Industrial Air Compressors">
+              <img src={sullairSvg} alt="Sullair" />
+            </div>
+            <div className="partner-card" onClick={() => onNavigate('equipmentSales')} title="Denair Air Compressors (Official Distributor in Nigeria)">
+              <img src={denairPng} alt="Denair" />
+            </div>
+            <div className="partner-card" onClick={() => onNavigate('equipmentSales')} title="Ingersoll Rand Compressors & Heavy Equipment">
+              <img src={ingersollRandSvg} alt="Ingersoll Rand" />
+            </div>
+            <div className="partner-card" onClick={() => onNavigate('catalog')} title="Kaeser Compressors OEM Spares & Systems">
+              <div className="partner-kaeser-badge">
+                <span className="kaeser-main">KAESER</span>
+                <span className="kaeser-sub">COMPRESSORS</span>
+              </div>
+            </div>
+            <div className="partner-card" onClick={() => onNavigate('catalog')} title="CompAir Industrial Systems">
+              <span className="partner-compair-text">CompAir</span>
+            </div>
+            <div className="partner-card" onClick={() => onNavigate('leasing')} title="Doosan Industrial Fleet">
+              <span className="partner-doosan-text">DOOSAN</span>
+            </div>
+            <div className="partner-card" onClick={() => onNavigate('equipmentSales')} title="Sollant Industrial Compressors">
+              <span className="partner-sollant-text">SOLLANT</span>
+            </div>
+            <div className="partner-card" onClick={() => onNavigate('leasing')} title="JMG Power & Air Systems">
+              <span className="partner-jmg-text">JMG</span>
+            </div>
+            <div className="partner-card" onClick={() => onNavigate('leasing')} title="Atlas Copco Mobile & Plant Fleet">
+              <span className="partner-atlasred-text">Atlas Copco</span>
+            </div>
           </div>
         </div>
       </section>
