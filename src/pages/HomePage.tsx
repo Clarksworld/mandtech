@@ -154,7 +154,7 @@ Corporate Web: https://mandtech.com.ng`;
             <span className="text-orange">Your One-Stop Name</span> in Industrial Equipment.
           </h1>
           <p className="hero-desc">
-            Providing robust solutions for heavy industry, from high-precision air systems to reliable power generation and comprehensive maintenance support.
+            Providing High-Precision Robust Air Solutions, Air systems, &amp; comprehensive Maintenance Support to: Manufacturing,  Oil &amp; Gas, Mining, Packaging,  Pharmaceuticals, Power Generation, etc., Industries
           </p>
           <div className="hero-cta-group">
             <button className="home-btn-primary" onClick={() => onNavigate('equipmentSales')}>
