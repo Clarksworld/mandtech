@@ -195,7 +195,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             </div>
 
             {/* Card 3: Repairs & Servicing */}
-            <div className="capability-card" onClick={() => onNavigate('aftersales')}>
+            <div className="capability-card" onClick={() => onNavigate('contact')}>
               <div className="card-icon-wrapper">
                 <Wrench size={24} />
               </div>
@@ -203,8 +203,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               <p className="card-desc">
                 On-site and workshop-based maintenance by certified technicians specializing in pneumatic and power generation systems.
               </p>
-              <button className="card-link-btn">
-                Book Service <ChevronRight size={14} style={{ display: 'inline', verticalAlign: 'middle' }} />
+              <button className="card-link-btn" onClick={(e) => { e.stopPropagation(); onNavigate('contact'); }}>
+                Get Enquiries <ChevronRight size={14} style={{ display: 'inline', verticalAlign: 'middle' }} />
               </button>
             </div>
 
