@@ -3,6 +3,10 @@ import { Wrench, ShieldCheck, Scale, Package, Calendar, Zap, ChevronRight, Downl
 import './HomePage.css';
 import heroBg from '../assets/hero_bg.png';
 import compressorImg from '../assets/compressor.png';
+import atlasCopcoSvg from '../assets/atlas_copco.svg';
+import sullairSvg from '../assets/sullair.svg';
+import ingersollRandSvg from '../assets/ingersoll_rand.svg';
+import denairPng from '../assets/denair.png';
 
 interface HomePageProps {
   onNavigate: (page: string) => void;
@@ -170,13 +174,62 @@ Corporate Web: https://mandtech.com.ng`;
         <div className="hero-bottom-bar-wrapper">
           <div className="container">
             <div className="hero-bottom-bar">
-              <div className="bar-item" onClick={() => onNavigate('equipmentSales')}>Equipment Sales</div>
+              <div className="bar-item" onClick={() => onNavigate('equipmentSales')}>Air Compressors</div>
               <div className="bar-divider"></div>
-              <div className="bar-item" onClick={() => onNavigate('aftersales')}>After-Sales</div>
-              <div className="bar-divider"></div>
-              <div className="bar-item" onClick={() => onNavigate('catalog')}>Parts Catalog</div>
+              <div className="bar-item" onClick={() => onNavigate('catalog')}>Spare Parts</div>
               <div className="bar-divider"></div>
               <div className="bar-item" onClick={() => onNavigate('leasing')}>Leasing &amp; Rentals</div>
+              <div className="bar-divider"></div>
+              <div className="bar-item" onClick={() => onNavigate('aftersales')}>Lubricants/Special Fluids</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* OEM Partners & Global Brands Showcase */}
+      <section className="partners-section">
+        <div className="container">
+          <div className="partners-header">
+            <span className="partners-tagline">Authorized Distribution &amp; Technical Fleet Brands</span>
+            <h2 className="partners-title">Our OEM Partners &amp; Trusted Brands</h2>
+            <p className="partners-subtitle">
+              Official Distributors of Denair Air Compressors in Nigeria, with certified factory OEM supply and maintenance support across major world-class machinery brands.
+            </p>
+          </div>
+
+          <div className="partners-grid">
+            <div className="partner-card" onClick={() => onNavigate('equipmentSales')} title="Atlas Copco Air Compressors & Fleet">
+              <img src={atlasCopcoSvg} alt="Atlas Copco" />
+            </div>
+            <div className="partner-card" onClick={() => onNavigate('equipmentSales')} title="Sullair Industrial Air Compressors">
+              <img src={sullairSvg} alt="Sullair" />
+            </div>
+            <div className="partner-card" onClick={() => onNavigate('equipmentSales')} title="Denair Air Compressors (Official Distributor in Nigeria)">
+              <img src={denairPng} alt="Denair" />
+            </div>
+            <div className="partner-card" onClick={() => onNavigate('equipmentSales')} title="Ingersoll Rand Compressors & Heavy Equipment">
+              <img src={ingersollRandSvg} alt="Ingersoll Rand" />
+            </div>
+            <div className="partner-card" onClick={() => onNavigate('catalog')} title="Kaeser Compressors OEM Spares & Systems">
+              <div className="partner-kaeser-badge">
+                <span className="kaeser-main">KAESER</span>
+                <span className="kaeser-sub">COMPRESSORS</span>
+              </div>
+            </div>
+            <div className="partner-card" onClick={() => onNavigate('catalog')} title="CompAir Industrial Systems">
+              <span className="partner-compair-text">CompAir</span>
+            </div>
+            <div className="partner-card" onClick={() => onNavigate('leasing')} title="Doosan Industrial Fleet">
+              <span className="partner-doosan-text">DOOSAN</span>
+            </div>
+            <div className="partner-card" onClick={() => onNavigate('equipmentSales')} title="Sollant Industrial Compressors">
+              <span className="partner-sollant-text">SOLLANT</span>
+            </div>
+            <div className="partner-card" onClick={() => onNavigate('leasing')} title="JMG Power & Air Systems">
+              <span className="partner-jmg-text">JMG</span>
+            </div>
+            <div className="partner-card" onClick={() => onNavigate('leasing')} title="Atlas Copco Mobile & Plant Fleet">
+              <span className="partner-atlasred-text">Atlas Copco</span>
             </div>
           </div>
         </div>

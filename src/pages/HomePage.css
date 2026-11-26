@@ -144,9 +144,201 @@
   background-color: rgba(255, 255, 255, 0.15);
 }
 
+/* OEM Partners Section */
+.partners-section {
+  padding: 90px 0 60px 0;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.partners-header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.partners-tagline {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #15803d;
+  background: rgba(22, 163, 74, 0.08);
+  border: 1px solid rgba(22, 163, 74, 0.2);
+  padding: 4px 14px;
+  border-radius: 9999px;
+  margin-bottom: 12px;
+}
+
+.partners-title {
+  font-size: 28px;
+  font-weight: 900;
+  color: #0f172a;
+  letter-spacing: -0.5px;
+  margin: 0 0 10px 0;
+}
+
+.partners-subtitle {
+  font-size: 14px;
+  color: #64748b;
+  max-width: 680px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.partners-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 992px) {
+  .partners-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .partners-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+.partner-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  height: 84px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.partner-card:hover {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+  transform: translateY(-3px);
+}
+
+.partner-card img {
+  max-height: 38px;
+  max-width: 135px;
+  width: auto;
+  object-fit: contain;
+  filter: grayscale(15%);
+  transition: filter 0.25s ease, transform 0.25s ease;
+}
+
+.partner-card:hover img {
+  filter: grayscale(0%);
+  transform: scale(1.04);
+}
+
+.partner-kaeser-badge {
+  background: #000000;
+  color: #ffffff;
+  padding: 6px 14px;
+  border-radius: 6px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.1;
+  transition: transform 0.25s ease;
+}
+
+.partner-card:hover .partner-kaeser-badge {
+  transform: scale(1.04);
+}
+
+.kaeser-main {
+  font-weight: 900;
+  font-size: 12px;
+  letter-spacing: -0.5px;
+}
+
+.kaeser-sub {
+  font-weight: 800;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: #facc15;
+}
+
+.partner-compair-text {
+  font-size: 16px;
+  font-weight: 800;
+  color: #005596;
+  letter-spacing: -0.3px;
+  transition: transform 0.25s ease;
+}
+
+.partner-card:hover .partner-compair-text {
+  transform: scale(1.05);
+}
+
+.partner-doosan-text {
+  font-size: 16px;
+  font-weight: 900;
+  color: #003865;
+  letter-spacing: 2px;
+  transition: transform 0.25s ease;
+}
+
+.partner-card:hover .partner-doosan-text {
+  transform: scale(1.05);
+}
+
+.partner-sollant-text {
+  font-size: 16px;
+  font-weight: 900;
+  font-style: italic;
+  color: #e31b23;
+  letter-spacing: -0.5px;
+  transition: transform 0.25s ease;
+}
+
+.partner-card:hover .partner-sollant-text {
+  transform: scale(1.05);
+}
+
+.partner-jmg-text {
+  font-size: 18px;
+  font-weight: 900;
+  font-style: italic;
+  color: #0a2540;
+  border-bottom: 2.5px solid #dc2626;
+  line-height: 1.1;
+  padding-bottom: 1px;
+  transition: transform 0.25s ease;
+}
+
+.partner-card:hover .partner-jmg-text {
+  transform: scale(1.05);
+}
+
+.partner-atlasred-text {
+  font-size: 14px;
+  font-weight: 800;
+  color: #d92d20;
+  border-top: 2.5px solid #d92d20;
+  padding-top: 2px;
+  letter-spacing: -0.3px;
+  transition: transform 0.25s ease;
+}
+
+.partner-card:hover .partner-atlasred-text {
+  transform: scale(1.05);
+}
+
 /* Redesigned Capabilities Section */
 .capabilities-section {
-  padding-top: 140px; /* Offset the floating hero link bar */
+  padding-top: 60px;
   background-color: var(--background);
 }
 
